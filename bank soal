@@ -11,11 +11,28 @@ const IST_DATA = [
     type: "mc",
     instruction: "Selesaikan kalimat berikut dengan memilih satu kata yang paling tepat dari 5 opsi yang tersedia.",
     questions: [
-      { q: "Seekor kuda selalu mempunyai ...", options: ["A. Kandang", "B. Ladam", "C. Pelana", "D. Kuku", "E. Suri"], key: "D" },
-      { q: "Lawan kata dari HARAPAN adalah ...", options: ["A. Duka", "B. Putus Asa", "C. Sengsara", "D. Cinta", "E. Benci"], key: "B" }
-      // Lanjutkan soal 3 - 20 di sini...
+      { q: "Pengaruh seseorang terhadap orang lain seharusnya bergantung pada ...", options: ["A. kekuasaan", "B. bujukan", "C. kekayaan", "D. keberanian", "E. kewibawaan"], key: "E" },
+      { q: "Lawan "hemat" ialah ...", options: ["A. murah", "B. kikir", "C. boros", "D. bernilai", "E. kaya"], key: "C" },
+      { q: "... tidak termasuk cuaca", options: ["A. angin puyuh", "B. halilintar", "C. salju", "D. gempa bumi", "E. kabut"], key: "D" },
+      { q: "Lawannya "setia" ialah ...", options: ["A. cinta", "B. benci", "C. persahabatan", "D. khianat", "E. permusuhan"], key: "D" },
+      { q: "Seekor kuda selalu mempunyai ...", options: ["A. kandang", "B. ladam", "C. pelana", "D. kuku", "E. surai"], key: "D" },
+      { q: "Seeorang paman ... lebih tua dari kemenakannya", options: ["A. jarang", "B. biasanya", "C. selalu", "D. tidak pernah", "E. kadang-kadang"], key: "B" },
+      { q: "Pada jumlah yang sama, nilai kalori yang tertinggi terdapat pada ...", options: ["A. ikan", "B. daging", "C. lemak", "D. tahu", "E. sayuran"], key: "C" },
+      { q: "Pada suatu pertandingan selalu terdapat ...", options: ["A. lawan", "B. wasit", "C. penonton", "D. sorak", "E. kemenangan"], key: "A" },
+      { q: "Suatu pernyataan yang belum dipastikan dikatakan sebagai pernyataan yang ...", options: ["A. paradoks", "B. tergesa-gesa", "C. mempunyai arti rangkap", "D. menyesatkan", "E. hipotesis"], key: "E" },
+      { q: "Pada sepatu selalu terdapat ...", options: ["A. kulit", "B. sol", "C. tali sepatu", "D. gesper", "E. lidah"], key: "B" },
+      { q: "Suatu ... tidak menyangkut persoalan pencegahan kecelakaan", options: ["A. lampu lalu lintas", "B. kacamata pelindung", "C. kotak PPPK", "D. tanda peringatan", "E. palang kereta api"], key: "C" },
+      { q: "Lembar kertas uang Rp. 50.000,- mempunyai panjang ... cm", options: ["A. 20", "B. 29", "C. 17", "D. 15", "E. 24"], key: "D" },
+      { q: "Seseorang yang bersikap menyangsikan setiap kemajuan ialah seseorang yang ...", options: ["A. demokratis", "B. radikal", "C. liberal", "D. konservatif", "E. anarkis"], key: "D" },
+      { q: "Lawannya "tidak pernah" ialah ...", options: ["A. sering", "B. kadang-kadang", "C. jarang", "D. kerap kali", "E. selalu"], key: "E" },
+      { q: "Jarak antara Jakarta - Surabaya kira-kira ... km", options: ["A. 650", "B. 1000", "C. 800", "D. 600", "E. 950"], key: "C" },
+      { q: "untuk dapat membuat nada yang rendah dan mendalam, kita memerlukan banyak ...", options: ["A. kekuatan", "B. peranan", "C. ayunan", "D. berat", "E. suara"], key: "A" },
+      { q: "Ayah ... lebih berpengalaman daripada anaknya", options: ["A. selalu", "B. biasanya", "C. jauh", "D. jarang", "E. pada dasarnya"], key: "B" },
+      { q: "Di antara kota-kota berikut ini, maka kota ... letaknya paling Selatan", options: ["A. Jakarta", "B. Bandung", "C. Cirebon", "D. Semarang", "E. Surabaya"], key: "B" },
+      { q: "Jika kita mengetahui jumlah persentase nomor-nomor lotre yang tidak menang, maka kita dapat menghitung ...", options: ["A. jumlah nomor yang menang", "B. pajak lotre", "C. kemungkinan menang", "D. jumlah pengikut", "E. tinggi keuntungan"], key: "C" },
+      { q: "Seorang anak yang berumur 10 tahun tingginya rata-rata ... cm", options: ["A. 150", "B. 130", "C. 110", "D. 105", "E. 115"], key: "B" }
     ]
-  },
+  }
   {
     id: "WA",
     name: "Subtes 2: Mencari Kata Berbeda (WA)",
