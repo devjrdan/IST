@@ -7,7 +7,7 @@ const IST_DATA = [
   {
     id: "SE",
     name: "Subtes 1: Melengkapi Kalimat (SE)",
-    durationSec: 360, // 6 Menit
+    durationSec: 300, // 5 Menit
     type: "mc",
     instruction: "Selesaikan kalimat berikut dengan memilih satu kata yang paling tepat dari 5 opsi yang tersedia.",
     questions: [
@@ -30,7 +30,7 @@ const IST_DATA = [
   {
     id: "AN",
     name: "Subtes 3: Analogi Kata (AN)",
-    durationSec: 420, // 7 Menit
+    durationSec: 360, // 6 Menit
     type: "mc",
     instruction: "Temukan kata yang melengkapi analogi kata pertama dan kedua.",
     questions: [
@@ -71,7 +71,7 @@ const IST_DATA = [
   {
     id: "FA",
     name: "Subtes 7: Potongan Bentuk (FA)",
-    durationSec: 420, // 7 Menit
+    durationSec: 480, // 8 Menit
     type: "mc",
     instruction: "Gabungkan potongan gambar dan pilih bentuk utuh yang sesuai.",
     questions: [
