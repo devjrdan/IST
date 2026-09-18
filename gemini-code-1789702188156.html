@@ -75,11 +75,17 @@
     <button class="btn" onclick="startEngine()">Mulai Rangkaian Tes</button>
   </div>
 
-  <!-- Screen 2: INSTRUCTION -->
+<!-- Screen 2: INSTRUCTION -->
   <div id="screen-instruction" class="body screen">
     <h1 id="inst-title">Judul Subtes</h1>
-    <p id="inst-text">Penjelasan Subtes</p>
-    <p style="color: #dc2626; font-weight: 600;">Waktu: <span id="inst-time"></span></p>
+    
+    <!-- ELEMEN BARU: Penampung Gambar Instruksi -->
+    <img id="inst-image" src="" style="display:none; width: 100%; max-width: 650px; margin: 0 auto 20px auto; border: 1px solid var(--border); border-radius: 6px;">
+    
+    <!-- ELEMEN DIUPDATE: Berubah jadi <div> agar mendukung format paragraf HTML -->
+    <div id="inst-text" style="margin-bottom: 24px; line-height: 1.6; color: var(--muted);">Penjelasan Subtes</div>
+    
+    <p style="color: #dc2626; font-weight: 600;">Waktu Mengerjakan: <span id="inst-time"></span></p>
     <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
   </div>
 
