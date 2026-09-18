@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asesmen IST Digital</title>
+  <style>
+    :root { --primary: #2563eb; --primary-dark: #1d4ed8; --bg: #f8fafc; --surface: #ffffff; --text: #1e293b; --muted: #64748b; --border: #e2e8f0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
+    .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
+    
+    /* Header & Timer */
+    .header { background: var(--primary); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .header h2 { font-size: 1.1rem; font-weight: 600; }
+    .timer-badge { background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-family: monospace; font-size: 1.2rem; }
+    
+    .body { padding: 32px 24px; flex-grow: 1; }
+    h1 { color: var(--primary); margin-bottom: 12px; }
+    p { color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .form-group input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border); }
+    
+    .btn { background: var(--primary); color: white; border: none; padding: 12px 24px; font-weight: 600; border-radius: 6px; cursor: pointer; display: inline-block; }
+    .btn:hover { background: var(--primary-dark); }
+    .btn:disabled { background: #94a3b8; cursor: not-allowed; }
+    .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
+    
+    /* Screen Management */
+    .screen { display: none; }
+    .screen.active { display: block; }
+    
+    /* Question UI */
+    .q-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; }
+    .q-image { max-width: 100%; border-radius: 6px; margin-bottom: 16px; border: 1px solid var(--border); }
+    
+    .options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+    .option-lbl { display: flex; align-items: center; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    .option-lbl:hover { background: #f1f5f9; }
+    .option-lbl input { margin-right: 12px; transform: scale(1.2); }
+    
+    .grid-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .nav-btn { width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border); background: #f8fafc; cursor: pointer; font-weight: 600; }
+    .nav-btn.answered { background: #dbeafe; color: var(--primary); border-color: var(--primary); }
+    .nav-btn.current { border: 2px solid var(--primary-dark); }
+    
+    .footer { display: flex; justify-content: space-between; margin-top: 20px; }
+  </style>
+  <!-- Load Database dan Scoring Engine -->
+  <script src="bank_soal.js"></script>
+  <script src="norma.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2 id="header-title">IST Digital</h2>
+    <div class="timer-badge" id="timer-display">--:--</div>
+  </div>
+
+  <!-- Screen 1: SETUP -->
+  <div id="screen-setup" class="body screen active">
+    <h1>Intelligenz Struktur Test (IST)</h1>
+    <p>Tes ini terdiri dari 9 bagian dengan batas waktu yang ketat. Sistem akan memindahkan layar secara otomatis apabila waktu habis. Kerjakan secepat dan seteliti mungkin.</p>
+    <div class="form-group">
+      <label>Nama Lengkap</label>
+      <input type="text" id="user-name" placeholder="Masukkan nama" required>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="user-email" placeholder="email@domain.com" required>
+    </div>
+    <button class="btn" onclick="startEngine()">Mulai Rangkaian Tes</button>
+  </div>
+
+  <!-- Screen 2: INSTRUCTION -->
+  <div id="screen-instruction" class="body screen">
+    <h1 id="inst-title">Judul Subtes</h1>
+    <p id="inst-text">Penjelasan Subtes</p>
+    <p style="color: #dc2626; font-weight: 600;">Waktu: <span id="inst-time"></span></p>
+    <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
+  </div>
+
+  <!-- Screen 3: MEMORY PHASE (KHUSUS SUBTES 9) -->
+  <div id="screen-memory" class="body screen">
+    <h1>Fase Menghafal</h1>
+    <p>Hafalkan kata-kata pada tabel di bawah ini. Waktu Anda 3 menit sebelum soal dimunculkan.</p>
+    <img id="mem-image" class="q-image" src="" alt="Loading gambar...">
+  </div>
+
+  <!-- Screen 4: TEST RUNTIME -->
+  <div id="screen-test" class="body screen">
+    <div style="font-weight: 600; color: var(--muted); margin-bottom: 12px;">Soal No <span id="q-num">1</span></div>
+    
+    <div id="q-content" class="q-text">Teks Pertanyaan</div>
+    <img id="q-img" class="q-image" src="" style="display:none;">
+    
+    <!-- Area Jawaban Dinamis -->
+    <div id="answer-area"></div>
+
+    <div class="footer">
+      <button class="btn btn-outline" id="btn-prev" onclick="changeQ(-1)">Kembali</button>
+      <button class="btn" id="btn-next" onclick="changeQ(1)">Selanjutnya</button>
+    </div>
+
+    <!-- Grid Nomor Soal -->
+    <div class="grid-nav" id="q-grid"></div>
+  </div>
+
+  <!-- Screen 5: FINISH -->
+  <div id="screen-finish" class="body screen" style="text-align: center;">
+    <h1>Asesmen Selesai</h1>
+    <p id="finish-msg">Mengirim jawaban Anda ke server...</p>
+  </div>
+</div>
+
+<script>
+  const WEBHOOK_URL = "URL_WEBHOOK_GOOGLESHEET_KAMU"; // GANTI DENGAN LINK APPS SCRIPT
+  
+  let candidate = {};
+  let state = {
+    subIdx: 0,
+    qIdx: 0,
+    answers: {}, // Format: { "SE": { 0: "A", 1: "C" }, "WA": ... }
+    timeLeft: 0,
+    timerObj: null,
+    isMemoryPhase: false
+  };
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function formatTime(sec) {
+    let m = Math.floor(sec / 60).toString().padStart(2, '0');
+    let s = (sec % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+  function startEngine() {
+    candidate.name = document.getElementById("user-name").value.trim();
+    candidate.email = document.getElementById("user-email").value.trim();
+    if (!candidate.name || !candidate.email) return alert("Isi data diri!");
+    
+    if (localStorage.getItem("ist_done_" + candidate.email)) {
+      return alert("Akun ini sudah menyelesaikan tes.");
+    }
+
+    state.subIdx = 0;
+    state.answers = {};
+    loadInstruction();
+  }
+
+  function loadInstruction() {
+    if (state.subIdx >= IST_DATA.length) {
+      submitAllData();
+      return;
+    }
+
+    const sub = IST_DATA[state.subIdx];
+    document.getElementById("header-title").innerText = sub.name;
+    document.getElementById("timer-display").innerText = "--:--";
+    
+    document.getElementById("inst-title").innerText = sub.name;
+    document.getElementById("inst-text").innerText = sub.instruction;
+    
+    let timeStr = sub.type === "memory" ? 
+      `${sub.durationMemorySec / 60} Menit Hafalan + ${sub.durationSec / 60} Menit Pengerjaan` : 
+      `${sub.durationSec / 60} Menit`;
+      
+    document.getElementById("inst-time").innerText = timeStr;
+    showScreen("screen-instruction");
+  }
+
+  function beginSubtest() {
+    const sub = IST_DATA[state.subIdx];
+    state.qIdx = 0;
+    if (!state.answers[sub.id]) state.answers[sub.id] = {};
+
+    if (sub.type === "memory" && !state.isMemoryPhase) {
+      // Masuk fase menghafal
+      state.isMemoryPhase = true;
+      document.getElementById("mem-image").src = sub.memoryImage || "";
+      showScreen("screen-memory");
+      startTimer(sub.durationMemorySec, endMemoryPhase);
+    } else {
+      // Masuk fase soal
+      showScreen("screen-test");
+      buildGrid();
+      renderQuestion();
+      startTimer(sub.durationSec, forceNextSubtest);
+    }
+  }
+
+  function endMemoryPhase() {
+    state.isMemoryPhase = false;
+    clearInterval(state.timerObj);
+    beginSubtest(); // Lanjut ke fase soal subtes 9
+  }
+
+  function startTimer(seconds, timeoutCallback) {
+    clearInterval(state.timerObj);
+    state.timeLeft = seconds;
+    document.getElementById("timer-display").innerText = formatTime(state.timeLeft);
+    
+    state.timerObj = setInterval(() => {
+      state.timeLeft--;
+      document.getElementById("timer-display").innerText = formatTime(state.timeLeft);
+      if (state.timeLeft <= 0) {
+        clearInterval(state.timerObj);
+        timeoutCallback();
+      }
+    }, 1000);
+  }
+
+  function renderQuestion() {
+    const sub = IST_DATA[state.subIdx];
+    const q = sub.questions[state.qIdx];
+    
+    document.getElementById("q-num").innerText = `${state.qIdx + 1} dari ${sub.questions.length}`;
+    document.getElementById("q-content").innerText = q.q;
+
+    // Handle Image
+    const imgEl = document.getElementById("q-img");
+    if (q.image) {
+      imgEl.src = q.image;
+      imgEl.style.display = "block";
+    } else {
+      imgEl.style.display = "none";
+    }
+
+    // Handle Input Area
+    const ansArea = document.getElementById("answer-area");
+    ansArea.innerHTML = "";
+    let savedAns = state.answers[sub.id][state.qIdx] || "";
+
+    if (sub.type === "mc" || sub.type === "memory") {
+      q.options.forEach(opt => {
+        let val = opt.charAt(0); // Ambil "A" dari "A. Jawaban"
+        let checked = savedAns === val ? "checked" : "";
+        ansArea.innerHTML += `
+          <label class="option-lbl">
+            <input type="radio" name="ist_opt" value="${val}" ${checked} onclick="saveAns('${val}')">
+            ${opt}
+          </label>
+        `;
+      });
+    } else if (sub.type === "input") {
+      ansArea.innerHTML = `
+        <div class="form-group">
+          <input type="text" id="text_ans" placeholder="Ketik jawaban di sini..." value="${savedAns}" onblur="saveAns(this.value)">
+        </div>
+      `;
+    }
+
+    // Button States
+    document.getElementById("btn-prev").disabled = (state.qIdx === 0);
+    let btnNext = document.getElementById("btn-next");
+    if (state.qIdx === sub.questions.length - 1) {
+      btnNext.innerText = "Akhiri Subtes Ini";
+      btnNext.onclick = forceNextSubtest; // Tombol submit manual
+    } else {
+      btnNext.innerText = "Selanjutnya";
+      btnNext.onclick = () => changeQ(1);
+    }
+
+    updateGridColor();
+  }
+
+  function saveAns(val) {
+    const subId = IST_DATA[state.subIdx].id;
+    state.answers[subId][state.qIdx] = val;
+    updateGridColor();
+  }
+
+  function changeQ(dir) {
+    // Save text input if typing before moving
+    const textInput = document.getElementById("text_ans");
+    if (textInput) saveAns(textInput.value);
+
+    state.qIdx += dir;
+    renderQuestion();
+  }
+
+  function goToQ(idx) {
+    const textInput = document.getElementById("text_ans");
+    if (textInput) saveAns(textInput.value);
+    
+    state.qIdx = idx;
+    renderQuestion();
+  }
+
+  function buildGrid() {
+    const grid = document.getElementById("q-grid");
+    const totalQ = IST_DATA[state.subIdx].questions.length;
+    grid.innerHTML = "";
+    for (let i = 0; i < totalQ; i++) {
+      grid.innerHTML += `<button class="nav-btn" id="grid-btn-${i}" onclick="goToQ(${i})">${i + 1}</button>`;
+    }
+  }
+
+  function updateGridColor() {
+    const subId = IST_DATA[state.subIdx].id;
+    const totalQ = IST_DATA[state.subIdx].questions.length;
+    for (let i = 0; i < totalQ; i++) {
+      let btn = document.getElementById(`grid-btn-${i}`);
+      if (!btn) continue;
+      
+      btn.classList.remove("current", "answered");
+      if (i === state.qIdx) btn.classList.add("current");
+      if (state.answers[subId][i]) btn.classList.add("answered");
+    }
+  }
+
+  function forceNextSubtest() {
+    // Pindah ke subtes berikutnya
+    const textInput = document.getElementById("text_ans");
+    if (textInput) saveAns(textInput.value);
+    
+    clearInterval(state.timerObj);
+    state.subIdx++;
+    loadInstruction();
+  }
+
+  function submitAllData() {
+    showScreen("screen-finish");
+    document.getElementById("timer-display").innerText = "SELESAI";
+    
+    // Kalkulasi pakai norma.js
+    const scores = calculateIST(state.answers);
+    
+    const payload = {
+      timestamp: new Date().toLocaleString("id-ID"),
+      name: candidate.name,
+      email: candidate.email,
+      rawScores: scores.rawScores,
+      totalRW: scores.totalRW,
+      answersJSON: JSON.stringify(state.answers)
+    };
+
+    localStorage.setItem("ist_done_" + candidate.email, "true");
+
+    // Pengiriman Non-Blocking (Background Fetch)
+    fetch(WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(payload)
+    }).then(() => {
+      document.getElementById("finish-msg").innerHTML = 
+        `<span style="color: #107c41; font-weight: 700;">Data berhasil terkirim.</span><br>Silakan konfirmasi ke penguji Anda.`;
+    }).catch(e => {
+      document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
+    });
+  }
+</script>
+
+</body>
+</html>
