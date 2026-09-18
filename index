@@ -160,7 +160,7 @@
     loadInstruction();
   }
 
-  function loadInstruction() {
+function loadInstruction() {
     if (state.subIdx >= IST_DATA.length) {
       submitAllData();
       return;
@@ -171,7 +171,18 @@
     document.getElementById("timer-display").innerText = "--:--";
     
     document.getElementById("inst-title").innerText = sub.name;
-    document.getElementById("inst-text").innerText = sub.instruction;
+    
+    // Perubahan 1: Memakai innerHTML agar tulisan instruksi bisa ditebalkan (Bold) atau di-Enter (<br>)
+    document.getElementById("inst-text").innerHTML = sub.instruction;
+    
+    // Perubahan 2: Logika pemanggilan gambar instruksi
+    const instImg = document.getElementById("inst-image");
+    if (sub.instructionImage) {
+      instImg.src = sub.instructionImage;
+      instImg.style.display = "block";
+    } else {
+      instImg.style.display = "none";
+    }
     
     let timeStr = sub.type === "memory" ? 
       `${sub.durationMemorySec / 60} Menit Hafalan + ${sub.durationSec / 60} Menit Pengerjaan` : 
