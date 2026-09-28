@@ -40,10 +40,28 @@ const IST_DATA = [
     type: "mc",
     instruction: "Carilah SATU kata yang tidak memiliki kesamaan dengan empat kata lainnya.",
     questions: [
-      { q: "Kata yang berbeda adalah ...", options: ["A. Meja", "B. Kursi", "C. Burung", "D. Lemari", "E. Tempat Tidur"], key: "C" }
-      // Lanjutkan soal 2 - 20 di sini...
+      { q: "Kata yang berbeda adalah ...", options: ["A. Lingkaran", "B. Panah", "C. Elips", "D. Busur", "E. Lengkungan"], key: "B" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Mengetuk", "B. Memaki", "C. Menjahit", "D. Menggergaji", "E. Memukul"], key: "B" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Lebar", "B. Keliling", "C. Luas", "D. Isi", "E. Panjang"], key: "D" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Mengikat", "B. Menyatukan", "C. Melepaskan", "D. Mengaitkan", "E. Melekatkan"], key: "C" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Arah", "B. Timur", "C. Perjalanan", "D. Tujuan", "E. Selatan"], key: "C" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Jarak", "B. Perpisahan", "C. Tugas", "D. Batas", "E. Perceraian"], key: "C" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Saringan", "B. Kelambu", "C. Payung", "D. Tapisan", "E. Jala"], key: "C" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Putih", "B. Pucat", "C. Buram", "D. Kasar", "E. Berkilauan"], key: "D" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Otobis", "B. Pesawat Terbang", "C. Sepeda Motor", "D. Sepeda", "E. Kapal Api"], key: "D" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Biola", "B. Seruling", "C. Klarinet", "D. Terompet", "E. Saxophon"], key: "A" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Bergelombang", "B. Kasar", "C. Berduri", "D. Licin", "E. Lurus"], key: "E" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Jam", "B. Kompas", "C. Penunjuk Jalan", "D. Bintang Pari", "E. Arah"], key: "A" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Kebijaksanaan", "B. Pendidikan", "C. Perencanaan", "D. Penempatan", "E. Pengerahan"], key: "A" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Bermotor", "B. Berjalan", "C. Berlayar", "D. Berspeda", "E. Berkuda"], key: "B" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Gambar", "B. Lukisan", "C. Potret", "D. Patung", "E. Ukiran"], key: "C" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Panjang", "B. Lonjong", "C. Runcing", "D. Bulat", "E. Bersudut"], key: "A" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Kunci", "B. Palang Pintu", "C. Gerendel", "D. Gunting", "E. Obeng"], key: "D" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Jembatan", "B. Batas", "C. Perkawinan", "D. Pagar", "E. Masyarakat"], key: "E" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Mengetam", "B. Memahat", "C. Mengasah", "D. Melicinkan", "E. Menggosok"], key: "B" }
+      { q: "Kata yang berbeda adalah ...", options: ["A. Batu", "B. Baja", "C. Bulu", "D. Karet", "E. Kayu"], key: "C" }
     ]
-  },
+  }
   {
     id: "AN",
     name: "Subtes 3: Analogi Kata (AN)",
@@ -51,9 +69,28 @@ const IST_DATA = [
     type: "mc",
     instruction: "Temukan kata yang melengkapi analogi kata pertama dan kedua.",
     questions: [
-      { q: "Hutan : Pohon = Tembok : ?", options: ["A. Batu bata", "B. Rumah", "C. Semen", "D. Putih", "E. Dinding"], key: "A" }
+      { q: "Menemukan : menghilangkan = Mengingat : ?", options: ["A. menghapal", "B. mengenai", "C. melupakan", "D. berpikir", "E. memimpikan"], key: "C" }
+      { q: "Bunga : jambangan = Burung : ?", options: ["A. sarang", "B. langit", "C. pagar", "D. pohon", "E. sangkar"], key: "E" }
+      { q: "Kereta api : rel = Otobis : ?", options: ["A. roda", "B. proos", "C. ban", "D. jalan raya", "E. kecepatan"], key: "D" }
+      { q: "Perak : Emas = Cincin : ?", options: ["A. arloji", "B. berlian", "C. permata", "D. gelang", "E. platina"], key: "D" }
+      { q: "Lingkaran : bola = Bujur sangkar : ?", options: ["A. bentuk", "B. gambar", "C. segi empat", "D. kubus", "E. piramida"], key: "D" }
+      { q: "Saran : keputusan = Merundingkan : ?", options: ["A. menawarkan", "B. menentukan", "C. menilai", "D. menimbang", "E. merenungkna"], key: "B" }
+      { q: "Lidah : asam = Hidung : ?", options: ["A. mencium", "B. bernapas", "C. mengecap", "D. tengik", "E. asin"], key: "D" }
+      { q: "Darah : pembuluh = Air : ?", options: ["A. pintu air", "B. sungai", "C. talang", "D. hujan", "E. ember"], key: "B" }
+      { q: "Saraf : penyalur = Pupil : ?", options: ["A. penyinaran", "B. mata", "C. melihat", "D. cahaya", "E. pelindung"], key: "E" }
+      { q: "Pengantar surat : pengantar telegram = Pandai besi : ?", options: ["A. palu godam", "B. pedagang besi", "C. api", "D. tukang emas", "E. besi tempa"], key: "D" }
+      { q: "Buta : wanra = Tuli : ?", options: ["A. pendengaran", "B. mendengar", "C. nada", "D. kata", "E. telinga"], key: "C" }
+      { q: "Makanan : bumbu = Ceramah : ?", options: ["A. penghinaan", "B. pidato", "C. kelakar", "D. kesan", "E. ayat"], key: "C" }
+      { q: "Marah : emosi = Duka cita : ?", options: ["A. suka cita", "B. sakit hati", "C. suasana hati", "D. sedih", "E. rindu"], key: "C" }
+      { q: "Mantel : jubah = Wool : ?", options: ["A. bahan sandang", "B. domba", "C. sutra", "D. jas", "E. tekstil"], key: "C" }
+      { q: "Ketinggian puncak : tekanan udara = ketinggian nada : ?", options: ["A. garpu tala", "B. sopran", "C. nyanyian", "D. panjang senar", "E. suara"], key: "D" }
+      { q: "Negara : revolusi = Hidup : ?", options: ["A. biologi", "B. keturunan", "C. mutasi", "D. seleksi", "E. ilmu hewan"], key: "C" }
+      { q: "Kekurangan : penemuan = Panas : ?", options: ["A. haus", "B. khatulistiwa", "C. es", "D. matahari", "E. dingin"], key: "C" }
+      { q: "Kayu : diketam = Besi : ?", options: ["A. dipalu", "B. digergaji", "C. dituang", "D. dikikir", "E. ditempa"], key: "E" }
+      { q: "Olahragawan : lembing = Cendikiawan : ?", options: ["A. perpustakaan", "B. penelitian", "C. karya", "D. studi", "E. mikroskop"], key: "E" }
+      { q: "Keledai : kuda pacuan = pembakaran : ?", options: ["A. pemadam api", "B. obor", "C. letupan", "D. korek api", "E. lautan api"], key: "E" }
     ]
-  },
+  }
   {
     id: "GE",
     name: "Subtes 4: Sifat Bersama (GE)",
