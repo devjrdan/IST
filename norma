@@ -1,0 +1,47 @@
+function calculateIST(userAnswers) {
+  let rawScores = {
+    SE: 0, WA: 0, AN: 0, GE: 0, RA: 0, ZR: 0, FA: 0, WU: 0, ME: 0
+  };
+  let totalRW = 0;
+
+  IST_DATA.forEach(subtest => {
+    let subtestRW = 0;
+    const answers = userAnswers[subtest.id] || {};
+
+    subtest.questions.forEach((q, idx) => {
+      let userAnswer = answers[idx] ? answers[idx].toString().trim().toLowerCase() : "";
+
+      // Logika khusus untuk Subtes 4 (GE) dengan skor 2, 1, 0
+      if (subtest.id === "GE") {
+        if (userAnswer !== "") {
+          // Cek apakah jawaban mengandung salah satu kata di key2
+          let isScore2 = q.key2 && q.key2.some(k => userAnswer.includes(k.toLowerCase()));
+          
+          // Cek apakah jawaban mengandung salah satu kata di key1
+          let isScore1 = q.key1 && q.key1.some(k => userAnswer.includes(k.toLowerCase()));
+
+          if (isScore2) {
+            subtestRW += 2;
+          } else if (isScore1) {
+            subtestRW += 1;
+          }
+        }
+      } 
+      // Logika untuk subtes lainnya (Skor biner 1 dan 0)
+      else {
+        let correctAnswer = q.key ? q.key.toString().trim().toLowerCase() : "";
+        if (userAnswer === correctAnswer && userAnswer !== "") {
+          subtestRW += 1;
+        }
+      }
+    });
+
+    rawScores[subtest.id] = subtestRW;
+    totalRW += subtestRW;
+  });
+
+  return {
+    rawScores: rawScores,
+    totalRW: totalRW
+  };
+}
