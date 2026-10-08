@@ -105,78 +105,78 @@ questions: [
   },
   {
     q: "Mata & Telinga",
-    score2: ["indera", "Alat indera", "panca inderaa", "alat indra"],
-    score1: ["organ", "bagian tubuh", "alat tubuh", "bagian kepala", "anggota tubuh", "panca indra"]
+    score2: ["indera", "alat indera", "panca indera", "indra", "alat indra", "panca indra",],
+    score1: ["organ", "alat tubuh"]
   },
   {
     q: "Gula & Intan",
-    score2: ["kristal", "hablur", "struktur kristal"],
-    score1: ["zat padat", "benda padat", "keras", "karbon", "berkilau", "mineral", "putih", "mahal"]
+    score2: ["kristal", "hablur", "zat arang"],
+    score1: ["berkilauan", "mengkilat", "bening"]
   },
   {
     q: "Hujan & Salju",
-    score2: ["presipitasi", "endapan air", "bentuk air", "kondensasi"],
-    score1: ["air", "cuaca", "dingin", "turun dari langit", "musim", "iklim", "cairan"]
+    score2: ["cuaca"],
+    score1: ["air", "basah", "gejala alam" ]
   },
   {
     q: "Pengantar surat & Telepon",
-    score2: ["komunikasi", "alat komunikasi", "media komunikasi", "sarana komunikasi", "penghubung"],
-    score1: ["pesan", "kirim kabar", "penyampai pesan", "informasi", "kabar"]
+    score2: ["pembawa berita", "alat perhubungan"],
+    score1: ["PTT", "pos", "telekomunikasi", "perhubungan", "komunikasi"]
   },
   {
     q: "Kamera & Kacamata",
-    score2: ["alat optik", "optik", "lensa", "instrumen optik"],
-    score1: ["melihat", "bantu penglihatan", "kaca", "alat lihat", "mata"]
+    score2: ["alat optik", "optik", "optic", "alat optic"],
+    score1: ["lensa"]
   },
   {
     q: "Lambung & Usus",
-    score2: ["pencernaan", "saluran pencernaan", "alat pencernaan", "organ pencernaan", "sistem pencernaan"],
-    score1: ["organ", "dalam tubuh", "perut", "isi perut", "organ tubuh", "bagian tubuh"]
+    score2: ["alat pencernaan"],
+    score1: ["jalan makanan", "perut", "isi perut", "pencernaan makanan"]
   },
   {
     q: "Banyak & Sedikit",
-    score2: ["kuantitas", "jumlah", "takaran", "besaran"],
-    score1: ["ukuran", "satuan", "perbandingan", "volume", "banyaknya"]
+    score2: ["penyebut jumlah", "jumlah", "kuantitas", "pengertian jumlah"],
+    score1: ["ukuran", "mengukur"]
   },
   {
     q: "Telur & Benih",
-    score2: ["bibit", "bakal makhluk", "bakal hidup", "embrio", "awal kehidupan", "perkembangbiakan", "reproduksi"],
-    score1: ["tumbuh", "asal mula", "cikal bakal", "calon", "makanan"]
+    score2: ["bibit", "bakal", "bakal hidup", "permulaan", "penghidupan", "alat perkembangbiak"],
+    score1: ["sel", "pembiakan"]
   },
   {
     q: "Bendera & Lencana",
-    score2: ["simbol", "lambang", "tanda pengenal", "identitas", "atribut"],
-    score1: ["tanda", "kehormatan", "organisasi", "negara", "pembeda"]
+    score2: ["simbol", "symbol", "lambang", "tanda"],
+    score1: ["tanda pengenal", "nama"]
   },
   {
     q: "Rumput & Gajah",
-    score2: ["makhluk hidup", "organisme", "biotik"],
-    score1: ["alam", "hidup", "rantai makanan", "di bumi", "tumbuh dan hewani"]
+    score2: ["makhluk hidup", "organisme", "makhluk"],
+    score1: ["tumbuh", "biologi", "ilmu hayat"]
   },
   {
     q: "Ember & Kantong",
-    score2: ["wadah", "tempat menampung", "penampung", "kontainer"],
-    score1: ["alat bawa", "tempat barang", "bawa barang", "tempat menyimpan", "alat rumah tangga"]
+    score2: ["wadah", "tempat penyimpan", "tempat pengisi"],
+    score1: ["alat", "tempat sesuatu", "tempat", "benda"]
   },
   {
     q: "Awal & Akhir",
-    score2: ["batas", "titik batas", "waktu", "tahapan", "siklus", "dimensi waktu"],
-    score1: ["urutan", "posisi", "letak", "bagian proses"]
+    score2: ["batas", "pengertian waktu"],
+    score1: ["waktu", "saat", "masa", "lamanya"]
   },
   {
     q: "Kikir & Boros",
-    score2: ["sifat uang", "sikap terhadap uang", "pengelolaan uang", "karakter belanja", "sifat finansial"],
-    score1: ["sifat manusia", "karakter", "perilaku", "sikap", "tabiat", "uang"]
+    score2: ["watak", "karakter"],
+    score1: ["sifat"]
   },
   {
     q: "Penawaran & Permintaan",
-    score2: ["hukum pasar", "mekanisme pasar", "prinsip ekonomi", "pasar", "konsep pasar", "ekonomi pasar"],
-    score1: ["ekonomi", "transaksi", "jual beli", "perdagangan", "bisnis"]
+    score2: ["regulator harga", "pengertian ekonomi"],
+    score1: ["dagang", "niaga", "penjualan", "pembelian", "jual beli"]
   },
   {
     q: "Atas & Bawah",
-    score2: ["arah", "orientasi arah", "letak spasial", "posisi ruang", "orientasi ruang"],
-    score1: ["posisi", "letak", "kedudukan", "tinggi rendah", "lokasi"]
+    score2: ["pengertian ruang", "penyebut ruang"],
+    score1: ["arah", "letak", "penentuan daerah", "tempat", "ruang", "penunjuk tempat"]
   }
 ]
     ]
