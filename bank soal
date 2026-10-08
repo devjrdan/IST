@@ -71,7 +71,7 @@ const IST_DATA = [
     questions: [
       { q: "Menemukan : menghilangkan = Mengingat : ?", options: ["A. menghapal", "B. mengenai", "C. melupakan", "D. berpikir", "E. memimpikan"], key: "C" }
       { q: "Bunga : jambangan = Burung : ?", options: ["A. sarang", "B. langit", "C. pagar", "D. pohon", "E. sangkar"], key: "E" }
-      { q: "Kereta api : rel = Otobis : ?", options: ["A. roda", "B. proos", "C. ban", "D. jalan raya", "E. kecepatan"], key: "D" }
+      { q: "Kereta api : rel = Otobis : ?", options: ["A. roda", "B. poros", "C. ban", "D. jalan raya", "E. kecepatan"], key: "D" }
       { q: "Perak : Emas = Cincin : ?", options: ["A. arloji", "B. berlian", "C. permata", "D. gelang", "E. platina"], key: "D" }
       { q: "Lingkaran : bola = Bujur sangkar : ?", options: ["A. bentuk", "B. gambar", "C. segi empat", "D. kubus", "E. piramida"], key: "D" }
       { q: "Saran : keputusan = Merundingkan : ?", options: ["A. menawarkan", "B. menentukan", "C. menilai", "D. menimbang", "E. merenungkna"], key: "B" }
@@ -96,10 +96,89 @@ const IST_DATA = [
     name: "Subtes 4: Sifat Bersama (GE)",
     durationSec: 480, // 8 Menit
     type: "input", // Isian Teks
-    instruction: "Ketik kata yang merangkum kesamaan dari dua kata berikut. (Contoh: Mawar & Melati -> Bunga)",
-    questions: [
-      { q: "Ayam & Burung Hitam", key: "Burung" }, // Kunci hanya patokan, aslinya dinilai manual (0,1,2)
-      { q: "Mata & Telinga", key: "Panca Indera" }
+    instruction: "Ketik kata yang merangkum kesamaan dari dua kata berikut. (Contoh: Ayam & itik -> Burung)",
+questions: [
+  {
+    q: "Mawar & Melati",
+    score2: ["bunga", "kembang", "perdu"],
+    score1: ["tumbuh-tumbuhan", "tangkal", "harum"]
+  },
+  {
+    q: "Mata & Telinga",
+    score2: ["indera", "Alat indera", "panca inderaa", "alat indra"],
+    score1: ["organ", "bagian tubuh", "alat tubuh", "bagian kepala", "anggota tubuh", "panca indra"]
+  },
+  {
+    q: "Gula & Intan",
+    score2: ["kristal", "hablur", "struktur kristal"],
+    score1: ["zat padat", "benda padat", "keras", "karbon", "berkilau", "mineral", "putih", "mahal"]
+  },
+  {
+    q: "Hujan & Salju",
+    score2: ["presipitasi", "endapan air", "bentuk air", "kondensasi"],
+    score1: ["air", "cuaca", "dingin", "turun dari langit", "musim", "iklim", "cairan"]
+  },
+  {
+    q: "Pengantar surat & Telepon",
+    score2: ["komunikasi", "alat komunikasi", "media komunikasi", "sarana komunikasi", "penghubung"],
+    score1: ["pesan", "kirim kabar", "penyampai pesan", "informasi", "kabar"]
+  },
+  {
+    q: "Kamera & Kacamata",
+    score2: ["alat optik", "optik", "lensa", "instrumen optik"],
+    score1: ["melihat", "bantu penglihatan", "kaca", "alat lihat", "mata"]
+  },
+  {
+    q: "Lambung & Usus",
+    score2: ["pencernaan", "saluran pencernaan", "alat pencernaan", "organ pencernaan", "sistem pencernaan"],
+    score1: ["organ", "dalam tubuh", "perut", "isi perut", "organ tubuh", "bagian tubuh"]
+  },
+  {
+    q: "Banyak & Sedikit",
+    score2: ["kuantitas", "jumlah", "takaran", "besaran"],
+    score1: ["ukuran", "satuan", "perbandingan", "volume", "banyaknya"]
+  },
+  {
+    q: "Telur & Benih",
+    score2: ["bibit", "bakal makhluk", "bakal hidup", "embrio", "awal kehidupan", "perkembangbiakan", "reproduksi"],
+    score1: ["tumbuh", "asal mula", "cikal bakal", "calon", "makanan"]
+  },
+  {
+    q: "Bendera & Lencana",
+    score2: ["simbol", "lambang", "tanda pengenal", "identitas", "atribut"],
+    score1: ["tanda", "kehormatan", "organisasi", "negara", "pembeda"]
+  },
+  {
+    q: "Rumput & Gajah",
+    score2: ["makhluk hidup", "organisme", "biotik"],
+    score1: ["alam", "hidup", "rantai makanan", "di bumi", "tumbuh dan hewani"]
+  },
+  {
+    q: "Ember & Kantong",
+    score2: ["wadah", "tempat menampung", "penampung", "kontainer"],
+    score1: ["alat bawa", "tempat barang", "bawa barang", "tempat menyimpan", "alat rumah tangga"]
+  },
+  {
+    q: "Awal & Akhir",
+    score2: ["batas", "titik batas", "waktu", "tahapan", "siklus", "dimensi waktu"],
+    score1: ["urutan", "posisi", "letak", "bagian proses"]
+  },
+  {
+    q: "Kikir & Boros",
+    score2: ["sifat uang", "sikap terhadap uang", "pengelolaan uang", "karakter belanja", "sifat finansial"],
+    score1: ["sifat manusia", "karakter", "perilaku", "sikap", "tabiat", "uang"]
+  },
+  {
+    q: "Penawaran & Permintaan",
+    score2: ["hukum pasar", "mekanisme pasar", "prinsip ekonomi", "pasar", "konsep pasar", "ekonomi pasar"],
+    score1: ["ekonomi", "transaksi", "jual beli", "perdagangan", "bisnis"]
+  },
+  {
+    q: "Atas & Bawah",
+    score2: ["arah", "orientasi arah", "letak spasial", "posisi ruang", "orientasi ruang"],
+    score1: ["posisi", "letak", "kedudukan", "tinggi rendah", "lokasi"]
+  }
+]
     ]
   },
   {
