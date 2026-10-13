@@ -122,6 +122,15 @@
     </div>
 
     <div id="q-content" class="q-text"></div>
+<!-- Penampung Gambar Rujukan Pilihan Bentuk A - E (Khusus Subtes FA & WU) -->
+    <div id="q-ref-container" style="display:none; margin-bottom: 16px; background: #f8fafc; padding: 12px; border: 1px dashed var(--border); border-radius: 8px; text-align: center;">
+      <span style="font-size: 0.85rem; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">PILIHAN BENTUK (A - E):</span>
+      <img id="q-ref-img" src="" style="max-width: 100%; border-radius: 4px;" alt="Rujukan Bentuk">
+    </div>
+
+    <!-- Teks Soal & Gambar Potongan Soal -->
+    <div id="q-content" class="q-text"></div>
+    <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
     <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
 
     <!-- Wadah Input Dinamis (MC / Isian Teks / Deret Digit RA) -->
@@ -258,7 +267,17 @@
     document.getElementById("q-num").innerText = `Soal ${state.qIdx + 1} / ${sub.questions.length}`;
     document.getElementById("q-content").innerText = q.q;
 
-    // Handle Gambar Soal jika ada
+// Handle Gambar Rujukan Bentuk (A-E)
+    const refContainer = document.getElementById("q-ref-container");
+    const refImg = document.getElementById("q-ref-img");
+    if (q.refImage) {
+      refImg.src = q.refImage;
+      refContainer.style.display = "block";
+    } else {
+      refContainer.style.display = "none";
+    }
+
+    // Handle Gambar Potongan Soal
     const imgEl = document.getElementById("q-img");
     if (q.image) {
       imgEl.src = q.image;
