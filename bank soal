@@ -492,3 +492,4 @@ instructionImage: "wu_instruksi.png",
       { q: "Kata yang mempunyai huruf permulaan D adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }  // Dahlia
     ]
   }
+];
