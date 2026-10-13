@@ -188,28 +188,35 @@ questions: [
     type: "input", // Isian Angka
     instruction: "Selesaikan soal hitungan matematika berikut.",
     questions: [
-      { q: "Jika seorang anak memiliki 50 rupiah dan memberikan 15 rupiah kepada orang lain, berapa rupiahkah yang masih tinggal padanya ?", key: " " },
-      { q: "Berapa km-kah yang dapat ditempuh oleh kereta api dalam waktu 7 jam, jika kecepatannya 40 km/jam ?", key: " " },
-      { q: "15 peti buah-buahan beratnya 250 kg dan setiap peti kosong beratnya 3 kg, berapakah berat buah-buahan itu ?", key: " " },
-      { q: "Seseorang mempunyai persediaan rumput yang cukup untuk 7 ekor kuda selama 78 hari. Berapa harikah persediaan itu cukup untuk 21 ekor kuda ?", key: " " },
-      { q: "3 batang coklat harganya Rp. 5,- Berapa batangkah yang dapat kita beli dengan Rp. 50,- ?", key: " " },
-      { q: "Seseorang dapat berjalan 1,75 m dalam waktu 1/4 detik. Berapa meterkah yang dapat ia tempuh dalam waktu 10 detik ?", key: " " },
-      { q: "Jika sebuah batu terletak 15 m disebelah selatan dari sebatang pohon dan phon itu berada 30 m di sebelah selatan dari sebuah rumah, berapa meterkah jarak antara batu dan rumah itu ?", key: " " },
-      { q: "Jika 4½ m bahan sandang harganya Rp. 90,- berapa rupiahkah harganya 2½ m ?", key: " " },
-      { q: "7 orang dapat menyelesaikan sesuatu pekerjaan dalam 6 hari. Berapa orangkah yang diperlukan untuk menyelesaikan pekerjaan itu dalam setengah hari ?", key: " " },
-      { q: "Karena dipanaskan, kawat yang panjangnya 48 cm akan mengembang menjadi 52 cm. Setelah pemanasan, berapakah panjangnya kawat yang berukuran 72 cm ?", key: " " },
-      { q: "Suatu pabrik dapat menghasilkan 304 batang pinsil dalam waktu 8 jam. Berapa batangkah dihasilkan dalam waktu setengah jam ?", key: " " },
-      { q: "Untuk suatu campuran diperlukan2 bagian perak dan 3 bagian timah. Berapa gramkah perak yang diperlukan untuk mendapatkan campuran itu yang bertanya 15 gram ?", key: " " },
-      { q: "Untuk setiap Rp. 3,- yang dimiliki Sidin, Hamid memiliki Rp. 5,- Jika mereka bersama mempunyai Rp. 120,- berapa rupiahkah yang dimiliki Hamid ?", key: " " },
-      { q: "Mesin A menenun 60 m kain, sedangkan mesin B menenun 40 m. Berapa meterkah yang ditenun mesin A, jika mesin B menenun 60 m ?", key: " " },
-      { q: "Seseorang membelikan ⅒ dari uangnya untuk perangko dan 4 kali jumlah itu untuk alat tulis. Sisa uangnya masih Rp. 60,- Berapa rupiahkah uangnya semula ?", key: " " },
-      { q: "Didalam dua peti terdapat 43 buah piring. Di dalam peti yang satu terdapat 9 buah piring lebih banyak daripada di dalam peti yang lain. Berapa buah piring terdapat di dalam peti yang lebih kecil ?", key: " " },
-      { q: "Suatu lembaran kain yang panjangnya 60 cm harus dibagi sedemikian rupa sehingga panjangnya satu bagian ialah ⅔ dari bagian yang lain. Berapa panjangnya bagian yang terpendek ?", key: " " },
-      { q: "Suatu perusahaan mengekspor ¾ dari hasil produksinya dan menjual ⅘ dari sisa itu di dalam Negeri. Berapa % kah hasil prooduksi yang masih tinggal ?", key: " " },
-      { q: "Jika suatu botol berisi anggur hanya ⅞ bagian dan harganya ialah Rp. 84,-, berapakah harga anggur itu jika botol itu hanya terisi ½ penuh ?", key: " " },
-      { q: "Di dalam suatu keluarga anak perempuan mempunyai jumlah saudara laki-laki yang sama dengan jumlah saudara perempuan dan setiap anak laki-laki mempunyai dua kali lebih banyak saudara perempuan daripada saudara laki-laki. Berapa anak laki-laki yang terdapat didalam keluarga itu ?", key: " " }
-    ]
-  },
+   {
+      id: "RA",
+      name: "Subtes 5: Berhitung (RA)",
+      durationSec: 600, // 10 Menit
+      type: "input", // Isian Angka
+      instruction: "Selesaikan soal hitungan matematika berikut.",
+      questions: [
+        { q: "Jika seorang anak memiliki 50 rupiah dan memberikan 15 rupiah kepada orang lain, berapa rupiahkah yang masih tinggal padanya ?", key: "35", digits: [3, 5] },
+        { q: "Berapa km-kah yang dapat ditempuh oleh kereta api dalam waktu 7 jam, jika kecepatannya 40 km/jam ?", key: "280", digits: [0, 2, 8] },
+        { q: "15 peti buah-buahan beratnya 250 kg dan setiap peti kosong beratnya 3 kg, berapakah berat buah-buahan itu ?", key: "205", digits: [0, 2, 5] },
+        { q: "Seseorang mempunyai persediaan rumput yang cukup untuk 7 ekor kuda selama 78 hari. Berapa harikah persediaan itu cukup untuk 21 ekor kuda ?", key: "26", digits: [2, 6] },
+        { q: "3 batang coklat harganya Rp. 5,- Berapa batangkah yang dapat kita beli dengan Rp. 50,- ?", key: "30", digits: [0, 3] },
+        { q: "Seseorang dapat berjalan 1,75 m dalam waktu 1/4 detik. Berapa meterkah yang dapat ia tempuh dalam waktu 10 detik ?", key: "70", digits: [0, 7] },
+        { q: "Jika sebuah batu terletak 15 m disebelah selatan dari sebatang pohon dan pohon itu berada 30 m di sebelah selatan dari sebuah rumah, berapa meterkah jarak antara batu dan rumah itu ?", key: "45", digits: [4, 5] },
+        { q: "Jika 4½ m bahan sandang harganya Rp. 90,- berapa rupiahkah harganya 2½ m ?", key: "50", digits: [0, 5] },
+        { q: "7 orang dapat menyelesaikan sesuatu pekerjaan dalam 6 hari. Berapa orangkah yang diperlukan untuk menyelesaikan pekerjaan itu dalam setengah hari ?", key: "84", digits: [4, 8] },
+        { q: "Karena dipanaskan, kawat yang panjangnya 48 cm akan mengembang menjadi 52 cm. Setelah pemanasan, berapakah panjangnya kawat yang berukuran 72 cm ?", key: "78", digits: [7, 8] },
+        { q: "Suatu pabrik dapat menghasilkan 304 batang pinsil dalam waktu 8 jam. Berapa batangkah dihasilkan dalam waktu setengah jam ?", key: "19", digits: [1, 9] },
+        { q: "Untuk suatu campuran diperlukan 2 bagian perak dan 3 bagian timah. Berapa gramkah perak yang diperlukan untuk mendapatkan campuran itu yang beratnya 15 gram ?", key: "6", digits: [6] },
+        { q: "Untuk setiap Rp. 3,- yang dimiliki Sidin, Hamid memiliki Rp. 5,- Jika mereka bersama mempunyai Rp. 120,- berapa rupiahkah yang dimiliki Hamid ?", key: "75", digits: [5, 7] },
+        { q: "Mesin A menenun 60 m kain, sedangkan mesin B menenun 40 m. Berapa meterkah yang ditenun mesin A, jika mesin B menenun 60 m ?", key: "90", digits: [0, 9] },
+        { q: "Seseorang membelikan 1/10 dari uangnya untuk perangko dan 4 kali jumlah itu untuk alat tulis. Sisa uangnya masih Rp. 60,- Berapa rupiahkah uangnya semula ?", key: "120", digits: [0, 1, 2] },
+        { q: "Didalam dua peti terdapat 43 buah piring. Di dalam peti yang satu terdapat 9 buah piring lebih banyak daripada di dalam peti yang lain. Berapa buah piring terdapat di dalam peti yang lebih kecil ?", key: "17", digits: [1, 7] },
+        { q: "Suatu lembaran kain yang panjangnya 60 cm harus dibagi sedemikian rupa sehingga panjangnya satu bagian ialah 2/3 dari bagian yang lain. Berapa panjangnya bagian yang terpendek ?", key: "24", digits: [2, 4] },
+        { q: "Suatu perusahaan mengekspor ¾ dari hasil produksinya dan menjual 4/5 dari sisa itu di dalam Negeri. Berapa % kah hasil produksi yang masih tinggal ?", key: "5", digits: [5] },
+        { q: "Jika suatu botol berisi anggur hanya 7/8 bagian dan harganya ialah Rp. 84,-, berapakah harga anggur itu jika botol itu hanya terisi ½ penuh ?", key: "48", digits: [4, 8] },
+        { q: "Di dalam suatu keluarga anak perempuan mempunyai jumlah saudara laki-laki yang sama dengan jumlah saudara perempuan dan setiap anak laki-laki mempunyai dua kali lebih banyak saudara perempuan daripada saudara laki-laki. Berapa anak laki-laki yang terdapat didalam keluarga itu ?", key: "3", digits: [3] }
+      ]
+    },
   {
     id: "ZR",
     name: "Subtes 6: Deret Angka (ZR)",
