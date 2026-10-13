@@ -374,8 +374,30 @@ questions: [
   <p>Carilah di antara pilihan bentuk <strong>(A, B, C, D, E)</strong> bentuk utuh yang dapat terbentuk jika potongan-potongan tersebut disusun rapat tanpa ada kelebihan sudut atau celah ruang!</p>
 `,
     instructionImage: "fa_instruksi.png",
-    questions: [
-      { q: "Pilih bentuk yang tepat:", image: "fa_1.png", options: ["A", "B", "C", "D", "E"], key: "A" }
+questions: [
+      // KELOMPOK 1: Bentuk Dasar Lingkaran (117 - 128)
+      { q: "Soal 117: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_117.png", options: ["A", "B", "C", "D", "E"], key: "A" },
+      { q: "Soal 118: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_118.png", options: ["A", "B", "C", "D", "E"], key: "E" },
+      { q: "Soal 119: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_119.png", options: ["A", "B", "C", "D", "E"], key: "D" },
+      { q: "Soal 120: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_120.png", options: ["A", "B", "C", "D", "E"], key: "A" },
+      { q: "Soal 121: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_121.png", options: ["A", "B", "C", "D", "E"], key: "B" },
+      { q: "Soal 122: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_122.png", options: ["A", "B", "C", "D", "E"], key: "C" },
+      { q: "Soal 123: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_123.png", options: ["A", "B", "C", "D", "E"], key: "B" },
+      { q: "Soal 124: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_124.png", options: ["A", "B", "C", "D", "E"], key: "E" },
+      { q: "Soal 125: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_125.png", options: ["A", "B", "C", "D", "E"], key: "D" },
+      { q: "Soal 126: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_126.png", options: ["A", "B", "C", "D", "E"], key: "C" },
+      { q: "Soal 127: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_127.png", options: ["A", "B", "C", "D", "E"], key: "A" },
+      { q: "Soal 128: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_1.png", image: "fa_128.png", options: ["A", "B", "C", "D", "E"], key: "E" },
+
+      // KELOMPOK 2: Bentuk Dasar Sudut / Poligon (129 - 136)
+      { q: "Soal 129: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_129.png", options: ["A", "B", "C", "D", "E"], key: "E" },
+      { q: "Soal 130: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_130.png", options: ["A", "B", "C", "D", "E"], key: "A" },
+      { q: "Soal 131: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_131.png", options: ["A", "B", "C", "D", "E"], key: "B" },
+      { q: "Soal 132: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_132.png", options: ["A", "B", "C", "D", "E"], key: "E" },
+      { q: "Soal 133: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_133.png", options: ["A", "B", "C", "D", "E"], key: "C" },
+      { q: "Soal 134: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_134.png", options: ["A", "B", "C", "D", "E"], key: "D" },
+      { q: "Soal 135: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_135.png", options: ["A", "B", "C", "D", "E"], key: "C" },
+      { q: "Soal 136: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_136.png", options: ["A", "B", "C", "D", "E"], key: "D" }
     ]
   },
   {
