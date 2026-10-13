@@ -108,7 +108,7 @@
   </div>
 
 <!-- Screen 3: MEMORY PHASE (KHUSUS SUBTES 9) -->
-  <div id="screen-memory" class="body screen" style="display: none; text-align: center;">
+  <div id="screen-memory" class="body screen" style="text-align: center;">
     <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal (Daya Ingat)</h1>
     <p style="color: var(--muted); margin-bottom: 20px;">
       Hafalkan daftar kata berikut beserta kategorinya. Waktu Anda: <strong>3 Menit</strong>.<br>
@@ -146,19 +146,35 @@
     </div>
   </div>
 
-  <!-- Screen 4: TEST RUNTIME -->
+<!-- Screen 4: TEST RUNTIME -->
   <div id="screen-test" class="body screen">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
       <span id="test-subtest-name" style="font-weight: 700; color: var(--primary);">Subtes</span>
       <span id="q-num" style="font-weight: 600; color: var(--muted); font-size: 0.9rem;">Soal 1 / 20</span>
     </div>
 
-    <div id="q-content" class="q-text"></div>
-<!-- Penampung Gambar Rujukan Pilihan Bentuk A - E (Khusus Subtes FA & WU) -->
+    <!-- Kotak Gambar Rujukan (Khusus Subtes 7 FA & Subtes 8 WU) -->
     <div id="q-ref-container" style="display:none; margin-bottom: 16px; background: #f8fafc; padding: 12px; border: 1px dashed var(--border); border-radius: 8px; text-align: center;">
-      <span style="font-size: 0.85rem; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">PILIHAN BENTUK (A - E):</span>
+      <span style="font-size: 0.85rem; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">PILIHAN RUJUKAN (A - E):</span>
       <img id="q-ref-img" src="" style="max-width: 100%; border-radius: 4px;" alt="Rujukan Bentuk">
     </div>
+
+    <!-- Teks Soal & Gambar Soal (Cukup 1 Saja Masing-Masing) -->
+    <div id="q-content" class="q-text"></div>
+    <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
+
+    <!-- Wadah Input Pilihan (MC / Digit RA / Text Input) -->
+    <div id="answer-area"></div>
+
+    <!-- Navigasi Bawah -->
+    <div class="footer">
+      <button class="btn btn-outline" id="btn-prev" onclick="changeQ(-1)">Kembali</button>
+      <button class="btn" id="btn-next" onclick="changeQ(1)">Selanjutnya ➔</button>
+    </div>
+
+    <!-- Grid Indikator Nomor -->
+    <div class="grid-nav" id="q-grid"></div>
+  </div>
 
     <!-- Teks Soal & Gambar Potongan Soal -->
     <div id="q-content" class="q-text"></div>
