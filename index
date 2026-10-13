@@ -107,11 +107,43 @@
     <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
   </div>
 
-  <!-- Screen 3: MEMORY PHASE (KHUSUS SUBTES 9) -->
-  <div id="screen-memory" class="body screen">
-    <h1>Fase Menghafal</h1>
-    <p>Hafalkan kata-kata pada tabel di bawah ini. Waktu Anda 3 menit sebelum soal dimunculkan.</p>
-    <img id="mem-image" class="q-image" src="" alt="Loading gambar...">
+<!-- Screen 3: MEMORY PHASE (KHUSUS SUBTES 9) -->
+  <div id="screen-memory" class="body screen" style="display: none; text-align: center;">
+    <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal (Daya Ingat)</h1>
+    <p style="color: var(--muted); margin-bottom: 20px;">
+      Hafalkan daftar kata berikut beserta kategorinya. Waktu Anda: <strong>3 Menit</strong>.<br>
+      Setelah waktu habis, tabel akan tertutup otomatis dan soal akan langsung dimulai.
+    </p>
+
+    <!-- Tabel Kata Hafalan Resmi Amthauer IST -->
+    <div style="max-width: 580px; margin: 0 auto 24px auto; background: #ffffff; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+        <tr style="border-bottom: 1px solid var(--border); background: #f8fafc;">
+          <td style="padding: 10px 16px; font-weight: 700; width: 130px; color: var(--primary);">BUNGA</td>
+          <td style="padding: 10px 16px;">Soka &bull; Larat &bull; Flamboyan &bull; Yasmin &bull; Dahlia</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 10px 16px; font-weight: 700; color: var(--primary);">PERKAKAS</td>
+          <td style="padding: 10px 16px;">Wajan &bull; Jarum &bull; Kikir &bull; Cangkul &bull; Palu</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border); background: #f8fafc;">
+          <td style="padding: 10px 16px; font-weight: 700; color: var(--primary);">BURUNG</td>
+          <td style="padding: 10px 16px;">Itik &bull; Elang &bull; Walet &bull; Tekukur &bull; Nuri</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 10px 16px; font-weight: 700; color: var(--primary);">KESENIAN</td>
+          <td style="padding: 10px 16px;">Quintet &bull; Arca &bull; Opera &bull; Gamelan &bull; Ukiran</td>
+        </tr>
+        <tr style="background: #f8fafc;">
+          <td style="padding: 10px 16px; font-weight: 700; color: var(--primary);">BINATANG</td>
+          <td style="padding: 10px 16px;">Musang &bull; Rusa &bull; Beruang &bull; Zebra &bull; Harimau</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="font-size: 0.9rem; color: #dc2626; font-weight: 600;">
+      Perhatikan timer di pojok kanan atas. Jangan merefresh halaman!
+    </div>
   </div>
 
   <!-- Screen 4: TEST RUNTIME -->
@@ -220,28 +252,34 @@
     showScreen("screen-instruction");
   }
 
-  function beginSubtest() {
+function beginSubtest() {
     const sub = IST_DATA[state.subIdx];
     state.qIdx = 0;
     if (!state.answers[sub.id]) state.answers[sub.id] = {};
 
+    // KONDISI 1: Jika Subtes 9 (memory) dan belum masuk fase hafalan
     if (sub.type === "memory" && !state.isMemoryPhase) {
       state.isMemoryPhase = true;
-      document.getElementById("mem-image").src = sub.memoryImage || "";
       showScreen("screen-memory");
+      // Timer berjalan 180 detik (3 Menit). Begitu habis, fungsi endMemoryPhase otomatis dipanggil!
       startTimer(sub.durationMemorySec, endMemoryPhase);
-    } else {
+    } 
+    // KONDISI 2: Masuk ke lembar soal utama (baik Subtes 1-8 atau Subtes 9 setelah hafalan)
+    else {
       showScreen("screen-test");
       buildGrid();
       renderQuestion();
+      // Timer soal berjalan 360 detik (6 Menit)
       startTimer(sub.durationSec, forceNextSubtest);
     }
   }
 
+  // Dipanggil otomatis saat countdown 3 menit hafalan menyentuh 00:00
   function endMemoryPhase() {
     state.isMemoryPhase = false;
     clearInterval(state.timerObj);
-    beginSubtest();
+    alert("Waktu menghafal telah selesai! Silakan jawab soal-soal berikut.");
+    beginSubtest(); // Otomatis berpindah ke Screen Soal Subtes 9
   }
 
   function startTimer(seconds, timeoutCallback) {
