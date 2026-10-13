@@ -32,7 +32,7 @@ const IST_DATA = [
       { q: "Jika kita mengetahui jumlah persentase nomor-nomor lotre yang tidak menang, maka kita dapat menghitung ...", options: ["A. jumlah nomor yang menang", "B. pajak lotre", "C. kemungkinan menang", "D. jumlah pengikut", "E. tinggi keuntungan"], key: "C" },
       { q: "Seorang anak yang berumur 10 tahun tingginya rata-rata ... cm", options: ["A. 150", "B. 130", "C. 110", "D. 105", "E. 115"], key: "B" }
     ]
-  }
+  },
   {
     id: "WA",
     name: "Subtes 2: Mencari Kata Berbeda (WA)",
@@ -61,7 +61,7 @@ const IST_DATA = [
       { q: "Kata yang berbeda adalah ...", options: ["A. Mengetam", "B. Memahat", "C. Mengasah", "D. Melicinkan", "E. Menggosok"], key: "B" },
       { q: "Kata yang berbeda adalah ...", options: ["A. Batu", "B. Baja", "C. Bulu", "D. Karet", "E. Kayu"], key: "C" }
     ]
-  }
+  },
   {
     id: "AN",
     name: "Subtes 3: Analogi Kata (AN)",
@@ -90,7 +90,7 @@ const IST_DATA = [
       { q: "Olahragawan : lembing = Cendikiawan : ?", options: ["A. perpustakaan", "B. penelitian", "C. karya", "D. studi", "E. mikroskop"], key: "E" },
       { q: "Keledai : kuda pacuan = pembakaran : ?", options: ["A. pemadam api", "B. obor", "C. letupan", "D. korek api", "E. lautan api"], key: "E" }
     ]
-  }
+  },
   {
     id: "GE",
     name: "Subtes 4: Sifat Bersama (GE)",
