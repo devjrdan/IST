@@ -410,9 +410,35 @@ questions: [
   <p>Setiap soal memperlihatkan salah satu dari kelima kubus tersebut dalam posisi/sudut pandang yang diputar atau digulingkan. Carilah kubus mana yang identik dengan soal tersebut!</p>
   <p><em>Perhatian: Anda harus memutar atau menggulingkan kubus di dalam pikiran. Ingat bahwa beberapa sisi mungkin tertutup dan menampilkan tanda baru.</em></p>
 `,
-    instructionImage: "wu_instruksi.png",
+instructionImage: "wu_instruksi.png",
     questions: [
-      { q: "Kubus mana yang sama dengan gambar rujukan?", image: "wu_1.png", options: ["A", "B", "C", "D", "E"], key: "B" }
+      // BARIS 1 (137 - 141)
+      { q: "Soal 137: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_137.png", options: ["A", "B", "C", "D", "E"], key: "E" },
+      { q: "Soal 138: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_138.png", options: ["A", "B", "C", "D", "E"], key: "D" },
+      { q: "Soal 139: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_139.png", options: ["A", "B", "C", "D", "E"], key: "A" },
+      { q: "Soal 140: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_140.png", options: ["A", "B", "C", "D", "E"], key: "C" },
+      { q: "Soal 141: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_141.png", options: ["A", "B", "C", "D", "E"], key: "B" },
+
+      // BARIS 2 (142 - 146)
+      { q: "Soal 142: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_142.png", options: ["A", "B", "C", "D", "E"], key: "D" },
+      { q: "Soal 143: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_143.png", options: ["A", "B", "C", "D", "E"], key: "A" },
+      { q: "Soal 144: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_144.png", options: ["A", "B", "C", "D", "E"], key: "B" },
+      { q: "Soal 145: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_145.png", options: ["A", "B", "C", "D", "E"], key: "E" },
+      { q: "Soal 146: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_146.png", options: ["A", "B", "C", "D", "E"], key: "C" },
+
+      // BARIS 3 (147 - 151)
+      { q: "Soal 147: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_147.png", options: ["A", "B", "C", "D", "E"], key: "D" },
+      { q: "Soal 148: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_148.png", options: ["A", "B", "C", "D", "E"], key: "C" },
+      { q: "Soal 149: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_149.png", options: ["A", "B", "C", "D", "E"], key: "B" },
+      { q: "Soal 150: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_150.png", options: ["A", "B", "C", "D", "E"], key: "E" },
+      { q: "Soal 151: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_151.png", options: ["A", "B", "C", "D", "E"], key: "A" },
+
+      // BARIS 4 (152 - 156)
+      { q: "Soal 152: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_152.png", options: ["A", "B", "C", "D", "E"], key: "A" },
+      { q: "Soal 153: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_153.png", options: ["A", "B", "C", "D", "E"], key: "B" },
+      { q: "Soal 154: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_154.png", options: ["A", "B", "C", "D", "E"], key: "C" },
+      { q: "Soal 155: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_155.png", options: ["A", "B", "C", "D", "E"], key: "D" },
+      { q: "Soal 156: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_156.png", options: ["A", "B", "C", "D", "E"], key: "E" }
     ]
   },
   {
