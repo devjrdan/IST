@@ -18,7 +18,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
-    .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
+    .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; min-height: 520px; }
     
     /* Header & Timer */
     .header { background: var(--primary); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
@@ -38,22 +38,23 @@
     .btn:hover { background: var(--primary-dark); }
     .btn:disabled { background: #94a3b8; cursor: not-allowed; }
     .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { background: #f1f5f9; }
     
-    /* Screen Management */
+    /* Screen State Management */
     .screen { display: none; }
     .screen.active { display: block; }
     
-    /* Question UI */
+    /* Question Styling */
     .q-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; line-height: 1.6; }
-    .q-image { max-width: 100%; border-radius: 6px; margin-bottom: 16px; border: 1px solid var(--border); display: block; }
+    .q-image { max-width: 100%; border-radius: 6px; margin: 0 auto 16px auto; border: 1px solid var(--border); display: block; }
     
-    .options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+    .options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
     .option-lbl { display: flex; align-items: center; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: 0.2s; }
     .option-lbl:hover { background: #f1f5f9; }
     .option-lbl input { margin-right: 12px; transform: scale(1.2); }
 
-    /* STYLING DIGIT SELECTOR (SUBTES 5: RA) */
-    .digit-scale-container { display: flex; flex-direction: column; align-items: center; margin: 24px 0; gap: 12px; }
+    /* Digit Selector Subtes 5 (RA) */
+    .digit-scale-container { display: flex; flex-direction: column; align-items: center; margin: 20px 0; gap: 12px; }
     .digit-scale-label { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .digit-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-width: 540px; }
     .btn-digit-scale { width: 44px; height: 48px; border-radius: 8px; border: 2px solid var(--border); background: #ffffff; color: #1e293b; font-size: 1.25rem; font-weight: 700; cursor: pointer; transition: all 0.15s ease-in-out; display: flex; align-items: center; justify-content: center; user-select: none; }
@@ -62,7 +63,7 @@
     .selected-preview { font-size: 0.9rem; color: var(--muted); min-height: 22px; }
     .selected-preview strong { color: var(--accent); }
     
-    /* Navigation Grid */
+    /* Grid Nomor Soal */
     .grid-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); }
     .nav-btn { width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border); background: #f8fafc; cursor: pointer; font-weight: 600; }
     .nav-btn.answered { background: #dbeafe; color: var(--primary); border-color: var(--primary); }
@@ -71,7 +72,6 @@
     .footer { display: flex; justify-content: space-between; margin-top: 24px; align-items: center; }
   </style>
   
-  <!-- Load Database dan Scoring Engine -->
   <script src="bank_soal.js"></script>
   <script src="norma.js"></script>
 </head>
@@ -83,7 +83,7 @@
     <div class="timer-badge" id="timer-display">--:--</div>
   </div>
 
-  <!-- Screen 1: SETUP -->
+  <!-- Screen 1: SETUP (Landing Page - MURNI TANPA TOMBOL KEMBALI/SELANJUTNYA) -->
   <div id="screen-setup" class="body screen active">
     <h1>Intelligenz Struktur Test (IST)</h1>
     <p>Tes ini terdiri dari 9 bagian dengan batas waktu yang ketat. Sistem akan memindahkan layar secara otomatis apabila waktu habis. Kerjakan secepat dan seteliti mungkin.</p>
@@ -101,13 +101,13 @@
   <!-- Screen 2: INSTRUCTION -->
   <div id="screen-instruction" class="body screen">
     <h1 id="inst-title">Judul Subtes</h1>
-    <img id="inst-image" src="" style="display:none; width: 100%; max-width: 650px; margin: 0 auto 20px auto; border: 1px solid var(--border); border-radius: 6px;">
+    <img id="inst-image" src="" style="display:none; width: 100%; max-width: 650px; margin: 0 auto 20px auto; border: 1px solid var(--border); border-radius: 6px;" alt="Instruksi">
     <div id="inst-text" style="margin-bottom: 24px; line-height: 1.6; color: var(--muted);">Penjelasan Subtes</div>
     <p style="color: #dc2626; font-weight: 600;">Waktu Mengerjakan: <span id="inst-time"></span></p>
     <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
   </div>
 
-<!-- Screen 3: MEMORY PHASE (KHUSUS SUBTES 9) -->
+  <!-- Screen 3: MEMORY PHASE (KHUSUS SUBTES 9) -->
   <div id="screen-memory" class="body screen" style="text-align: center;">
     <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal (Daya Ingat)</h1>
     <p style="color: var(--muted); margin-bottom: 20px;">
@@ -115,7 +115,6 @@
       Setelah waktu habis, tabel akan tertutup otomatis dan soal akan langsung dimulai.
     </p>
 
-    <!-- Tabel Kata Hafalan Resmi Amthauer IST -->
     <div style="max-width: 580px; margin: 0 auto 24px auto; background: #ffffff; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left;">
       <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
         <tr style="border-bottom: 1px solid var(--border); background: #f8fafc;">
@@ -142,11 +141,11 @@
     </div>
 
     <div style="font-size: 0.9rem; color: #dc2626; font-weight: 600;">
-      Perhatikan timer di pojok kanan atas. Jangan merefresh halaman!
+      Perhatikan timer di pojok kanan atas. Jangan me-refresh halaman!
     </div>
   </div>
 
-<!-- Screen 4: TEST RUNTIME -->
+  <!-- Screen 4: TEST RUNTIME (HANYA DI SINI TOMBOL NAVIGASI BERADA) -->
   <div id="screen-test" class="body screen">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
       <span id="test-subtest-name" style="font-weight: 700; color: var(--primary);">Subtes</span>
@@ -156,59 +155,40 @@
     <!-- Kotak Rujukan Gambar (Subtes 7 FA & 8 WU) -->
     <div id="q-ref-container" style="display:none; margin-bottom: 16px; background: #f8fafc; padding: 12px; border: 1px dashed var(--border); border-radius: 8px; text-align: center;">
       <span style="font-size: 0.85rem; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">PILIHAN RUJUKAN (A - E):</span>
-      <img id="q-ref-img" src="" style="max-width: 100%; border-radius: 4px;" alt="Rujukan Bentuk">
+      <img id="q-ref-img" src="" style="max-width: 100%; border-radius: 4px;" alt="Rujukan">
     </div>
 
-    <!-- Teks Soal & Gambar Soal -->
     <div id="q-content" class="q-text"></div>
     <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
 
-    <!-- Area Opsi Jawaban (MC / Digit RA / Text GE) -->
+    <!-- Area Opsi Jawaban Dinamis -->
     <div id="answer-area"></div>
 
-    <!-- TOMBOL NAVIGASI BAWAH (HARUS DI SINI) -->
+    <!-- Tombol Navigasi Pengerjaan -->
     <div class="footer">
       <button class="btn btn-outline" id="btn-prev" onclick="changeQ(-1)">Kembali</button>
       <button class="btn" id="btn-next" onclick="changeQ(1)">Selanjutnya ➔</button>
     </div>
 
-    <!-- Grid Indikator Nomor Soal -->
+    <!-- Grid Indikator Nomor -->
     <div class="grid-nav" id="q-grid"></div>
   </div>
 
-    <!-- Teks Soal & Gambar Potongan Soal -->
-    <div id="q-content" class="q-text"></div>
-    <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
-    <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
-
-    <!-- Wadah Input Dinamis (MC / Isian Teks / Deret Digit RA) -->
-    <div id="answer-area"></div>
-
-    <!-- Tombol Navigasi Bawah -->
-    <div class="footer">
-      <button class="btn btn-outline" id="btn-prev" onclick="changeQ(-1)">Kembali</button>
-      <button class="btn" id="btn-next" onclick="changeQ(1)">Selanjutnya ➔</button>
-    </div>
-
-    <!-- Grid Nomor Soal -->
-    <div class="grid-nav" id="q-grid"></div>
-  </div>
-
-<!-- Screen 5: FINISH -->
+  <!-- Screen 5: FINISH -->
   <div id="screen-finish" class="body screen" style="text-align: center;">
     <h1>Asesmen Selesai</h1>
     <p id="finish-msg">Mengirim jawaban Anda ke server...</p>
   </div>
-</div> <!-- Penutup .container -->
+</div>
 
 <script>
-  const WEBHOOK_URL = "URL_WEBHOOK_GOOGLESHEET_KAMU"; // Ganti dengan URL Google Apps Script milikmu
+  const WEBHOOK_URL = "URL_WEBHOOK_GOOGLESHEET_KAMU"; 
   
   let candidate = {};
   let state = {
     subIdx: 0,
     qIdx: 0,
-    answers: {}, // Format: { "RA": { 0: [3, 5], 1: [0, 6] }, "SE": { 0: "A" } }
+    answers: {},
     timeLeft: 0,
     timerObj: null,
     isMemoryPhase: false
@@ -268,34 +248,28 @@
     showScreen("screen-instruction");
   }
 
-function beginSubtest() {
+  function beginSubtest() {
     const sub = IST_DATA[state.subIdx];
     state.qIdx = 0;
     if (!state.answers[sub.id]) state.answers[sub.id] = {};
 
-    // KONDISI 1: Jika Subtes 9 (memory) dan belum masuk fase hafalan
     if (sub.type === "memory" && !state.isMemoryPhase) {
       state.isMemoryPhase = true;
       showScreen("screen-memory");
-      // Timer berjalan 180 detik (3 Menit). Begitu habis, fungsi endMemoryPhase otomatis dipanggil!
       startTimer(sub.durationMemorySec, endMemoryPhase);
-    } 
-    // KONDISI 2: Masuk ke lembar soal utama (baik Subtes 1-8 atau Subtes 9 setelah hafalan)
-    else {
+    } else {
       showScreen("screen-test");
       buildGrid();
       renderQuestion();
-      // Timer soal berjalan 360 detik (6 Menit)
       startTimer(sub.durationSec, forceNextSubtest);
     }
   }
 
-  // Dipanggil otomatis saat countdown 3 menit hafalan menyentuh 00:00
   function endMemoryPhase() {
     state.isMemoryPhase = false;
     clearInterval(state.timerObj);
     alert("Waktu menghafal telah selesai! Silakan jawab soal-soal berikut.");
-    beginSubtest(); // Otomatis berpindah ke Screen Soal Subtes 9
+    beginSubtest();
   }
 
   function startTimer(seconds, timeoutCallback) {
@@ -321,7 +295,7 @@ function beginSubtest() {
     document.getElementById("q-num").innerText = `Soal ${state.qIdx + 1} / ${sub.questions.length}`;
     document.getElementById("q-content").innerText = q.q;
 
-// Handle Gambar Rujukan Bentuk (A-E)
+    // Handle Gambar Rujukan (A-E)
     const refContainer = document.getElementById("q-ref-container");
     const refImg = document.getElementById("q-ref-img");
     if (q.refImage) {
@@ -331,7 +305,7 @@ function beginSubtest() {
       refContainer.style.display = "none";
     }
 
-    // Handle Gambar Potongan Soal
+    // Handle Gambar Soal
     const imgEl = document.getElementById("q-img");
     if (q.image) {
       imgEl.src = q.image;
@@ -344,7 +318,7 @@ function beginSubtest() {
     ansArea.innerHTML = "";
     let savedAns = state.answers[sub.id][state.qIdx];
 
-    // 1. TIPE DERET DIGIT (SUBTES 5: RA)
+    // 1. Digit Selector (RA)
     if (sub.id === "RA" || sub.type === "digit_select") {
       const selectedArr = Array.isArray(savedAns) ? savedAns : [];
       const digitList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
@@ -369,20 +343,23 @@ function beginSubtest() {
       `;
       ansArea.innerHTML = html;
     }
-    // 2. TIPE PILIHAN GANDA (MC & MEMORY)
+    // 2. Pilihan Ganda (MC & Memory)
     else if (sub.type === "mc" || sub.type === "memory") {
+      let html = `<div class="options-grid">`;
       q.options.forEach(opt => {
         let val = opt.charAt(0);
         let checked = savedAns === val ? "checked" : "";
-        ansArea.innerHTML += `
+        html += `
           <label class="option-lbl">
             <input type="radio" name="ist_opt" value="${val}" ${checked} onclick="saveAns('${val}')">
             ${opt}
           </label>
         `;
       });
+      html += `</div>`;
+      ansArea.innerHTML = html;
     } 
-    // 3. TIPE ISIAN TEKS BEBAS (SUBTES 4: GE)
+    // 3. Isian Teks Bebas (GE / ZR)
     else if (sub.type === "input") {
       ansArea.innerHTML = `
         <div class="form-group" style="max-width: 480px; margin: 16px auto;">
@@ -405,7 +382,6 @@ function beginSubtest() {
     updateGridColor();
   }
 
-  // LOGIKA KHUSUS SELEKSI DIGIT SUBTES 5 (RA)
   function toggleDigitRA(digit) {
     const subId = IST_DATA[state.subIdx].id;
     if (!Array.isArray(state.answers[subId][state.qIdx])) {
@@ -424,7 +400,6 @@ function beginSubtest() {
       chip.classList.add("active");
     }
 
-    // Update teks pratinjau seketika
     const preview = document.getElementById("selected-preview-text");
     if (arr.length === 0) {
       preview.innerHTML = "Digit dipilih: <em>(Belum ada)</em>";
@@ -488,7 +463,6 @@ function beginSubtest() {
     showScreen("screen-finish");
     document.getElementById("timer-display").innerText = "SELESAI";
     
-    // Hitung kalkulasi norma psikometri (norma.js)
     const scores = typeof calculateIST === "function" ? calculateIST(state.answers) : { rawScores: {}, totalRW: 0 };
     
     const payload = {
