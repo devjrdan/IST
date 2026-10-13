@@ -441,19 +441,54 @@ instructionImage: "wu_instruksi.png",
       { q: "Soal 156: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_156.png", options: ["A", "B", "C", "D", "E"], key: "E" }
     ]
   },
-  {
+{
     id: "ME",
     name: "Subtes 9: Daya Ingat (ME)",
-    durationMemorySec: 180, // 3 Menit Hafalan
-    durationSec: 360, // 6 Menit Soal
+    durationMemorySec: 180, // 3 Menit Fase Menghafal
+    durationSec: 360,       // 6 Menit Fase Pengerjaan Soal (20 Soal)
     type: "memory",
     memoryImage: "me_hafalan.png",
     instruction: `
-  <p>Anda akan diberikan waktu <strong>3 menit</strong> untuk menghafalkan daftar kata-kata yang dikelompokkan ke dalam 5 kategori.</p>
-  <p>Setelah 3 menit, tabel hafalan akan tertutup secara otomatis dan Anda akan diminta menjawab soal yang menanyakan kategori dari kata-kata yang dihafalkan.</p>
+  <p>Pada subtes terakhir ini, kemampuan daya ingat Anda akan diuji.</p>
+  <p>Setelah menekan tombol di bawah, Anda diberikan waktu <strong>tepat 3 menit</strong> untuk menghafalkan kata-kata yang dikelompokkan ke dalam 5 kategori:</p>
+  <ul style="margin: 8px 0 16px 20px; line-height: 1.8;">
+    <li><strong>A. BUNGA</strong></li>
+    <li><strong>B. PERKAKAS</strong></li>
+    <li><strong>C. BURUNG</strong></li>
+    <li><strong>D. KESENIAN</strong></li>
+    <li><strong>E. BINATANG</strong></li>
+  </ul>
+  <p>Setelah waktu hafalan 3 menit habis, tabel kata akan <strong>tertutup otomatis secara permanen</strong> dan layar soal akan langsung terbuka.</p>
+  <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
+    <strong>Contoh Soal:</strong><br>
+    Kata yang mempunyai huruf permulaan <strong>Z</strong> adalah sejenis ....<br>
+    a) bunga &nbsp; b) perkakas &nbsp; c) burung &nbsp; d) kesenian &nbsp; e) binatang<br>
+    <em>Penjelasan: Kata yang berawalan Z adalah <strong>Zebra</strong>. Zebra tergolong binatang.</em><br>
+    <em>Jawaban benar: <strong>e) binatang</strong></em>
+  </div>
 `,
     questions: [
-      { q: "Kata yang berawalan huruf K adalah sejenis...", options: ["A. Bunga", "B. Binatang", "C. Kesenian", "D. Negara", "E. Perkakas"], key: "B" }
+      // 20 Soal Daya Ingat (No. 157 - 176)
+      // Seluruh opsi A s/d E mengacu ke 5 kategori utama
+      { q: "Kata yang mempunyai huruf permulaan O adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Opera
+      { q: "Kata yang mempunyai huruf permulaan B adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Beruang
+      { q: "Kata yang mempunyai huruf permulaan F adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Flamboyan
+      { q: "Kata yang mempunyai huruf permulaan J adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Jarum
+      { q: "Kata yang mempunyai huruf permulaan E adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Elang
+      { q: "Kata yang mempunyai huruf permulaan C adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Cangkul
+      { q: "Kata yang mempunyai huruf permulaan G adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Gamelan
+      { q: "Kata yang mempunyai huruf permulaan T adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Tekukur
+      { q: "Kata yang mempunyai huruf permulaan M adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Musang
+      { q: "Kata yang mempunyai huruf permulaan S adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Soka
+      { q: "Kata yang mempunyai huruf permulaan Q adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Quintet
+      { q: "Kata yang mempunyai huruf permulaan W adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Wajan (atau Walet -> C)
+      { q: "Kata yang mempunyai huruf permulaan L adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Larat
+      { q: "Kata yang mempunyai huruf permulaan N adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Nuri
+      { q: "Kata yang mempunyai huruf permulaan H adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Harimau
+      { q: "Kata yang mempunyai huruf permulaan P adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Palu
+      { q: "Kata yang mempunyai huruf permulaan U adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Ukiran
+      { q: "Kata yang mempunyai huruf permulaan I adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Itik
+      { q: "Kata yang mempunyai huruf permulaan R adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Rusa
+      { q: "Kata yang mempunyai huruf permulaan D adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }  // Dahlia
     ]
   }
-];
