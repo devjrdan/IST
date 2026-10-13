@@ -9,7 +9,21 @@ const IST_DATA = [
     name: "Subtes 1: Melengkapi Kalimat (SE)",
     durationSec: 360, // 6 Menit
     type: "mc",
-    instruction: "Selesaikan kalimat berikut dengan memilih satu kata yang paling tepat dari 5 opsi yang tersedia.",
+    instruction: `
+  <p>Soal-soal 01 - 20 terdiri atas kalimat-kalimat. Pada setiap kalimat, satu kata hilang dan disediakan 5 (lima) kata pilihan sebagai penggantinya.</p>
+  <p>Pilihlah kata yang tepat yang dapat menyempurnakan kalimat tersebut!</p>
+  <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
+    <strong>Contoh 01:</strong><br>
+    Seekor kuda mempunyai kesamaan terbanyak dengan seekor ..............<br>
+    a) kucing &nbsp; b) bajing &nbsp; c) keledai &nbsp; d) lembu &nbsp; e) anjing<br>
+    <em>Jawaban benar: <strong>c) keledai</strong></em>
+    <br><br>
+    <strong>Contoh berikutnya:</strong><br>
+    Lawannya "harapan" ialah .............<br>
+    a) duka &nbsp; b) putus asa &nbsp; c) sengsara &nbsp; d) cinta &nbsp; e) benci<br>
+    <em>Jawaban benar: <strong>b) putus asa</strong></em>
+  </div>
+`
     questions: [
       { q: "Pengaruh seseorang terhadap orang lain seharusnya bergantung pada ...", options: ["A. kekuasaan", "B. bujukan", "C. kekayaan", "D. keberanian", "E. kewibawaan"], key: "E" },
       { q: "Lawan 'hemat' ialah ...", options: ["A. murah", "B. kikir", "C. boros", "D. bernilai", "E. kaya"], key: "C" },
@@ -38,7 +52,21 @@ const IST_DATA = [
     name: "Subtes 2: Mencari Kata Berbeda (WA)",
     durationSec: 360, // 6 Menit
     type: "mc",
-    instruction: "Carilah SATU kata yang tidak memiliki kesamaan dengan empat kata lainnya.",
+    instruction: `
+  <p>Ditentukan 5 kata. Pada 4 dari 5 kata tersebut terdapat suatu kesamaan.</p>
+  <p>Carilah kata yang kelima yang <strong>tidak memiliki kesamaan</strong> dengan keempat kata lainnya!</p>
+  <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
+    <strong>Contoh 02:</strong><br>
+    a) meja &nbsp; b) kursi &nbsp; c) burung &nbsp; d) lemari &nbsp; e) tempat tidur<br>
+    <em>Penjelasan: a, b, d, dan e adalah perabot rumah tangga (mebel), sedangkan c) burung bukan perabot rumah.</em><br>
+    <em>Jawaban benar: <strong>c) burung</strong></em>
+    <br><br>
+    <strong>Contoh berikutnya:</strong><br>
+    a) duduk &nbsp; b) berbaring &nbsp; c) berdiri &nbsp; d) berjalan &nbsp; e) berjongkok<br>
+    <em>Penjelasan: Pada a, b, c, dan e orang dalam keadaan diam/tidak bergerak, sedangkan d) orang dalam keadaan bergerak.</em><br>
+    <em>Jawaban benar: <strong>d) berjalan</strong></em>
+  </div>
+`
     questions: [
       { q: "Kata yang berbeda adalah ...", options: ["A. Lingkaran", "B. Panah", "C. Elips", "D. Busur", "E. Lengkungan"], key: "B" },
       { q: "Kata yang berbeda adalah ...", options: ["A. Mengetuk", "B. Memaki", "C. Menjahit", "D. Menggergaji", "E. Memukul"], key: "B" },
@@ -67,7 +95,23 @@ const IST_DATA = [
     name: "Subtes 3: Analogi Kata (AN)",
     durationSec: 420, // 7 Menit
     type: "mc",
-    instruction: "Temukan kata yang melengkapi analogi kata pertama dan kedua.",
+    instruction: `
+  <p>Ditentukan 3 (tiga) kata. Antara kata pertama dan kata kedua terdapat hubungan tertentu. Antara kata ketiga dan salah satu kata pilihan dari lima opsi harus memiliki <strong>hubungan yang sama</strong>.</p>
+  <p>Carilah kata yang melengkapi analogi tersebut!</p>
+  <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
+    <strong>Contoh 03:</strong><br>
+    Hutan : pohon = tembok : ?<br>
+    a) batu bata &nbsp; b) rumah &nbsp; c) semen &nbsp; d) putih &nbsp; e) dinding<br>
+    <em>Penjelasan: Hutan terdiri atas pohon-pohon, maka tembok terdiri atas batu-batu bata.</em><br>
+    <em>Jawaban benar: <strong>a) batu bata</strong></em>
+    <br><br>
+    <strong>Contoh berikutnya:</strong><br>
+    Gelap : terang = basah : ?<br>
+    a) hujan &nbsp; b) hari &nbsp; c) lembab &nbsp; d) angin &nbsp; e) kering<br>
+    <em>Penjelasan: Gelap lawannya terang, maka basah lawannya kering.</em><br>
+    <em>Jawaban benar: <strong>e) kering</strong></em>
+  </div>
+`
     questions: [
       { q: "Menemukan : menghilangkan = Mengingat : ?", options: ["A. menghapal", "B. mengenai", "C. melupakan", "D. berpikir", "E. memimpikan"], key: "C" },
       { q: "Bunga : jambangan = Burung : ?", options: ["A. sarang", "B. langit", "C. pagar", "D. pohon", "E. sangkar"], key: "E" },
@@ -96,7 +140,21 @@ const IST_DATA = [
     name: "Subtes 4: Sifat Bersama (GE)",
     durationSec: 480, // 8 Menit
     type: "input", // Isian Teks
-    instruction: "Ketik kata yang merangkum kesamaan dari dua kata berikut. (Contoh: Ayam & itik -> Burung)",
+    instruction: `
+  <p>Ditentukan dua kata. Carilah <strong>satu perkataan</strong> yang merangkum kesamaan atau meliputi pengertian kedua kata tersebut.</p>
+  <p>Ketik jawaban Anda pada kotak isian yang disediakan (usahakan mencari konsep/kategori yang paling pokok).</p>
+  <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
+    <strong>Contoh 04:</strong><br>
+    Ayam - itik<br>
+    <em>Penjelasan: Perkataan "burung" dapat meliputi pengertian kedua kata itu.</em><br>
+    <em>Jawaban yang diketik: <strong>burung</strong></em>
+    <br><br>
+    <strong>Contoh berikutnya:</strong><br>
+    Gaun - celana<br>
+    <em>Penjelasan: Keduanya tergolong dalam pakaian.</em><br>
+    <em>Jawaban yang diketik: <strong>pakaian</strong></em>
+  </div>
+`
     questions: [
       {
         q: "Mawar & Melati",
@@ -185,7 +243,21 @@ const IST_DATA = [
     name: "Subtes 5: Berhitung (RA)",
     durationSec: 600, // 10 Menit
     type: "digit_select", // Format pencoretan digit IST
-    instruction: "Selesaikan soal hitungan matematika berikut.",
+    instruction: `
+  <p>Persoalan berikutnya ialah soal-soal hitungan matematika. Selesaikan hitungan Anda di kertas buram terlebih dahulu.</p>
+  <p>Untuk menjawab di sistem, <strong>pilih/klik semua digit angka</strong> penyusun jawaban Anda pada deret angka (1 sampai 0). Urutan pemilihan angka tidak dipersoalkan.</p>
+  <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
+    <strong>Contoh 05:</strong><br>
+    Sebatang pensil harganya 25 rupiah. Berapakah harga 3 batang?<br>
+    <em>Jawabannya ialah: 75.</em><br>
+    <em>Maka pada sistem, klik digit: <strong>7</strong> dan <strong>5</strong>.</em>
+    <br><br>
+    <strong>Contoh lain:</strong><br>
+    Dengan sepeda Husin dapat mencapai 15 km dalam waktu 1 jam. Berapa km-kah yang dapat ia capai dalam waktu 4 jam?<br>
+    <em>Jawabannya ialah: 60.</em><br>
+    <em>Maka pada sistem, klik digit: <strong>6</strong> dan <strong>0</strong>.</em>
+  </div>
+`
     questions: [
       { q: "Jika seorang anak memiliki 50 rupiah dan memberikan 15 rupiah kepada orang lain, berapa rupiahkah yang masih tinggal padanya ?", key: "35", digits: [3, 5] },
       { q: "Berapa km-kah yang dapat ditempuh oleh kereta api dalam waktu 7 jam, jika kecepatannya 40 km/jam ?", key: "280", digits: [0, 2, 8] },
@@ -214,7 +286,21 @@ const IST_DATA = [
     name: "Subtes 6: Deret Angka (ZR)",
     durationSec: 600, // 10 Menit
     type: "input", // Isian Angka
-    instruction: "Lanjutkan pola deret angka berikut.",
+    instruction: `
+  <p>Pada persoalan berikut diberikan deret angka yang tersusun menurut aturan tertentu. Carilah angka lanjutan berikutnya menurut aturan deret tersebut!</p>
+  <p><em>(Petunjuk: Pola bisa berupa penjumlahan, pengurangan, perkalian, atau pembagian bertingkat).</em></p>
+  <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
+    <strong>Contoh 06:</strong><br>
+    2 &nbsp; 4 &nbsp; 6 &nbsp; 8 &nbsp; 10 &nbsp; 12 &nbsp; 14 &nbsp; ?<br>
+    <em>Penjelasan: Angka berikutnya didapat dengan menambah 2 pada angka di depannya.</em><br>
+    <em>Jawaban: <strong>16</strong></em>
+    <br><br>
+    <strong>Contoh berikutnya:</strong><br>
+    9 &nbsp; 7 &nbsp; 10 &nbsp; 8 &nbsp; 11 &nbsp; 9 &nbsp; 12 &nbsp; ?<br>
+    <em>Penjelasan: Pola bergantian dikurangi 2 (-2), lalu ditambah 3 (+3).</em><br>
+    <em>Jawaban: <strong>10</strong></em>
+  </div>
+`
     questions: [
       { q: "2   4   6   8   10   ?", key: "12" }
     ]
@@ -224,7 +310,11 @@ const IST_DATA = [
     name: "Subtes 7: Potongan Bentuk (FA)",
     durationSec: 420, // 7 Menit
     type: "mc",
-    instruction: "Gabungkan potongan gambar dan pilih bentuk utuh yang sesuai.",
+    instruction: `
+  <p>Setiap soal memperlihatkan suatu bentuk tertentu yang terpotong menjadi beberapa bagian.</p>
+  <p>Carilah di antara pilihan bentuk <strong>(A, B, C, D, E)</strong> bentuk utuh yang dapat terbentuk jika potongan-potongan tersebut disusun rapat tanpa ada kelebihan sudut atau celah ruang!</p>
+`,
+instructionImage: "fa_instruksi.png" // Foto halaman 13 yang kamu punya (potongan lingkaran, segitiga, kerucut)
     questions: [
       // Kamu upload gambar fa_1.png ke github, lalu masukin namanya ke image:
       { q: "Pilih bentuk yang tepat:", image: "fa_1.png", options: ["A", "B", "C", "D", "E"], key: "A" }
@@ -235,7 +325,12 @@ const IST_DATA = [
     name: "Subtes 8: Kubus (WU)",
     durationSec: 540, // 9 Menit
     type: "mc",
-    instruction: "Cari kubus yang sama dengan posisi yang diputar.",
+    instruction: `
+  <p>Ditentukan 5 (lima) buah kubus <strong>A, B, C, D, E</strong> dengan corak tanda yang berbeda pada setiap sisinya.</p>
+  <p>Setiap soal memperlihatkan salah satu dari kelima kubus tersebut dalam posisi/sudut pandang yang diputar atau digulingkan. Carilah kubus mana yang identik dengan soal tersebut!</p>
+  <p><em>Perhatian: Anda harus memutar atau menggulingkan kubus di dalam pikiran. Ingat bahwa beberapa sisi mungkin tertutup dan menampilkan tanda baru.</em></p>
+`,
+instructionImage: "wu_instruksi.png" // Foto halaman 15 yang kamu punya (rujukan kubus A s/d E)
     questions: [
       { q: "Kubus mana yang sama dengan gambar rujukan?", image: "wu_1.png", options: ["A", "B", "C", "D", "E"], key: "B" }
     ]
@@ -247,7 +342,11 @@ const IST_DATA = [
     durationSec: 360, // 6 Menit Soal
     type: "memory",
     memoryImage: "me_hafalan.png", // Gambar lembar hafalan kata
-    instruction: "Hafalkan daftar kata berikut selama 3 menit. Setelah itu, gambar akan tertutup otomatis.",
+    instruction: `
+  <p>Anda akan diberikan waktu <strong>3 menit</strong> untuk menghafalkan daftar kata-kata yang dikelompokkan ke dalam 5 kategori.</p>
+  <p>Setelah 3 menit, tabel hafalan akan tertutup secara otomatis dan Anda akan diminta menjawab soal yang menanyakan kategori dari kata-kata yang dihafalkan.</p>
+`,
+memoryImage: "me_hafalan.png" // Foto tabel daftar kata halaman 17 (Bunga, Perkakas, Burung, Kesenian, Binatang)
     questions: [
       { q: "Kata yang berawalan huruf K adalah sejenis...", options: ["A. Bunga", "B. Binatang", "C. Kesenian", "D. Negara", "E. Perkakas"], key: "B" }
     ]
