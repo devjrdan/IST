@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Asesmen IST Digital</title>
   <style>
-    :root { --primary: #2563eb; --primary-dark: #1d4ed8; --bg: #f8fafc; --surface: #ffffff; --text: #1e293b; --muted: #64748b; --border: #e2e8f0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+    :root { 
+      --primary: #2563eb; 
+      --primary-dark: #1d4ed8; 
+      --accent: #107c41;
+      --accent-dark: #0b5a2f;
+      --bg: #f8fafc; 
+      --surface: #ffffff; 
+      --text: #1e293b; 
+      --muted: #64748b; 
+      --border: #e2e8f0; 
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
     .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
     
@@ -21,9 +31,10 @@
     
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
-    .form-group input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border); }
+    .form-group input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border); outline: none; font-size: 1rem; }
+    .form-group input:focus { border-color: var(--primary); }
     
-    .btn { background: var(--primary); color: white; border: none; padding: 12px 24px; font-weight: 600; border-radius: 6px; cursor: pointer; display: inline-block; }
+    .btn { background: var(--primary); color: white; border: none; padding: 12px 24px; font-weight: 600; border-radius: 6px; cursor: pointer; display: inline-block; transition: background 0.2s; }
     .btn:hover { background: var(--primary-dark); }
     .btn:disabled { background: #94a3b8; cursor: not-allowed; }
     .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
@@ -33,21 +44,33 @@
     .screen.active { display: block; }
     
     /* Question UI */
-    .q-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; }
-    .q-image { max-width: 100%; border-radius: 6px; margin-bottom: 16px; border: 1px solid var(--border); }
+    .q-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; line-height: 1.6; }
+    .q-image { max-width: 100%; border-radius: 6px; margin-bottom: 16px; border: 1px solid var(--border); display: block; }
     
     .options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
     .option-lbl { display: flex; align-items: center; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: 0.2s; }
     .option-lbl:hover { background: #f1f5f9; }
     .option-lbl input { margin-right: 12px; transform: scale(1.2); }
+
+    /* STYLING DIGIT SELECTOR (SUBTES 5: RA) */
+    .digit-scale-container { display: flex; flex-direction: column; align-items: center; margin: 24px 0; gap: 12px; }
+    .digit-scale-label { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .digit-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-width: 540px; }
+    .btn-digit-scale { width: 44px; height: 48px; border-radius: 8px; border: 2px solid var(--border); background: #ffffff; color: #1e293b; font-size: 1.25rem; font-weight: 700; cursor: pointer; transition: all 0.15s ease-in-out; display: flex; align-items: center; justify-content: center; user-select: none; }
+    .btn-digit-scale:hover { border-color: var(--accent); background: #f0fdf4; }
+    .btn-digit-scale.active { background: var(--accent) !important; color: #ffffff !important; border-color: var(--accent-dark) !important; box-shadow: 0 4px 10px rgba(16, 124, 65, 0.35); transform: translateY(-2px); }
+    .selected-preview { font-size: 0.9rem; color: var(--muted); min-height: 22px; }
+    .selected-preview strong { color: var(--accent); }
     
+    /* Navigation Grid */
     .grid-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); }
     .nav-btn { width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border); background: #f8fafc; cursor: pointer; font-weight: 600; }
     .nav-btn.answered { background: #dbeafe; color: var(--primary); border-color: var(--primary); }
     .nav-btn.current { border: 2px solid var(--primary-dark); }
     
-    .footer { display: flex; justify-content: space-between; margin-top: 20px; }
+    .footer { display: flex; justify-content: space-between; margin-top: 24px; align-items: center; }
   </style>
+  
   <!-- Load Database dan Scoring Engine -->
   <script src="bank_soal.js"></script>
   <script src="norma.js"></script>
@@ -59,71 +82,6 @@
     <h2 id="header-title">IST Digital</h2>
     <div class="timer-badge" id="timer-display">--:--</div>
   </div>
-/* --- STYLING OPSI 2: LIKERT / DIGIT SELECTOR (IST RA) --- */
-.digit-scale-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 24px 0;
-  gap: 12px;
-}
-
-.digit-scale-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--muted, #64748b);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.digit-row {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 540px;
-}
-
-.btn-digit-scale {
-  width: 44px;
-  height: 48px;
-  border-radius: 8px;
-  border: 2px solid var(--border, #cbd5e1);
-  background: #ffffff;
-  color: #1e293b;
-  font-size: 1.25rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-}
-
-.btn-digit-scale:hover {
-  border-color: #107c41;
-  background: #f0fdf4;
-}
-
-/* Status saat digit dicoret/dipilih */
-.btn-digit-scale.active {
-  background: #107c41 !important;
-  color: #ffffff !important;
-  border-color: #0b5a2f !important;
-  box-shadow: 0 4px 10px rgba(16, 124, 65, 0.35);
-  transform: translateY(-2px);
-}
-
-.selected-preview {
-  font-size: 0.9rem;
-  color: var(--muted, #64748b);
-  min-height: 22px;
-}
-
-.selected-preview strong {
-  color: #107c41;
-}
 
   <!-- Screen 1: SETUP -->
   <div id="screen-setup" class="body screen active">
@@ -131,7 +89,7 @@
     <p>Tes ini terdiri dari 9 bagian dengan batas waktu yang ketat. Sistem akan memindahkan layar secara otomatis apabila waktu habis. Kerjakan secepat dan seteliti mungkin.</p>
     <div class="form-group">
       <label>Nama Lengkap</label>
-      <input type="text" id="user-name" placeholder="Masukkan nama" required>
+      <input type="text" id="user-name" placeholder="Masukkan nama lengkap" required>
     </div>
     <div class="form-group">
       <label>Email</label>
@@ -140,16 +98,11 @@
     <button class="btn" onclick="startEngine()">Mulai Rangkaian Tes</button>
   </div>
 
-<!-- Screen 2: INSTRUCTION -->
+  <!-- Screen 2: INSTRUCTION -->
   <div id="screen-instruction" class="body screen">
     <h1 id="inst-title">Judul Subtes</h1>
-    
-    <!-- ELEMEN BARU: Penampung Gambar Instruksi -->
     <img id="inst-image" src="" style="display:none; width: 100%; max-width: 650px; margin: 0 auto 20px auto; border: 1px solid var(--border); border-radius: 6px;">
-    
-    <!-- ELEMEN DIUPDATE: Berubah jadi <div> agar mendukung format paragraf HTML -->
     <div id="inst-text" style="margin-bottom: 24px; line-height: 1.6; color: var(--muted);">Penjelasan Subtes</div>
-    
     <p style="color: #dc2626; font-weight: 600;">Waktu Mengerjakan: <span id="inst-time"></span></p>
     <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
   </div>
@@ -161,29 +114,28 @@
     <img id="mem-image" class="q-image" src="" alt="Loading gambar...">
   </div>
 
-<!-- Screen 4: TEST RUNTIME -->
-    <div id="screen-test" class="screen" style="display: none; padding: 24px;">
-      <!-- Header HUD Soal -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
-        <span id="test-subtest-name" style="font-weight: 700; color: #107c41; font-size: 1.05rem;">Subtes 5: Berhitung (RA)</span>
-        <span id="test-q-counter" style="font-weight: 600; color: #64748b; font-size: 0.9rem;">Soal 1 / 20</span>
-      </div>
-
-      <!-- Teks Pertanyaan -->
-      <div id="test-question-body" style="font-size: 1.15rem; line-height: 1.6; color: #1e293b; min-height: 70px; margin-bottom: 20px;">
-        <!-- Teks soal akan dirender secara dinamis di sini -->
-      </div>
-
-      <!-- Wadah Interaktif: Berisi Tombol Angka (RA), Pilihan Ganda (MC), atau Input Teks (GE) -->
-      <div id="test-input-wrapper"></div>
-
-      <!-- Tombol Navigasi / Submit Jawaban -->
-      <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-        <button id="btn-next-question" class="btn" style="width: auto; min-width: 180px; padding: 12px 28px;" onclick="handleSubmitAnswer()">
-          Lanjut Soal Berikutnya ➔
-        </button>
-      </div>
+  <!-- Screen 4: TEST RUNTIME -->
+  <div id="screen-test" class="body screen">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+      <span id="test-subtest-name" style="font-weight: 700; color: var(--primary);">Subtes</span>
+      <span id="q-num" style="font-weight: 600; color: var(--muted); font-size: 0.9rem;">Soal 1 / 20</span>
     </div>
+
+    <div id="q-content" class="q-text"></div>
+    <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
+
+    <!-- Wadah Input Dinamis (MC / Isian Teks / Deret Digit RA) -->
+    <div id="answer-area"></div>
+
+    <!-- Tombol Navigasi Bawah -->
+    <div class="footer">
+      <button class="btn btn-outline" id="btn-prev" onclick="changeQ(-1)">Kembali</button>
+      <button class="btn" id="btn-next" onclick="changeQ(1)">Selanjutnya ➔</button>
+    </div>
+
+    <!-- Grid Nomor Soal -->
+    <div class="grid-nav" id="q-grid"></div>
+  </div>
 
   <!-- Screen 5: FINISH -->
   <div id="screen-finish" class="body screen" style="text-align: center;">
@@ -193,13 +145,13 @@
 </div>
 
 <script>
-  const WEBHOOK_URL = "URL_WEBHOOK_GOOGLESHEET_KAMU"; // GANTI DENGAN LINK APPS SCRIPT
+  const WEBHOOK_URL = "URL_WEBHOOK_GOOGLESHEET_KAMU"; // Ganti dengan URL Google Apps Script milikmu
   
   let candidate = {};
   let state = {
     subIdx: 0,
     qIdx: 0,
-    answers: {}, // Format: { "SE": { 0: "A", 1: "C" }, "WA": ... }
+    answers: {}, // Format: { "RA": { 0: [3, 5], 1: [0, 6] }, "SE": { 0: "A" } }
     timeLeft: 0,
     timerObj: null,
     isMemoryPhase: false
@@ -219,10 +171,10 @@
   function startEngine() {
     candidate.name = document.getElementById("user-name").value.trim();
     candidate.email = document.getElementById("user-email").value.trim();
-    if (!candidate.name || !candidate.email) return alert("Isi data diri!");
+    if (!candidate.name || !candidate.email) return alert("Mohon lengkapi data diri!");
     
     if (localStorage.getItem("ist_done_" + candidate.email)) {
-      return alert("Akun ini sudah menyelesaikan tes.");
+      return alert("Akun email ini tercatat sudah menyelesaikan tes.");
     }
 
     state.subIdx = 0;
@@ -230,7 +182,7 @@
     loadInstruction();
   }
 
-function loadInstruction() {
+  function loadInstruction() {
     if (state.subIdx >= IST_DATA.length) {
       submitAllData();
       return;
@@ -241,11 +193,8 @@ function loadInstruction() {
     document.getElementById("timer-display").innerText = "--:--";
     
     document.getElementById("inst-title").innerText = sub.name;
-    
-    // Perubahan 1: Memakai innerHTML agar tulisan instruksi bisa ditebalkan (Bold) atau di-Enter (<br>)
     document.getElementById("inst-text").innerHTML = sub.instruction;
     
-    // Perubahan 2: Logika pemanggilan gambar instruksi
     const instImg = document.getElementById("inst-image");
     if (sub.instructionImage) {
       instImg.src = sub.instructionImage;
@@ -268,13 +217,11 @@ function loadInstruction() {
     if (!state.answers[sub.id]) state.answers[sub.id] = {};
 
     if (sub.type === "memory" && !state.isMemoryPhase) {
-      // Masuk fase menghafal
       state.isMemoryPhase = true;
       document.getElementById("mem-image").src = sub.memoryImage || "";
       showScreen("screen-memory");
       startTimer(sub.durationMemorySec, endMemoryPhase);
     } else {
-      // Masuk fase soal
       showScreen("screen-test");
       buildGrid();
       renderQuestion();
@@ -285,7 +232,7 @@ function loadInstruction() {
   function endMemoryPhase() {
     state.isMemoryPhase = false;
     clearInterval(state.timerObj);
-    beginSubtest(); // Lanjut ke fase soal subtes 9
+    beginSubtest();
   }
 
   function startTimer(seconds, timeoutCallback) {
@@ -307,10 +254,11 @@ function loadInstruction() {
     const sub = IST_DATA[state.subIdx];
     const q = sub.questions[state.qIdx];
     
-    document.getElementById("q-num").innerText = `${state.qIdx + 1} dari ${sub.questions.length}`;
+    document.getElementById("test-subtest-name").innerText = sub.name;
+    document.getElementById("q-num").innerText = `Soal ${state.qIdx + 1} / ${sub.questions.length}`;
     document.getElementById("q-content").innerText = q.q;
 
-    // Handle Image
+    // Handle Gambar Soal jika ada
     const imgEl = document.getElementById("q-img");
     if (q.image) {
       imgEl.src = q.image;
@@ -319,14 +267,39 @@ function loadInstruction() {
       imgEl.style.display = "none";
     }
 
-    // Handle Input Area
     const ansArea = document.getElementById("answer-area");
     ansArea.innerHTML = "";
-    let savedAns = state.answers[sub.id][state.qIdx] || "";
+    let savedAns = state.answers[sub.id][state.qIdx];
 
-    if (sub.type === "mc" || sub.type === "memory") {
+    // 1. TIPE DERET DIGIT (SUBTES 5: RA)
+    if (sub.id === "RA" || sub.type === "digit_select") {
+      const selectedArr = Array.isArray(savedAns) ? savedAns : [];
+      const digitList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+      
+      let html = `
+        <div class="digit-scale-container">
+          <div class="digit-scale-label">Pilih seluruh digit pembentuk jawaban Anda:</div>
+          <div class="digit-row">
+            ${digitList.map(num => `
+              <button type="button" 
+                      class="btn-digit-scale ${selectedArr.includes(num) ? 'active' : ''}" 
+                      id="digit-chip-${num}" 
+                      onclick="toggleDigitRA(${num})">
+                ${num}
+              </button>
+            `).join("")}
+          </div>
+          <div class="selected-preview" id="selected-preview-text">
+            ${selectedArr.length > 0 ? `Digit dipilih: <strong>[ ${[...selectedArr].sort((a,b)=>a-b).join(", ")} ]</strong>` : 'Digit dipilih: <em>(Belum ada)</em>'}
+          </div>
+        </div>
+      `;
+      ansArea.innerHTML = html;
+    }
+    // 2. TIPE PILIHAN GANDA (MC & MEMORY)
+    else if (sub.type === "mc" || sub.type === "memory") {
       q.options.forEach(opt => {
-        let val = opt.charAt(0); // Ambil "A" dari "A. Jawaban"
+        let val = opt.charAt(0);
         let checked = savedAns === val ? "checked" : "";
         ansArea.innerHTML += `
           <label class="option-lbl">
@@ -335,23 +308,56 @@ function loadInstruction() {
           </label>
         `;
       });
-    } else if (sub.type === "input") {
+    } 
+    // 3. TIPE ISIAN TEKS BEBAS (SUBTES 4: GE)
+    else if (sub.type === "input") {
       ansArea.innerHTML = `
-        <div class="form-group">
-          <input type="text" id="text_ans" placeholder="Ketik jawaban di sini..." value="${savedAns}" onblur="saveAns(this.value)">
+        <div class="form-group" style="max-width: 480px; margin: 16px auto;">
+          <input type="text" id="text_ans" placeholder="Ketik jawaban Anda di sini..." value="${savedAns || ''}" oninput="saveAns(this.value)">
         </div>
       `;
     }
 
-    // Button States
+    // Tombol Navigasi
     document.getElementById("btn-prev").disabled = (state.qIdx === 0);
     let btnNext = document.getElementById("btn-next");
     if (state.qIdx === sub.questions.length - 1) {
-      btnNext.innerText = "Akhiri Subtes Ini";
-      btnNext.onclick = forceNextSubtest; // Tombol submit manual
+      btnNext.innerText = "Selesaikan Subtes ✓";
+      btnNext.onclick = forceNextSubtest;
     } else {
-      btnNext.innerText = "Selanjutnya";
+      btnNext.innerText = "Selanjutnya ➔";
       btnNext.onclick = () => changeQ(1);
+    }
+
+    updateGridColor();
+  }
+
+  // LOGIKA KHUSUS SELEKSI DIGIT SUBTES 5 (RA)
+  function toggleDigitRA(digit) {
+    const subId = IST_DATA[state.subIdx].id;
+    if (!Array.isArray(state.answers[subId][state.qIdx])) {
+      state.answers[subId][state.qIdx] = [];
+    }
+
+    let arr = state.answers[subId][state.qIdx];
+    const chip = document.getElementById(`digit-chip-${digit}`);
+    const idx = arr.indexOf(digit);
+
+    if (idx > -1) {
+      arr.splice(idx, 1);
+      chip.classList.remove("active");
+    } else {
+      arr.push(digit);
+      chip.classList.add("active");
+    }
+
+    // Update teks pratinjau seketika
+    const preview = document.getElementById("selected-preview-text");
+    if (arr.length === 0) {
+      preview.innerHTML = "Digit dipilih: <em>(Belum ada)</em>";
+    } else {
+      const sorted = [...arr].sort((a, b) => a - b);
+      preview.innerHTML = `Digit dipilih: <strong>[ ${sorted.join(", ")} ]</strong>`;
     }
 
     updateGridColor();
@@ -364,18 +370,11 @@ function loadInstruction() {
   }
 
   function changeQ(dir) {
-    // Save text input if typing before moving
-    const textInput = document.getElementById("text_ans");
-    if (textInput) saveAns(textInput.value);
-
     state.qIdx += dir;
     renderQuestion();
   }
 
   function goToQ(idx) {
-    const textInput = document.getElementById("text_ans");
-    if (textInput) saveAns(textInput.value);
-    
     state.qIdx = idx;
     renderQuestion();
   }
@@ -398,15 +397,15 @@ function loadInstruction() {
       
       btn.classList.remove("current", "answered");
       if (i === state.qIdx) btn.classList.add("current");
-      if (state.answers[subId][i]) btn.classList.add("answered");
+      
+      const ans = state.answers[subId]?.[i];
+      if (Array.isArray(ans) ? ans.length > 0 : Boolean(ans)) {
+        btn.classList.add("answered");
+      }
     }
   }
 
   function forceNextSubtest() {
-    // Pindah ke subtes berikutnya
-    const textInput = document.getElementById("text_ans");
-    if (textInput) saveAns(textInput.value);
-    
     clearInterval(state.timerObj);
     state.subIdx++;
     loadInstruction();
@@ -416,8 +415,8 @@ function loadInstruction() {
     showScreen("screen-finish");
     document.getElementById("timer-display").innerText = "SELESAI";
     
-    // Kalkulasi pakai norma.js
-    const scores = calculateIST(state.answers);
+    // Hitung kalkulasi norma psikometri (norma.js)
+    const scores = typeof calculateIST === "function" ? calculateIST(state.answers) : { rawScores: {}, totalRW: 0 };
     
     const payload = {
       timestamp: new Date().toLocaleString("id-ID"),
@@ -430,7 +429,6 @@ function loadInstruction() {
 
     localStorage.setItem("ist_done_" + candidate.email, "true");
 
-    // Pengiriman Non-Blocking (Background Fetch)
     fetch(WEBHOOK_URL, {
       method: "POST",
       mode: "no-cors",
@@ -438,156 +436,12 @@ function loadInstruction() {
       body: JSON.stringify(payload)
     }).then(() => {
       document.getElementById("finish-msg").innerHTML = 
-        `<span style="color: #107c41; font-weight: 700;">Data berhasil terkirim.</span><br>Silakan konfirmasi ke penguji Anda.`;
+        `<span style="color: #107c41; font-weight: 700; font-size: 1.1rem;">Data berhasil terkirim.</span><br><br>Terima kasih telah mengikuti rangkaian Asesmen IST. Silakan konfirmasi ke pihak penguji.`;
     }).catch(e => {
       document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
     });
   }
 </script>
-// VARIABEL STATE RUNTIME
-let currentSelectedDigits = [];
-let userAnswers = {}; // Menampung hasil jawaban kandidat
 
-/**
- * 1. Fungsi Utama Render Soal
- */
-function renderQuestion() {
-  const currentSubtest = subtests[currentSubtestIndex]; // Mengambil subtes aktif
-  const currentQ = currentSubtest.questions[currentQuestionIndex];
-  
-  // Update HUD
-  document.getElementById("test-subtest-name").innerText = currentSubtest.name;
-  document.getElementById("test-q-counter").innerText = `Soal ${currentQuestionIndex + 1} / ${currentSubtest.questions.length}`;
-  document.getElementById("test-question-body").innerText = currentQ.q;
-  
-  const container = document.getElementById("test-input-wrapper");
-  container.innerHTML = "";
-  currentSelectedDigits = []; // Reset pilihan digit untuk soal baru
-
-  // Update Teks Tombol di Nomor Terakhir
-  const btnNext = document.getElementById("btn-next-question");
-  if (currentQuestionIndex === currentSubtest.questions.length - 1) {
-    btnNext.innerText = "Selesaikan Subtes ✓";
-  } else {
-    btnNext.innerText = "Lanjut Soal Berikutnya ➔";
-  }
-
-  // --- KONDISI A: Subtes 5 (RA) Tipe Digit Selector ala Lembar Jawab Asli IST ---
-  if (currentSubtest.id === "RA" || currentSubtest.type === "digit_select") {
-    const digitList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-    
-    let html = `
-      <div class="digit-scale-container">
-        <div class="digit-scale-label">Pilih seluruh digit penyusun jawaban Anda:</div>
-        <div class="digit-row">
-          ${digitList.map(num => `
-            <button type="button" class="btn-digit-scale" id="digit-chip-${num}" onclick="toggleDigitSelection(${num})">
-              ${num}
-            </button>
-          `).join("")}
-        </div>
-        <div class="selected-preview" id="selected-preview-text">Digit dipilih: <em>(Belum ada)</em></div>
-      </div>
-    `;
-    container.innerHTML = html;
-  } 
-  
-  // --- KONDISI B: Subtes Isian Teks Bebas (Misal Subtes 4: GE) ---
-  else if (currentSubtest.type === "input") {
-    container.innerHTML = `
-      <div style="max-width: 480px; margin: 20px auto;">
-        <input type="text" id="raw-text-answer" class="form-control" placeholder="Ketik jawaban Anda di sini..." autocomplete="off" style="width: 100%; padding: 12px; font-size: 1.05rem;" />
-      </div>
-    `;
-    setTimeout(() => document.getElementById("raw-text-answer")?.focus(), 100);
-  }
-
-  // --- KONDISI C: Subtes Pilihan Ganda Biasa (MC) ---
-  else if (currentSubtest.type === "mc") {
-    container.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 580px; margin: 16px auto;">
-        ${currentQ.options.map(opt => `
-          <button type="button" class="btn btn-outline" style="text-align: left; padding: 12px 18px;" onclick="selectMCOption('${opt[0]}')">
-            ${opt}
-          </button>
-        `).join("")}
-      </div>
-    `;
-  }
-}
-
-/**
- * 2. Logika Toggle Seleksi Digit Angka (Subtes RA)
- */
-function toggleDigitSelection(digit) {
-  const chip = document.getElementById(`digit-chip-${digit}`);
-  const idx = currentSelectedDigits.indexOf(digit);
-
-  if (idx > -1) {
-    // Jika sudah terpilih -> batalkan pilihan
-    currentSelectedDigits.splice(idx, 1);
-    chip.classList.remove("active");
-  } else {
-    // Jika belum terpilih -> tambahkan ke daftar
-    currentSelectedDigits.push(digit);
-    chip.classList.add("active");
-  }
-
-  // Tampilkan preview angka yang dipilih secara realtime
-  const preview = document.getElementById("selected-preview-text");
-  if (currentSelectedDigits.length === 0) {
-    preview.innerHTML = "Digit dipilih: <em>(Belum ada)</em>";
-  } else {
-    // Urutkan angka agar rapi dilihat
-    const sorted = [...currentSelectedDigits].sort((a, b) => a - b);
-    preview.innerHTML = `Digit dipilih: <strong>[ ${sorted.join(", ")} ]</strong>`;
-  }
-}
-
-/**
- * 3. Handler Tombol Submit / Lanjut Soal
- */
-function handleSubmitAnswer() {
-  const currentSubtest = subtests[currentSubtestIndex];
-  const currentQ = currentSubtest.questions[currentQuestionIndex];
-  
-  let finalAnswerRecorded = null;
-  let isCorrectScore = 0;
-
-  // Evaluasi jika bertipe Digit Selector (RA)
-  if (currentSubtest.id === "RA" || currentSubtest.type === "digit_select") {
-    finalAnswerRecorded = [...currentSelectedDigits].sort((a, b) => a - b);
-
-    // Kunci jawaban dari bank_soal (misal: [3, 5] untuk hasil 35)
-    const targetKeyDigits = [...currentQ.digits].sort((a, b) => a - b);
-
-    // Validasi kesamaan elemen tanpa peduli urutan klik peserta
-    const isSameLength = finalAnswerRecorded.length === targetKeyDigits.length;
-    const isMatched = isSameLength && finalAnswerRecorded.every((val, i) => val === targetKeyDigits[i]);
-    isCorrectScore = isMatched ? 1 : 0;
-  }
-  // Evaluasi isian teks (GE)
-  else if (currentSubtest.type === "input") {
-    const rawVal = document.getElementById("raw-text-answer")?.value || "";
-    finalAnswerRecorded = rawVal.trim();
-    isCorrectScore = gradeGEAnswer(finalAnswerRecorded, currentQ); // Menggunakan auto-grader GE sebelumnya
-  }
-
-  // Rekam ke koleksi data jawaban
-  if (!userAnswers[currentSubtest.id]) userAnswers[currentSubtest.id] = [];
-  userAnswers[currentSubtest.id].push({
-    questionNo: currentQuestionIndex + 1,
-    jawabanPeserta: finalAnswerRecorded,
-    skor: isCorrectScore
-  });
-
-  // Navigasi ke nomor berikutnya atau lanjut ke subtes berikutnya
-  if (currentQuestionIndex < currentSubtest.questions.length - 1) {
-    currentQuestionIndex++;
-    renderQuestion();
-  } else {
-    finishCurrentSubtest();
-  }
-}
 </body>
 </html>
