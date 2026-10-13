@@ -153,26 +153,26 @@
       <span id="q-num" style="font-weight: 600; color: var(--muted); font-size: 0.9rem;">Soal 1 / 20</span>
     </div>
 
-    <!-- Kotak Gambar Rujukan (Khusus Subtes 7 FA & Subtes 8 WU) -->
+    <!-- Kotak Rujukan Gambar (Subtes 7 FA & 8 WU) -->
     <div id="q-ref-container" style="display:none; margin-bottom: 16px; background: #f8fafc; padding: 12px; border: 1px dashed var(--border); border-radius: 8px; text-align: center;">
       <span style="font-size: 0.85rem; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">PILIHAN RUJUKAN (A - E):</span>
       <img id="q-ref-img" src="" style="max-width: 100%; border-radius: 4px;" alt="Rujukan Bentuk">
     </div>
 
-    <!-- Teks Soal & Gambar Soal (Cukup 1 Saja Masing-Masing) -->
+    <!-- Teks Soal & Gambar Soal -->
     <div id="q-content" class="q-text"></div>
     <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
 
-    <!-- Wadah Input Pilihan (MC / Digit RA / Text Input) -->
+    <!-- Area Opsi Jawaban (MC / Digit RA / Text GE) -->
     <div id="answer-area"></div>
 
-    <!-- Navigasi Bawah -->
+    <!-- TOMBOL NAVIGASI BAWAH (HARUS DI SINI) -->
     <div class="footer">
       <button class="btn btn-outline" id="btn-prev" onclick="changeQ(-1)">Kembali</button>
       <button class="btn" id="btn-next" onclick="changeQ(1)">Selanjutnya ➔</button>
     </div>
 
-    <!-- Grid Indikator Nomor -->
+    <!-- Grid Indikator Nomor Soal -->
     <div class="grid-nav" id="q-grid"></div>
   </div>
 
@@ -194,12 +194,12 @@
     <div class="grid-nav" id="q-grid"></div>
   </div>
 
-  <!-- Screen 5: FINISH -->
+<!-- Screen 5: FINISH -->
   <div id="screen-finish" class="body screen" style="text-align: center;">
     <h1>Asesmen Selesai</h1>
     <p id="finish-msg">Mengirim jawaban Anda ke server...</p>
   </div>
-</div>
+</div> <!-- Penutup .container -->
 
 <script>
   const WEBHOOK_URL = "URL_WEBHOOK_GOOGLESHEET_KAMU"; // Ganti dengan URL Google Apps Script milikmu
