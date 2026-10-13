@@ -1,6 +1,7 @@
 // FORMAT TIPE SOAL:
 // "mc" = Pilihan Ganda (A, B, C, D, E)
 // "input" = Isian Teks/Angka (Subtes GE, RA, ZR)
+// "digit_select" = Khusus Subtes 5 RA (Pencoretan Digit IST)
 // "memory" = Khusus Subtes 9 (Hafalan 3 menit lalu soal)
 
 const IST_DATA = [
@@ -19,11 +20,11 @@ const IST_DATA = [
     <em>Jawaban benar: <strong>c) keledai</strong></em>
     <br><br>
     <strong>Contoh berikutnya:</strong><br>
-    Lawannya "harapan" ialah .............<br>
+    Lawannya 'harapan' ialah .............<br>
     a) duka &nbsp; b) putus asa &nbsp; c) sengsara &nbsp; d) cinta &nbsp; e) benci<br>
     <em>Jawaban benar: <strong>b) putus asa</strong></em>
   </div>
-`
+`,
     questions: [
       { q: "Pengaruh seseorang terhadap orang lain seharusnya bergantung pada ...", options: ["A. kekuasaan", "B. bujukan", "C. kekayaan", "D. keberanian", "E. kewibawaan"], key: "E" },
       { q: "Lawan 'hemat' ialah ...", options: ["A. murah", "B. kikir", "C. boros", "D. bernilai", "E. kaya"], key: "C" },
@@ -66,7 +67,7 @@ const IST_DATA = [
     <em>Penjelasan: Pada a, b, c, dan e orang dalam keadaan diam/tidak bergerak, sedangkan d) orang dalam keadaan bergerak.</em><br>
     <em>Jawaban benar: <strong>d) berjalan</strong></em>
   </div>
-`
+`,
     questions: [
       { q: "Kata yang berbeda adalah ...", options: ["A. Lingkaran", "B. Panah", "C. Elips", "D. Busur", "E. Lengkungan"], key: "B" },
       { q: "Kata yang berbeda adalah ...", options: ["A. Mengetuk", "B. Memaki", "C. Menjahit", "D. Menggergaji", "E. Memukul"], key: "B" },
@@ -111,7 +112,7 @@ const IST_DATA = [
     <em>Penjelasan: Gelap lawannya terang, maka basah lawannya kering.</em><br>
     <em>Jawaban benar: <strong>e) kering</strong></em>
   </div>
-`
+`,
     questions: [
       { q: "Menemukan : menghilangkan = Mengingat : ?", options: ["A. menghapal", "B. mengenai", "C. melupakan", "D. berpikir", "E. memimpikan"], key: "C" },
       { q: "Bunga : jambangan = Burung : ?", options: ["A. sarang", "B. langit", "C. pagar", "D. pohon", "E. sangkar"], key: "E" },
@@ -135,7 +136,7 @@ const IST_DATA = [
       { q: "Keledai : kuda pacuan = pembakaran : ?", options: ["A. pemadam api", "B. obor", "C. letupan", "D. korek api", "E. lautan api"], key: "E" }
     ]
   },
-{
+  {
     id: "GE",
     name: "Subtes 4: Sifat Bersama (GE)",
     durationSec: 480, // 8 Menit
@@ -154,7 +155,7 @@ const IST_DATA = [
     <em>Penjelasan: Keduanya tergolong dalam pakaian.</em><br>
     <em>Jawaban yang diketik: <strong>pakaian</strong></em>
   </div>
-`
+`,
     questions: [
       {
         q: "Mawar & Melati",
@@ -257,7 +258,7 @@ const IST_DATA = [
     <em>Jawabannya ialah: 60.</em><br>
     <em>Maka pada sistem, klik digit: <strong>6</strong> dan <strong>0</strong>.</em>
   </div>
-`
+`,
     questions: [
       { q: "Jika seorang anak memiliki 50 rupiah dan memberikan 15 rupiah kepada orang lain, berapa rupiahkah yang masih tinggal padanya ?", key: "35", digits: [3, 5] },
       { q: "Berapa km-kah yang dapat ditempuh oleh kereta api dalam waktu 7 jam, jika kecepatannya 40 km/jam ?", key: "280", digits: [0, 2, 8] },
@@ -300,7 +301,7 @@ const IST_DATA = [
     <em>Penjelasan: Pola bergantian dikurangi 2 (-2), lalu ditambah 3 (+3).</em><br>
     <em>Jawaban: <strong>10</strong></em>
   </div>
-`
+`,
     questions: [
       { q: "2   4   6   8   10   ?", key: "12" }
     ]
@@ -314,9 +315,8 @@ const IST_DATA = [
   <p>Setiap soal memperlihatkan suatu bentuk tertentu yang terpotong menjadi beberapa bagian.</p>
   <p>Carilah di antara pilihan bentuk <strong>(A, B, C, D, E)</strong> bentuk utuh yang dapat terbentuk jika potongan-potongan tersebut disusun rapat tanpa ada kelebihan sudut atau celah ruang!</p>
 `,
-instructionImage: "fa_instruksi.png" // Foto halaman 13 yang kamu punya (potongan lingkaran, segitiga, kerucut)
+    instructionImage: "fa_instruksi.png",
     questions: [
-      // Kamu upload gambar fa_1.png ke github, lalu masukin namanya ke image:
       { q: "Pilih bentuk yang tepat:", image: "fa_1.png", options: ["A", "B", "C", "D", "E"], key: "A" }
     ]
   },
@@ -330,7 +330,7 @@ instructionImage: "fa_instruksi.png" // Foto halaman 13 yang kamu punya (potonga
   <p>Setiap soal memperlihatkan salah satu dari kelima kubus tersebut dalam posisi/sudut pandang yang diputar atau digulingkan. Carilah kubus mana yang identik dengan soal tersebut!</p>
   <p><em>Perhatian: Anda harus memutar atau menggulingkan kubus di dalam pikiran. Ingat bahwa beberapa sisi mungkin tertutup dan menampilkan tanda baru.</em></p>
 `,
-instructionImage: "wu_instruksi.png" // Foto halaman 15 yang kamu punya (rujukan kubus A s/d E)
+    instructionImage: "wu_instruksi.png",
     questions: [
       { q: "Kubus mana yang sama dengan gambar rujukan?", image: "wu_1.png", options: ["A", "B", "C", "D", "E"], key: "B" }
     ]
@@ -341,12 +341,11 @@ instructionImage: "wu_instruksi.png" // Foto halaman 15 yang kamu punya (rujukan
     durationMemorySec: 180, // 3 Menit Hafalan
     durationSec: 360, // 6 Menit Soal
     type: "memory",
-    memoryImage: "me_hafalan.png", // Gambar lembar hafalan kata
+    memoryImage: "me_hafalan.png",
     instruction: `
   <p>Anda akan diberikan waktu <strong>3 menit</strong> untuk menghafalkan daftar kata-kata yang dikelompokkan ke dalam 5 kategori.</p>
   <p>Setelah 3 menit, tabel hafalan akan tertutup secara otomatis dan Anda akan diminta menjawab soal yang menanyakan kategori dari kata-kata yang dihafalkan.</p>
 `,
-memoryImage: "me_hafalan.png" // Foto tabel daftar kata halaman 17 (Bunga, Perkakas, Burung, Kesenian, Binatang)
     questions: [
       { q: "Kata yang berawalan huruf K adalah sejenis...", options: ["A. Bunga", "B. Binatang", "C. Kesenian", "D. Negara", "E. Perkakas"], key: "B" }
     ]
