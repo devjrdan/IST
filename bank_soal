@@ -7,7 +7,7 @@
 const IST_DATA = [
   {
     id: "SE",
-    name: "Subtes 1: Melengkapi Kalimat (SE)",
+    name: "Subtes 1: Melengkapi Kalimat",
     durationSec: 360, // 6 Menit
     type: "mc",
     instruction: `
@@ -50,7 +50,7 @@ const IST_DATA = [
   },
   {
     id: "WA",
-    name: "Subtes 2: Mencari Kata Berbeda (WA)",
+    name: "Subtes 2: Mencari Kata Berbeda",
     durationSec: 360, // 6 Menit
     type: "mc",
     instruction: `
@@ -93,7 +93,7 @@ const IST_DATA = [
   },
   {
     id: "AN",
-    name: "Subtes 3: Analogi Kata (AN)",
+    name: "Subtes 3: Analogi Kata",
     durationSec: 420, // 7 Menit
     type: "mc",
     instruction: `
@@ -138,7 +138,7 @@ const IST_DATA = [
   },
   {
     id: "GE",
-    name: "Subtes 4: Sifat Bersama (GE)",
+    name: "Subtes 4: Sifat Bersama",
     durationSec: 480, // 8 Menit
     type: "input", // Isian Teks
     instruction: `
@@ -241,7 +241,7 @@ const IST_DATA = [
   },
   {
     id: "RA",
-    name: "Subtes 5: Berhitung (RA)",
+    name: "Subtes 5: Berhitung",
     durationSec: 600, // 10 Menit
     type: "digit_select", // Format pencoretan digit IST
     instruction: `
@@ -284,7 +284,7 @@ const IST_DATA = [
   },
   {
     id: "ZR",
-    name: "Subtes 6: Deret Angka (ZR)",
+    name: "Subtes 6: Deret Angka",
     durationSec: 600, // 10 Menit
     type: "input", // Isian Angka
     instruction: `
@@ -366,7 +366,7 @@ questions: [
   },
 {
     id: "FA",
-    name: "Subtes 7: Potongan Bentuk (FA)",
+    name: "Subtes 7: Potongan Bentuk",
     durationSec: 420, // 7 Menit (20 Soal)
     type: "mc",
     instruction: `
@@ -438,17 +438,70 @@ questions: [
       { q: "Soal 136: Susun potongan bentuk berikut menjadi bentuk utuh:", refImage: "fa_ref_2.png", image: "fa_136.png", options: ["A", "B", "C", "D", "E"], key: "D" }
     ]
   },
-  {
+{
     id: "WU",
-    name: "Subtes 8: Kubus (WU)",
-    durationSec: 540, // 9 Menit
+    name: "Subtes 8: Latihan Balok",
+    durationSec: 540, // 9 Menit (20 Soal)
     type: "mc",
     instruction: `
-  <p>Ditentukan 5 (lima) buah kubus <strong>A, B, C, D, E</strong> dengan corak tanda yang berbeda pada setiap sisinya.</p>
-  <p>Setiap soal memperlihatkan salah satu dari kelima kubus tersebut dalam posisi/sudut pandang yang diputar atau digulingkan. Carilah kubus mana yang identik dengan soal tersebut!</p>
-  <p><em>Perhatian: Anda harus memutar atau menggulingkan kubus di dalam pikiran. Ingat bahwa beberapa sisi mungkin tertutup dan menampilkan tanda baru.</em></p>
+  <div style="font-size: 0.95rem; line-height: 1.6; color: #334155;">
+    <h3 style="text-align: center; color: #1e293b; margin-bottom: 4px; font-size: 1.05rem; letter-spacing: 0.5px;">
+      PETUNJUK DAN CONTOH UNTUK KELOMPOK SOAL 08
+    </h3>
+    <div style="text-align: center; font-weight: 600; color: #64748b; margin-bottom: 16px;">
+      (Soal-soal No. 137 - 156)
+    </div>
+
+    <p style="margin-bottom: 12px;">
+      Ditentukan 5 (lima) buah kubus <strong>a, b, c, d, e</strong>. Pada tiap-tiap kubus terdapat enam tanda yang berlainan pada setiap sisinya. Tiga dari tanda itu dapat dilihat.
+    </p>
+    <p style="margin-bottom: 12px;">
+      Kubus-kubus yang ditentukan itu (a, b, c, d, e) ialah kubus-kubus yang berbeda, artinya kubus-kubus itu dapat mempunyai tanda-tanda yang sama, akan tetapi susunannya berlainan. Setiap soal memperlihatkan salah satu kubus yang ditentukan di dalam kedudukan yang berbeda.
+    </p>
+    <p style="margin-bottom: 16px;">
+      Carilah kubus yang dimaksudkan itu dan coretkanlah jawaban saudara pada lembar jawaban di belakang nomor soal yang sesuai. Kubus itu dapat diputar, dapat digulingkan, atau dapat diputar dan digulingkan dalam pikiran saudara, oleh karena itu mungkin akan terlihat suatu tanda yang baru.
+    </p>
+
+    <!-- Gambar Rujukan Kubus & Baris Contoh Soal -->
+    <div style="text-align: center; margin: 18px 0;">
+      <img src="wu_instruksi.png" style="width: 100%; max-width: 600px; border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);" alt="Contoh Kubus WU">
+    </div>
+
+    <!-- Kotak Pembahasan Contoh 08 -->
+    <div style="background: #f8fafc; border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-top: 16px;">
+      <strong style="color: #1e293b; font-size: 1rem;">Contoh 08:</strong><br>
+      Contoh ini memperlihatkan <strong>kubus a</strong> dengan kedudukan yang berbeda.<br>
+      Mendapatkannya adalah dengan cara menggulingkan lebih dahulu kubus itu ke kiri satu kali dan kemudian diputar ke kiri satu kali, sehingga sisi kubus yang bertanda dua segi empat hitam terletak di depan, seperti kubus a.<br>
+      Oleh karena itu, pada lembar jawaban di belakang contoh 08, huruf <strong>a</strong> harus dicoret:
+      
+      <!-- Simulasi Coretan Lembar Jawab Asli -->
+      <div style="display: flex; align-items: center; gap: 14px; margin: 12px 0 16px 0; font-family: monospace; font-size: 1.15rem; font-weight: 700; color: #475569;">
+        <span>08)</span>
+        <span style="color: #dc2626; text-decoration: line-through; background: #fee2e2; padding: 2px 8px; border-radius: 4px;">a</span>
+        <span>b</span>
+        <span>c</span>
+        <span>d</span>
+        <span>e</span>
+      </div>
+
+      <strong style="color: #1e293b;">Contoh berikutnya:</strong>
+      <ul style="margin: 6px 0 0 20px; line-height: 1.6;">
+        <li>
+          <strong>Contoh kedua adalah kubus e:</strong> Cara mendapatkannya adalah dengan digulingkan ke kiri satu kali dan diputar ke kiri satu kali, sehingga sisi kubus yang bertanda garis silang terletak di depan, seperti kubus e.
+        </li>
+        <li>
+          <strong>Contoh ketiga adalah kubus b:</strong> Cara mendapatkannya adalah dengan menggulingkannya ke kiri satu kali, sehingga dasar kubus yang tadinya tidak terlihat memunculkan tanda baru (dalam hal ini tanda dua segi empat hitam) dan tanda silang pada sisi atas kubus itu menjadi tidak terlihat lagi.
+        </li>
+        <li>
+          <strong>Contoh keempat menunjukkan kubus c.</strong>
+        </li>
+        <li>
+          <strong>Contoh kelima adalah kubus d.</strong>
+        </li>
+      </ul>
+    </div>
+  </div>
 `,
-instructionImage: "wu_instruksi.png",
     questions: [
       // BARIS 1 (137 - 141)
       { q: "Soal 137: Kubus mana yang identik dengan gambar rujukan?", refImage: "wu_ref.png", image: "wu_137.png", options: ["A", "B", "C", "D", "E"], key: "E" },
@@ -481,7 +534,7 @@ instructionImage: "wu_instruksi.png",
   },
 {
     id: "ME",
-    name: "Subtes 9: Daya Ingat (ME)",
+    name: "Subtes 9: Daya Ingat",
     durationMemorySec: 180, // 3 Menit Fase Menghafal
     durationSec: 360,       // 6 Menit Fase Pengerjaan Soal (20 Soal)
     type: "memory",
