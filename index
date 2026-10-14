@@ -214,9 +214,9 @@
       return alert("Akun email ini tercatat sudah menyelesaikan tes.");
     }
 
-    state.subIdx = 0;
-    state.answers = {};
-    loadInstruction();
+  state.subIdx = 0;
+  state.answers = {};
+  state.memoryDone = false; // Tambahkan baris ini
   }
 
   function loadInstruction() {
@@ -248,16 +248,19 @@
     showScreen("screen-instruction");
   }
 
-  function beginSubtest() {
+function beginSubtest() {
     const sub = IST_DATA[state.subIdx];
     state.qIdx = 0;
     if (!state.answers[sub.id]) state.answers[sub.id] = {};
 
-    if (sub.type === "memory" && !state.isMemoryPhase) {
-      state.isMemoryPhase = true;
+    // Jika subtes daya ingat dan BELUM selesai menghafal
+    if (sub.type === "memory" && !state.memoryDone) {
+      state.memoryDone = true; // Langsung kunci agar tidak pernah berulang
       showScreen("screen-memory");
       startTimer(sub.durationMemorySec, endMemoryPhase);
-    } else {
+    } 
+    // Masuk ke layar ujian soal
+    else {
       showScreen("screen-test");
       buildGrid();
       renderQuestion();
@@ -266,10 +269,9 @@
   }
 
   function endMemoryPhase() {
-    state.isMemoryPhase = false;
     clearInterval(state.timerObj);
     alert("Waktu menghafal telah selesai! Silakan jawab soal-soal berikut.");
-    beginSubtest();
+    beginSubtest(); // state.memoryDone sudah true, jadi otomatis lanjut ke lembar soal
   }
 
   function startTimer(seconds, timeoutCallback) {
