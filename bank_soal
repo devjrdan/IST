@@ -12,7 +12,7 @@ const IST_DATA = [
     type: "mc",
     instruction: `
   <p>Soal-soal 01 - 20 terdiri atas kalimat-kalimat. Pada setiap kalimat, satu kata hilang dan disediakan 5 (lima) kata pilihan sebagai penggantinya.</p>
-  <p>Pilihlah kata yang tepat yang dapat menyempurnakan kalimat tersebut!</p>
+  <p>Pilihlah kata yang tepat yang dapat menyempurnakan kalimat itu!</p>
   <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
     <strong>Contoh 01:</strong><br>
     Seekor kuda mempunyai kesamaan terbanyak dengan seekor ..............<br>
@@ -55,7 +55,7 @@ const IST_DATA = [
     type: "mc",
     instruction: `
   <p>Ditentukan 5 kata. Pada 4 dari 5 kata tersebut terdapat suatu kesamaan.</p>
-  <p>Carilah kata yang kelima yang <strong>tidak memiliki kesamaan</strong> dengan keempat kata lainnya!</p>
+  <p>Carilah kata yang kelima yang <strong>tidak memiliki kesamaan</strong> dengan keempat kata itu!</p>
   <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
     <strong>Contoh 02:</strong><br>
     a) meja &nbsp; b) kursi &nbsp; c) burung &nbsp; d) lemari &nbsp; e) tempat tidur<br>
@@ -97,8 +97,8 @@ const IST_DATA = [
     durationSec: 420, // 7 Menit
     type: "mc",
     instruction: `
-  <p>Ditentukan 3 (tiga) kata. Antara kata pertama dan kata kedua terdapat hubungan tertentu. Antara kata ketiga dan salah satu kata pilihan dari lima opsi harus memiliki <strong>hubungan yang sama</strong>.</p>
-  <p>Carilah kata yang melengkapi analogi tersebut!</p>
+  <p>Ditentukan 3 (tiga) kata. Antara kata pertama dan kata kedua terdapat suatu hubungan yang tertentu. Antara kata ketiga dan salah satu diantara lima kata pilihan harus pula terdapat <strong>hubungan yang sama itu</strong>.</p>
+  <p>Carilah kata itu!</p>
   <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
     <strong>Contoh 03:</strong><br>
     Hutan : pohon = tembok : ?<br>
@@ -142,8 +142,8 @@ const IST_DATA = [
     durationSec: 480, // 8 Menit
     type: "input", // Isian Teks
     instruction: `
-  <p>Ditentukan dua kata. Carilah <strong>satu perkataan</strong> yang merangkum kesamaan atau meliputi pengertian kedua kata tersebut.</p>
-  <p>Ketik jawaban Anda pada kotak isian yang disediakan (usahakan mencari konsep/kategori yang paling pokok).</p>
+  <p>Ditentukan dua kata. Carilah <strong>satu perkataan</strong> yang meliputi pengertian kedua kata tadi.</p>
+  <p>Ketiklah perkataan itu pada lembar jawaban di belakang nomor soal yang sesuai.</p>
   <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
     <strong>Contoh 04:</strong><br>
     Ayam - itik<br>
@@ -245,7 +245,7 @@ const IST_DATA = [
     durationSec: 600, // 10 Menit
     type: "digit_select", // Format pencoretan digit IST
     instruction: `
-  <p>Persoalan berikutnya ialah soal-soal hitungan matematika. Selesaikan hitungan Anda di kertas buram terlebih dahulu.</p>
+  <p>Persoalan berikutnya ialah soal-soal hitungan. Siapkan dan selesaikan hitungan Anda di kertas buram terlebih dahulu.</p>
   <p>Untuk menjawab di sistem, <strong>pilih/klik semua digit angka</strong> penyusun jawaban Anda pada deret angka (1 sampai 0). Urutan pemilihan angka tidak dipersoalkan.</p>
   <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
     <strong>Contoh 05:</strong><br>
@@ -288,7 +288,7 @@ const IST_DATA = [
     durationSec: 600, // 10 Menit
     type: "input", // Isian Angka
     instruction: `
-  <p>Pada persoalan berikut diberikan deret angka yang tersusun menurut aturan tertentu. Carilah angka lanjutan berikutnya menurut aturan deret tersebut!</p>
+  <p>Pada persoalan berikut akan diberikan deret angka yang tersusun menurut aturan tertentu dan dapat dilanjutkan menurut aturan itu. Carilah angka lanjutan berikutnya menurut aturan deret tersebut!</p>
   <p><em>(Petunjuk: Pola bisa berupa penjumlahan, pengurangan, perkalian, atau pembagian bertingkat).</em></p>
   <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
     <strong>Contoh 06:</strong><br>
