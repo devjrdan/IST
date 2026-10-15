@@ -18,7 +18,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
-    .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; min-height: 520px; }
+    .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; min-height: 540px; }
     
     /* Header & Timer */
     .header { background: var(--primary); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
@@ -83,16 +83,35 @@
     <div class="timer-badge" id="timer-display">--:--</div>
   </div>
 
-  <!-- Screen 1: SETUP (Landing Page - MURNI TANPA TOMBOL KEMBALI/SELANJUTNYA) -->
-  <div id="screen-setup" class="body screen active">
-    <h1>Intelligenz Struktur Test (IST)</h1>
-    <p>Tes ini terdiri dari 9 bagian dengan batas waktu yang ketat. Sistem akan memindahkan layar secara otomatis apabila waktu habis. Kerjakan secepat dan seteliti mungkin.</p>
+  <!-- Screen 0: TOKEN GATE -->
+  <div id="screen-token" class="body screen active">
+    <h1>Selamat Datang di Asesmen IST</h1>
+    <p>Silakan masukkan kode token ujian resmi yang telah diberikan oleh penguji untuk mengakses rangkaian asesmen.</p>
+    
+    <div class="form-group" style="max-width: 420px;">
+      <label>Kode Token Asesmen</label>
+      <input type="text" id="input-token" placeholder="Contoh: ALBEA-0001" style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px;" autocomplete="off" required>
+    </div>
+    
+    <button class="btn" id="btn-verify-token" style="min-width: 180px;" onclick="verifyToken()">Verifikasi Token ➔</button>
+
+    <div id="token-resume-alert" style="display: none; margin-top: 24px; padding: 16px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: left;">
+      <h3 style="color: #1d4ed8; font-size: 1rem; margin-bottom: 6px;">Sesi Ujian Ditemukan!</h3>
+      <p style="margin-bottom: 12px; font-size: 0.9rem;" id="resume-msg"></p>
+      <button class="btn" style="background: var(--accent);" onclick="resumeSession()">Lanjutkan Pengerjaan ➔</button>
+    </div>
+  </div>
+
+  <!-- Screen 1: SETUP BIODATA -->
+  <div id="screen-setup" class="body screen">
+    <h1>Data Diri Peserta</h1>
+    <p>Token Terverifikasi: <strong id="display-active-token" style="color: var(--primary);"></strong>. Lengkapi biodata sebelum memulai ujian.</p>
     <div class="form-group">
       <label>Nama Lengkap</label>
       <input type="text" id="user-name" placeholder="Masukkan nama lengkap" required>
     </div>
     <div class="form-group">
-      <label>Email</label>
+      <label>Email Aktif</label>
       <input type="email" id="user-email" placeholder="email@domain.com" required>
     </div>
     <button class="btn" onclick="startEngine()">Mulai Rangkaian Tes</button>
@@ -107,9 +126,9 @@
     <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
   </div>
 
-  <!-- Screen 3: MEMORY PHASE (KHUSUS SUBTES 9) -->
+  <!-- Screen 3: MEMORY PHASE (SUBTES 9) -->
   <div id="screen-memory" class="body screen" style="text-align: center;">
-    <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal</h1>
+    <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal (Daya Ingat)</h1>
     <p style="color: var(--muted); margin-bottom: 20px;">
       Hafalkan daftar kata berikut beserta kategorinya. Waktu Anda: <strong>3 Menit</strong>.<br>
       Setelah waktu habis, tabel akan tertutup otomatis dan soal akan langsung dimulai.
@@ -145,7 +164,7 @@
     </div>
   </div>
 
-  <!-- Screen 4: TEST RUNTIME (HANYA DI SINI TOMBOL NAVIGASI BERADA) -->
+  <!-- Screen 4: TEST RUNTIME -->
   <div id="screen-test" class="body screen">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
       <span id="test-subtest-name" style="font-weight: 700; color: var(--primary);">Subtes</span>
@@ -161,10 +180,9 @@
     <div id="q-content" class="q-text"></div>
     <img id="q-img" class="q-image" src="" style="display:none;" alt="Ilustrasi Soal">
 
-    <!-- Area Opsi Jawaban Dinamis -->
     <div id="answer-area"></div>
 
-    <!-- Tombol Navigasi Pengerjaan -->
+    <!-- Tombol Navigasi Bawah -->
     <div class="footer">
       <button class="btn btn-outline" id="btn-prev" onclick="changeQ(-1)">Kembali</button>
       <button class="btn" id="btn-next" onclick="changeQ(1)">Selanjutnya ➔</button>
@@ -183,8 +201,8 @@
 
 <script>
   const WEBHOOK_URL = "URL_WEBHOOK_GOOGLESHEET_KAMU"; 
-  
-  let candidate = {};
+
+  let candidate = { token: "", name: "", email: "" };
   let state = {
     subIdx: 0,
     qIdx: 0,
@@ -192,51 +210,46 @@
     timeLeft: 0,
     timerObj: null,
     memoryDone: false,
-    currentScreen: "screen-setup"
+    currentScreen: "screen-token"
   };
 
-  // Cegah peserta menutup tab atau refresh secara tidak sengaja
+  // Mencegah peserta menutup browser tanpa sengaja
   window.addEventListener("beforeunload", function (e) {
     if (localStorage.getItem("ist_active_session")) {
       e.preventDefault();
-      e.returnValue = "Pengerjaan tes sedang berlangsung. Yakin ingin keluar?";
+      e.returnValue = "Pengerjaan tes sedang berlangsung. Data Anda tersimpan.";
     }
   });
 
-  // Cek Sesi Tersimpan saat Halaman Pertama Kali Dibuka / Direfresh
+  // Otomatis deteksi sesi tersimpan saat halaman dibuka ulang
   window.addEventListener("load", function () {
-    const savedSession = localStorage.getItem("ist_active_session");
-    if (savedSession) {
+    const saved = localStorage.getItem("ist_active_session");
+    if (saved) {
       try {
-        const parsed = JSON.parse(savedSession);
-        candidate = parsed.candidate;
-        state.subIdx = parsed.subIdx;
-        state.qIdx = parsed.qIdx;
-        state.answers = parsed.answers;
-        state.timeLeft = parsed.timeLeft;
-        state.memoryDone = parsed.memoryDone;
-        
-        // Pulihkan tampilan ke layar terakhir
-        if (parsed.currentScreen === "screen-test") {
-          showScreen("screen-test");
-          buildGrid();
-          renderQuestion();
-          startTimer(state.timeLeft, forceNextSubtest);
-        } else if (parsed.currentScreen === "screen-memory") {
-          showScreen("screen-memory");
-          startTimer(state.timeLeft, endMemoryPhase);
-        } else {
-          loadInstruction();
+        const parsed = JSON.parse(saved);
+        if (parsed.candidate && parsed.candidate.token) {
+          document.getElementById("input-token").value = parsed.candidate.token;
+          const resumeBox = document.getElementById("token-resume-alert");
+          const resumeMsg = document.getElementById("resume-msg");
+          resumeMsg.innerHTML = `Peserta: <strong>${parsed.candidate.name}</strong> (${parsed.candidate.email})<br>Progres: Sedang berada di <strong>Subtes ${parsed.subIdx + 1}</strong>.`;
+          resumeBox.style.display = "block";
         }
-      } catch (err) {
-        console.error("Gagal memuat sesi:", err);
+      } catch (e) {
+        console.error(e);
       }
     }
   });
 
-  function saveCurrentSession(screenId) {
-    if (screenId) state.currentScreen = screenId;
-    const sessionData = {
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    state.currentScreen = id;
+    saveSession();
+  }
+
+  function saveSession() {
+    if (!candidate.token) return;
+    const data = {
       candidate: candidate,
       subIdx: state.subIdx,
       qIdx: state.qIdx,
@@ -245,14 +258,90 @@
       memoryDone: state.memoryDone,
       currentScreen: state.currentScreen
     };
-    localStorage.setItem("ist_active_session", JSON.stringify(sessionData));
+    localStorage.setItem("ist_active_session", JSON.stringify(data));
   }
 
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    state.currentScreen = id;
-    saveCurrentSession(id);
+  // Verifikasi token langsung ke Google Sheet (doGet)
+  async function verifyToken() {
+    const inputEl = document.getElementById("input-token");
+    const val = inputEl.value.trim().toUpperCase();
+    if (!val) return alert("Silakan masukkan kode token Anda!");
+
+    // Cek apakah token sudah pernah selesai di perangkat ini
+    const voidTokens = JSON.parse(localStorage.getItem("ist_void_tokens") || "[]");
+    if (voidTokens.includes(val)) {
+      return alert("Token ini sudah dinyatakan SELESAI (VOID) di perangkat ini.");
+    }
+
+    // Fast-resume jika sesi lokal aktif cocok dengan token input
+    const saved = localStorage.getItem("ist_active_session");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.candidate && parsed.candidate.token === val) {
+          resumeSession();
+          return;
+        }
+      } catch (e) {}
+    }
+
+    const btn = document.getElementById("btn-verify-token");
+    const originalText = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = "Memverifikasi ke Server...";
+
+    try {
+      const response = await fetch(`${WEBHOOK_URL}?action=verifyToken&token=${encodeURIComponent(val)}`);
+      const result = await response.json();
+
+      if (!result.valid) {
+        alert(result.message || "Token tidak valid!");
+        return;
+      }
+
+      // Token valid & aktif di database
+      candidate.token = val;
+      document.getElementById("display-active-token").innerText = val;
+      showScreen("screen-setup");
+
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghubungi server database token. Pastikan URL Webhook sudah benar dan koneksi internet stabil.");
+    } finally {
+      btn.disabled = false;
+      btn.innerText = originalText;
+    }
+  }
+
+  function resumeSession() {
+    const saved = localStorage.getItem("ist_active_session");
+    if (!saved) return;
+    const parsed = JSON.parse(saved);
+
+    candidate = parsed.candidate;
+    state.subIdx = parsed.subIdx;
+    state.qIdx = parsed.qIdx;
+    state.answers = parsed.answers;
+    state.timeLeft = parsed.timeLeft;
+    state.memoryDone = parsed.memoryDone;
+
+    alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes Anda...`);
+
+    if (parsed.currentScreen === "screen-test") {
+      showScreen("screen-test");
+      buildGrid();
+      renderQuestion();
+      startTimer(state.timeLeft, forceNextSubtest);
+    } else if (parsed.currentScreen === "screen-memory") {
+      showScreen("screen-memory");
+      startTimer(state.timeLeft, endMemoryPhase);
+    } else {
+      loadInstruction();
+    }
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
   function formatTime(sec) {
@@ -261,30 +350,21 @@
     return `${m}:${s}`;
   }
 
-  function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
   function startEngine() {
     candidate.name = document.getElementById("user-name").value.trim();
     candidate.email = document.getElementById("user-email").value.trim();
     
-    if (!candidate.name || !candidate.email) {
-      return alert("Mohon lengkapi nama dan email Anda!");
-    }
+    if (!candidate.name || !candidate.email) return alert("Mohon lengkapi nama dan email!");
+    if (!isValidEmail(candidate.email)) return alert("Format email tidak valid! (contoh: user@domain.com)");
 
-    if (!isValidEmail(candidate.email)) {
-      return alert("Format email tidak valid! (contoh: nama@domain.com)");
-    }
-    
     if (localStorage.getItem("ist_done_" + candidate.email)) {
-      return alert("Akun email ini tercatat sudah menyelesaikan tes.");
+      return alert("Akun email ini sudah pernah menyelesaikan tes.");
     }
 
     state.subIdx = 0;
     state.answers = {};
     state.memoryDone = false;
-    saveCurrentSession("screen-instruction");
+    saveSession();
     loadInstruction();
   }
 
@@ -348,14 +428,11 @@
       state.timeLeft--;
       document.getElementById("timer-display").innerText = formatTime(state.timeLeft);
       
-      // Simpan sisa detik ke storage tiap 5 detik sekali agar tidak membebani browser
-      if (state.timeLeft % 5 === 0) {
-        saveCurrentSession();
-      }
+      if (state.timeLeft % 5 === 0) saveSession();
 
       if (state.timeLeft <= 0) {
         clearInterval(state.timerObj);
-        timeoutCallback(); // Eksekusi pindah otomatis tanpa blokir kelengkapan soal
+        timeoutCallback();
       }
     }, 1000);
   }
@@ -368,7 +445,7 @@
     document.getElementById("q-num").innerText = `Soal ${state.qIdx + 1} / ${sub.questions.length}`;
     document.getElementById("q-content").innerText = q.q;
 
-    // Handle Gambar Rujukan Bentuk
+    // Handle Gambar Rujukan
     const refContainer = document.getElementById("q-ref-container");
     const refImg = document.getElementById("q-ref-img");
     if (q.refImage) {
@@ -441,12 +518,12 @@
       `;
     }
 
-    // Tombol Navigasi Bawah
+    // Tombol Navigasi
     document.getElementById("btn-prev").disabled = (state.qIdx === 0);
     let btnNext = document.getElementById("btn-next");
     if (state.qIdx === sub.questions.length - 1) {
       btnNext.innerText = "Selesaikan Subtes ✓";
-      btnNext.onclick = handleManualSubtestSubmit; // Pengecekan kelengkapan saat klik manual
+      btnNext.onclick = handleManualSubtestSubmit;
     } else {
       btnNext.innerText = "Selanjutnya ➔";
       btnNext.onclick = () => changeQ(1);
@@ -455,7 +532,7 @@
     updateGridColor();
   }
 
-  // VALIDASI KELENGKAPAN: Menolak submit manual jika ada nomor yang belum terisi
+  // Validasi seluruh soal wajib terjawab sebelum submit manual
   function handleManualSubtestSubmit() {
     const sub = IST_DATA[state.subIdx];
     const subAnswers = state.answers[sub.id] || {};
@@ -473,9 +550,7 @@
         isAnswered = typeof ans === "string" && ans !== "";
       }
 
-      if (!isAnswered) {
-        emptyQuestions.push(i + 1);
-      }
+      if (!isAnswered) emptyQuestions.push(i + 1);
     }
 
     if (emptyQuestions.length > 0) {
@@ -514,26 +589,26 @@
       preview.innerHTML = `Digit dipilih: <strong>[ ${sorted.join(", ")} ]</strong>`;
     }
 
-    saveCurrentSession();
+    saveSession();
     updateGridColor();
   }
 
   function saveAns(val) {
     const subId = IST_DATA[state.subIdx].id;
     state.answers[subId][state.qIdx] = val;
-    saveCurrentSession();
+    saveSession();
     updateGridColor();
   }
 
   function changeQ(dir) {
     state.qIdx += dir;
-    saveCurrentSession();
+    saveSession();
     renderQuestion();
   }
 
   function goToQ(idx) {
     state.qIdx = idx;
-    saveCurrentSession();
+    saveSession();
     renderQuestion();
   }
 
@@ -563,12 +638,11 @@
     }
   }
 
-  // Dipanggil saat waktu habis ATAU saat submit manual dinyatakan lolos validasi
   function forceNextSubtest() {
     clearInterval(state.timerObj);
     state.subIdx++;
     state.memoryDone = false;
-    saveCurrentSession("screen-instruction");
+    showScreen("screen-instruction");
     loadInstruction();
   }
 
@@ -580,6 +654,7 @@
     
     const payload = {
       timestamp: new Date().toLocaleString("id-ID"),
+      token: candidate.token,
       name: candidate.name,
       email: candidate.email,
       rawScores: scores.rawScores,
@@ -587,7 +662,12 @@
       answersJSON: JSON.stringify(state.answers)
     };
 
-    // Tandai email ini sudah selesai dan hapus sesi sementara
+    let voidTokens = JSON.parse(localStorage.getItem("ist_void_tokens") || "[]");
+    if (!voidTokens.includes(candidate.token)) {
+      voidTokens.push(candidate.token);
+      localStorage.setItem("ist_void_tokens", JSON.stringify(voidTokens));
+    }
+
     localStorage.setItem("ist_done_" + candidate.email, "true");
     localStorage.removeItem("ist_active_session");
 
@@ -598,12 +678,12 @@
       body: JSON.stringify(payload)
     }).then(() => {
       document.getElementById("finish-msg").innerHTML = 
-        `<span style="color: #107c41; font-weight: 700; font-size: 1.1rem;">Data berhasil terkirim.</span><br><br>Terima kasih telah mengikuti rangkaian Asesmen IST. Silakan konfirmasi ke pihak penguji.`;
+        `<span style="color: #107c41; font-weight: 700; font-size: 1.1rem;">Data Berhasil Terkirim!</span><br><br>Terima kasih, <strong>${candidate.name}</strong>. Rangkaian Asesmen IST telah selesai. Token Anda (<strong>${candidate.token}</strong>) kini telah dinonaktifkan.`;
     }).catch(e => {
       document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
     });
   }
 </script>
-  
+
 </body>
 </html>
