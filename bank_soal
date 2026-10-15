@@ -545,29 +545,28 @@ questions: [
   </ul>
   <p>Setelah waktu hafalan 3 menit habis, tabel kata akan <strong>tertutup otomatis secara permanen</strong> dan layar soal akan langsung terbuka.</p>
 `,
-    questions: [
-      // 20 Soal Daya Ingat (No. 157 - 176)
-      // Seluruh opsi A s/d E mengacu ke 5 kategori utama
-      { q: "Kata yang mempunyai huruf permulaan O adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Opera
+questions: [
+      // 20 Soal Daya Ingat Berurutan Alfabetis (A - U, tanpa Q)
+      { q: "Kata yang mempunyai huruf permulaan A adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Arca
       { q: "Kata yang mempunyai huruf permulaan B adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Beruang
-      { q: "Kata yang mempunyai huruf permulaan F adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Flamboyan
-      { q: "Kata yang mempunyai huruf permulaan J adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Jarum
-      { q: "Kata yang mempunyai huruf permulaan E adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Elang
       { q: "Kata yang mempunyai huruf permulaan C adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Cangkul
+      { q: "Kata yang mempunyai huruf permulaan D adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Dahlia
+      { q: "Kata yang mempunyai huruf permulaan E adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Elang
+      { q: "Kata yang mempunyai huruf permulaan F adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Flamboyan
       { q: "Kata yang mempunyai huruf permulaan G adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Gamelan
-      { q: "Kata yang mempunyai huruf permulaan T adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Tekukur
-      { q: "Kata yang mempunyai huruf permulaan M adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Musang
-      { q: "Kata yang mempunyai huruf permulaan S adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Soka
-      { q: "Kata yang mempunyai huruf permulaan Q adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Quintet
-      { q: "Kata yang mempunyai huruf permulaan W adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Wajan (atau Walet -> C)
-      { q: "Kata yang mempunyai huruf permulaan L adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Larat
-      { q: "Kata yang mempunyai huruf permulaan N adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Nuri
       { q: "Kata yang mempunyai huruf permulaan H adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Harimau
-      { q: "Kata yang mempunyai huruf permulaan P adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Palu
-      { q: "Kata yang mempunyai huruf permulaan U adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Ukiran
       { q: "Kata yang mempunyai huruf permulaan I adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Itik
+      { q: "Kata yang mempunyai huruf permulaan J adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Jarum
+      { q: "Kata yang mempunyai huruf permulaan K adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Kikir
+      { q: "Kata yang mempunyai huruf permulaan L adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Larat
+      { q: "Kata yang mempunyai huruf permulaan M adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Musang
+      { q: "Kata yang mempunyai huruf permulaan N adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Nuri
+      { q: "Kata yang mempunyai huruf permulaan O adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }, // Opera
+      { q: "Kata yang mempunyai huruf permulaan P adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "B" }, // Palu
       { q: "Kata yang mempunyai huruf permulaan R adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "E" }, // Rusa
-      { q: "Kata yang mempunyai huruf permulaan D adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }  // Dahlia
+      { q: "Kata yang mempunyai huruf permulaan S adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "A" }, // Soka
+      { q: "Kata yang mempunyai huruf permulaan T adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "C" }, // Tekukur
+      { q: "Kata yang mempunyai huruf permulaan U adalah sejenis ....", options: ["A. Bunga", "B. Perkakas", "C. Burung", "D. Kesenian", "E. Binatang"], key: "D" }  // Ukiran
     ]
   }
 ];
