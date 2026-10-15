@@ -205,18 +205,34 @@
     return `${m}:${s}`;
   }
 
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
   function startEngine() {
     candidate.name = document.getElementById("user-name").value.trim();
     candidate.email = document.getElementById("user-email").value.trim();
-    if (!candidate.name || !candidate.email) return alert("Mohon lengkapi data diri!");
     
+    // 1. Cek kelengkapan input
+    if (!candidate.name || !candidate.email) {
+      return alert("Mohon lengkapi data diri!");
+    }
+
+    // 2. Cek format email (Regex)
+    if (!isValidEmail(candidate.email)) {
+      return alert("Format email tidak valid! Pastikan formatnya benar (contoh: nama@domain.com).");
+    }
+
+    // 3. Cek apakah email sudah pernah mengerjakan
     if (localStorage.getItem("ist_done_" + candidate.email)) {
       return alert("Akun email ini tercatat sudah menyelesaikan tes.");
     }
 
-  state.subIdx = 0;
-  state.answers = {};
-  state.memoryDone = false; // Tambahkan baris ini
+    state.subIdx = 0;
+    state.answers = {};
+    state.memoryDone = false;
+    loadInstruction(); // <-- Ini wajib ada agar tes langsung jalan
   }
 
   function loadInstruction() {
