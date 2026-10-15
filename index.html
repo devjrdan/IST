@@ -191,12 +191,68 @@
     answers: {},
     timeLeft: 0,
     timerObj: null,
-    isMemoryPhase: false
+    memoryDone: false,
+    currentScreen: "screen-setup"
   };
+
+  // Cegah peserta menutup tab atau refresh secara tidak sengaja
+  window.addEventListener("beforeunload", function (e) {
+    if (localStorage.getItem("ist_active_session")) {
+      e.preventDefault();
+      e.returnValue = "Pengerjaan tes sedang berlangsung. Yakin ingin keluar?";
+    }
+  });
+
+  // Cek Sesi Tersimpan saat Halaman Pertama Kali Dibuka / Direfresh
+  window.addEventListener("load", function () {
+    const savedSession = localStorage.getItem("ist_active_session");
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession);
+        candidate = parsed.candidate;
+        state.subIdx = parsed.subIdx;
+        state.qIdx = parsed.qIdx;
+        state.answers = parsed.answers;
+        state.timeLeft = parsed.timeLeft;
+        state.memoryDone = parsed.memoryDone;
+        
+        // Pulihkan tampilan ke layar terakhir
+        if (parsed.currentScreen === "screen-test") {
+          showScreen("screen-test");
+          buildGrid();
+          renderQuestion();
+          startTimer(state.timeLeft, forceNextSubtest);
+        } else if (parsed.currentScreen === "screen-memory") {
+          showScreen("screen-memory");
+          startTimer(state.timeLeft, endMemoryPhase);
+        } else {
+          loadInstruction();
+        }
+      } catch (err) {
+        console.error("Gagal memuat sesi:", err);
+      }
+    }
+  });
+
+  function saveCurrentSession(screenId) {
+    if (screenId) state.currentScreen = screenId;
+    const sessionData = {
+      candidate: candidate,
+      subIdx: state.subIdx,
+      qIdx: state.qIdx,
+      answers: state.answers,
+      timeLeft: state.timeLeft,
+      memoryDone: state.memoryDone,
+      currentScreen: state.currentScreen
+    };
+    localStorage.setItem("ist_active_session", JSON.stringify(sessionData));
+  }
 
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    state.currentScreen = id;
+    saveCurrentSession(id);
   }
 
   function formatTime(sec) {
@@ -205,26 +261,22 @@
     return `${m}:${s}`;
   }
 
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
   function startEngine() {
     candidate.name = document.getElementById("user-name").value.trim();
     candidate.email = document.getElementById("user-email").value.trim();
     
-    // 1. Cek kelengkapan input
     if (!candidate.name || !candidate.email) {
-      return alert("Mohon lengkapi data diri!");
+      return alert("Mohon lengkapi nama dan email Anda!");
     }
 
-    // 2. Cek format email (Regex)
     if (!isValidEmail(candidate.email)) {
-      return alert("Format email tidak valid! Pastikan formatnya benar (contoh: nama@domain.com).");
+      return alert("Format email tidak valid! (contoh: nama@domain.com)");
     }
-
-    // 3. Cek apakah email sudah pernah mengerjakan
+    
     if (localStorage.getItem("ist_done_" + candidate.email)) {
       return alert("Akun email ini tercatat sudah menyelesaikan tes.");
     }
@@ -232,7 +284,8 @@ function isValidEmail(email) {
     state.subIdx = 0;
     state.answers = {};
     state.memoryDone = false;
-    loadInstruction(); // <-- Ini wajib ada agar tes langsung jalan
+    saveCurrentSession("screen-instruction");
+    loadInstruction();
   }
 
   function loadInstruction() {
@@ -244,7 +297,6 @@ function isValidEmail(email) {
     const sub = IST_DATA[state.subIdx];
     document.getElementById("header-title").innerText = sub.name;
     document.getElementById("timer-display").innerText = "--:--";
-    
     document.getElementById("inst-title").innerText = sub.name;
     document.getElementById("inst-text").innerHTML = sub.instruction;
     
@@ -264,19 +316,16 @@ function isValidEmail(email) {
     showScreen("screen-instruction");
   }
 
-function beginSubtest() {
+  function beginSubtest() {
     const sub = IST_DATA[state.subIdx];
     state.qIdx = 0;
     if (!state.answers[sub.id]) state.answers[sub.id] = {};
 
-    // Jika subtes daya ingat dan BELUM selesai menghafal
     if (sub.type === "memory" && !state.memoryDone) {
-      state.memoryDone = true; // Langsung kunci agar tidak pernah berulang
+      state.memoryDone = true;
       showScreen("screen-memory");
       startTimer(sub.durationMemorySec, endMemoryPhase);
-    } 
-    // Masuk ke layar ujian soal
-    else {
+    } else {
       showScreen("screen-test");
       buildGrid();
       renderQuestion();
@@ -287,7 +336,7 @@ function beginSubtest() {
   function endMemoryPhase() {
     clearInterval(state.timerObj);
     alert("Waktu menghafal telah selesai! Silakan jawab soal-soal berikut.");
-    beginSubtest(); // state.memoryDone sudah true, jadi otomatis lanjut ke lembar soal
+    beginSubtest();
   }
 
   function startTimer(seconds, timeoutCallback) {
@@ -298,9 +347,15 @@ function beginSubtest() {
     state.timerObj = setInterval(() => {
       state.timeLeft--;
       document.getElementById("timer-display").innerText = formatTime(state.timeLeft);
+      
+      // Simpan sisa detik ke storage tiap 5 detik sekali agar tidak membebani browser
+      if (state.timeLeft % 5 === 0) {
+        saveCurrentSession();
+      }
+
       if (state.timeLeft <= 0) {
         clearInterval(state.timerObj);
-        timeoutCallback();
+        timeoutCallback(); // Eksekusi pindah otomatis tanpa blokir kelengkapan soal
       }
     }, 1000);
   }
@@ -313,7 +368,7 @@ function beginSubtest() {
     document.getElementById("q-num").innerText = `Soal ${state.qIdx + 1} / ${sub.questions.length}`;
     document.getElementById("q-content").innerText = q.q;
 
-    // Handle Gambar Rujukan (A-E)
+    // Handle Gambar Rujukan Bentuk
     const refContainer = document.getElementById("q-ref-container");
     const refImg = document.getElementById("q-ref-img");
     if (q.refImage) {
@@ -336,7 +391,7 @@ function beginSubtest() {
     ansArea.innerHTML = "";
     let savedAns = state.answers[sub.id][state.qIdx];
 
-    // 1. Digit Selector (RA)
+    // 1. Tipe Digit Selector (RA)
     if (sub.id === "RA" || sub.type === "digit_select") {
       const selectedArr = Array.isArray(savedAns) ? savedAns : [];
       const digitList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
@@ -361,7 +416,7 @@ function beginSubtest() {
       `;
       ansArea.innerHTML = html;
     }
-    // 2. Pilihan Ganda (MC & Memory)
+    // 2. Tipe Pilihan Ganda (MC & Memory)
     else if (sub.type === "mc" || sub.type === "memory") {
       let html = `<div class="options-grid">`;
       q.options.forEach(opt => {
@@ -377,7 +432,7 @@ function beginSubtest() {
       html += `</div>`;
       ansArea.innerHTML = html;
     } 
-    // 3. Isian Teks Bebas (GE / ZR)
+    // 3. Tipe Isian Bebas (GE / ZR)
     else if (sub.type === "input") {
       ansArea.innerHTML = `
         <div class="form-group" style="max-width: 480px; margin: 16px auto;">
@@ -386,18 +441,51 @@ function beginSubtest() {
       `;
     }
 
-    // Tombol Navigasi
+    // Tombol Navigasi Bawah
     document.getElementById("btn-prev").disabled = (state.qIdx === 0);
     let btnNext = document.getElementById("btn-next");
     if (state.qIdx === sub.questions.length - 1) {
       btnNext.innerText = "Selesaikan Subtes ✓";
-      btnNext.onclick = forceNextSubtest;
+      btnNext.onclick = handleManualSubtestSubmit; // Pengecekan kelengkapan saat klik manual
     } else {
       btnNext.innerText = "Selanjutnya ➔";
       btnNext.onclick = () => changeQ(1);
     }
 
     updateGridColor();
+  }
+
+  // VALIDASI KELENGKAPAN: Menolak submit manual jika ada nomor yang belum terisi
+  function handleManualSubtestSubmit() {
+    const sub = IST_DATA[state.subIdx];
+    const subAnswers = state.answers[sub.id] || {};
+    let emptyQuestions = [];
+
+    for (let i = 0; i < sub.questions.length; i++) {
+      const ans = subAnswers[i];
+      let isAnswered = false;
+
+      if (sub.id === "RA" || sub.type === "digit_select") {
+        isAnswered = Array.isArray(ans) && ans.length > 0;
+      } else if (sub.type === "input") {
+        isAnswered = typeof ans === "string" && ans.trim().length > 0;
+      } else {
+        isAnswered = typeof ans === "string" && ans !== "";
+      }
+
+      if (!isAnswered) {
+        emptyQuestions.push(i + 1);
+      }
+    }
+
+    if (emptyQuestions.length > 0) {
+      alert(`Anda belum menjawab seluruh soal!\n\nNomor yang masih kosong: ${emptyQuestions.join(", ")}.\nSilakan lengkapi sebelum menyelesaikan subtes ini.`);
+      return;
+    }
+
+    if (confirm("Apakah Anda yakin ingin menyelesaikan subtes ini? Waktu yang tersisa tidak dapat digunakan lagi.")) {
+      forceNextSubtest();
+    }
   }
 
   function toggleDigitRA(digit) {
@@ -426,22 +514,26 @@ function beginSubtest() {
       preview.innerHTML = `Digit dipilih: <strong>[ ${sorted.join(", ")} ]</strong>`;
     }
 
+    saveCurrentSession();
     updateGridColor();
   }
 
   function saveAns(val) {
     const subId = IST_DATA[state.subIdx].id;
     state.answers[subId][state.qIdx] = val;
+    saveCurrentSession();
     updateGridColor();
   }
 
   function changeQ(dir) {
     state.qIdx += dir;
+    saveCurrentSession();
     renderQuestion();
   }
 
   function goToQ(idx) {
     state.qIdx = idx;
+    saveCurrentSession();
     renderQuestion();
   }
 
@@ -471,9 +563,12 @@ function beginSubtest() {
     }
   }
 
+  // Dipanggil saat waktu habis ATAU saat submit manual dinyatakan lolos validasi
   function forceNextSubtest() {
     clearInterval(state.timerObj);
     state.subIdx++;
+    state.memoryDone = false;
+    saveCurrentSession("screen-instruction");
     loadInstruction();
   }
 
@@ -492,7 +587,9 @@ function beginSubtest() {
       answersJSON: JSON.stringify(state.answers)
     };
 
+    // Tandai email ini sudah selesai dan hapus sesi sementara
     localStorage.setItem("ist_done_" + candidate.email, "true");
+    localStorage.removeItem("ist_active_session");
 
     fetch(WEBHOOK_URL, {
       method: "POST",
@@ -507,6 +604,6 @@ function beginSubtest() {
     });
   }
 </script>
-
+  
 </body>
 </html>
