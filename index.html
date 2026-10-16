@@ -250,7 +250,7 @@
     currentScreen: "screen-token"
   };
 
-  // Mencegah peserta menutup browser tanpa sengaja
+  // Mencegah peserta menutup tab/browser tanpa sengaja
   window.addEventListener("beforeunload", function (e) {
     if (localStorage.getItem("ist_active_session")) {
       e.preventDefault();
@@ -447,11 +447,13 @@
     }
   }
 
+  // Transisi otomatis subtes 9 langsung ke soal tanpa pop-up
   function endMemoryPhase() {
     clearInterval(state.timerObj);
     beginSubtest();
   }
 
+  // Timer anti-freeze berbasis delta timestamp
   function startTimer(seconds, timeoutCallback) {
     clearInterval(state.timerObj);
     state.timeLeft = seconds;
@@ -720,7 +722,7 @@
     });
   }
 
-  // --- KEAMANAN & PENCEGAHAN (CLEAN & NON-INTRUSIVE) ---
+  // --- KEAMANAN STANDAR TANPA POPUP GANGGUAN ---
 
   // 1. Matikan Klik Kanan
   document.addEventListener('contextmenu', event => event.preventDefault());
@@ -742,7 +744,6 @@
     if (e.ctrlKey || e.metaKey) {
       const key = e.key.toLowerCase();
       
-      // Izinkan paste token di kolom input
       if (key === 'v' && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
         return true;
       }
