@@ -29,6 +29,7 @@
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      -webkit-touch-callout: none;
     }
 
     input, textarea {
@@ -108,7 +109,22 @@
     
     .footer { display: flex; justify-content: space-between; margin-top: 24px; align-items: center; }
 
-    /* Custom Strike Modal (Anti-Infinite Loop) */
+    /* Subtes 9 Anti-Screenshot Hold-to-Reveal */
+    .mem-row { cursor: pointer; transition: background 0.15s; }
+    .mem-row:hover { background: #eff6ff !important; }
+    .mem-words {
+      filter: blur(8px);
+      opacity: 0.25;
+      transition: filter 0.1s ease, opacity 0.1s ease;
+      pointer-events: none;
+      select: none;
+    }
+    .mem-row.revealed .mem-words {
+      filter: blur(0);
+      opacity: 1;
+    }
+
+    /* Custom Strike Modal */
     #strike-modal {
       display: none;
       position: fixed;
@@ -199,41 +215,41 @@
     <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
   </div>
 
-  <!-- Screen 3: MEMORY PHASE (SUBTES 9) -->
+  <!-- Screen 3: MEMORY PHASE (SUBTES 9 - ANTI-SCREENSHOT HOLD MODE) -->
   <div id="screen-memory" class="body screen" style="text-align: center;">
     <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal (Daya Ingat)</h1>
-    <p style="color: var(--muted); margin-bottom: 20px;">
+    <p style="color: var(--muted); margin-bottom: 12px;">
       Hafalkan daftar kata berikut beserta kategorinya. Waktu Anda: <strong>3 Menit</strong>.<br>
-      Setelah waktu habis, tampilan hafalan otomatis ditutup dan tes langsung dimulai tanpa jeda.
+      <span style="color: var(--primary); font-weight: 600;">Tekan dan tahan (atau klik) pada baris kategori untuk melihat daftar katanya.</span>
     </p>
 
-    <div style="max-width: 580px; margin: 0 auto 24px auto; background: #ffffff; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left;">
-      <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
-        <tr style="border-bottom: 1px solid var(--border); background: #f8fafc;">
-          <td style="padding: 10px 16px; font-weight: 700; width: 130px; color: var(--primary);">BUNGA</td>
-          <td style="padding: 10px 16px;">Soka &bull; Larat &bull; Flamboyan &bull; Yasmin &bull; Dahlia</td>
+    <div style="max-width: 580px; margin: 0 auto 20px auto; background: #ffffff; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;" id="memory-table">
+        <tr class="mem-row" style="border-bottom: 1px solid var(--border); background: #f8fafc;" onmousedown="revealRow(this)" onmouseup="hideAllRows()" onmouseleave="hideAllRows()" ontouchstart="revealRowTouch(event, this)" ontouchend="hideAllRows()" ontouchcancel="hideAllRows()">
+          <td style="padding: 12px 16px; font-weight: 700; width: 140px; color: var(--primary);">👆 BUNGA</td>
+          <td class="mem-words" style="padding: 12px 16px;">Soka &bull; Larat &bull; Flamboyan &bull; Yasmin &bull; Dahlia</td>
         </tr>
-        <tr style="border-bottom: 1px solid var(--border);">
-          <td style="padding: 10px 16px; font-weight: 700; color: var(--primary);">PERKAKAS</td>
-          <td style="padding: 10px 16px;">Wajan &bull; Jarum &bull; Kikir &bull; Cangkul &bull; Palu</td>
+        <tr class="mem-row" style="border-bottom: 1px solid var(--border);" onmousedown="revealRow(this)" onmouseup="hideAllRows()" onmouseleave="hideAllRows()" ontouchstart="revealRowTouch(event, this)" ontouchend="hideAllRows()" ontouchcancel="hideAllRows()">
+          <td style="padding: 12px 16px; font-weight: 700; color: var(--primary);">👆 PERKAKAS</td>
+          <td class="mem-words" style="padding: 12px 16px;">Wajan &bull; Jarum &bull; Kikir &bull; Cangkul &bull; Palu</td>
         </tr>
-        <tr style="border-bottom: 1px solid var(--border); background: #f8fafc;">
-          <td style="padding: 10px 16px; font-weight: 700; color: var(--primary);">BURUNG</td>
-          <td style="padding: 10px 16px;">Itik &bull; Elang &bull; Walet &bull; Tekukur &bull; Nuri</td>
+        <tr class="mem-row" style="border-bottom: 1px solid var(--border); background: #f8fafc;" onmousedown="revealRow(this)" onmouseup="hideAllRows()" onmouseleave="hideAllRows()" ontouchstart="revealRowTouch(event, this)" ontouchend="hideAllRows()" ontouchcancel="hideAllRows()">
+          <td style="padding: 12px 16px; font-weight: 700; color: var(--primary);">👆 BURUNG</td>
+          <td class="mem-words" style="padding: 12px 16px;">Itik &bull; Elang &bull; Walet &bull; Tekukur &bull; Nuri</td>
         </tr>
-        <tr style="border-bottom: 1px solid var(--border);">
-          <td style="padding: 10px 16px; font-weight: 700; color: var(--primary);">KESENIAN</td>
-          <td style="padding: 10px 16px;">Quintet &bull; Arca &bull; Opera &bull; Gamelan &bull; Ukiran</td>
+        <tr class="mem-row" style="border-bottom: 1px solid var(--border);" onmousedown="revealRow(this)" onmouseup="hideAllRows()" onmouseleave="hideAllRows()" ontouchstart="revealRowTouch(event, this)" ontouchend="hideAllRows()" ontouchcancel="hideAllRows()">
+          <td style="padding: 12px 16px; font-weight: 700; color: var(--primary);">👆 KESENIAN</td>
+          <td class="mem-words" style="padding: 12px 16px;">Quintet &bull; Arca &bull; Opera &bull; Gamelan &bull; Ukiran</td>
         </tr>
-        <tr style="background: #f8fafc;">
-          <td style="padding: 10px 16px; font-weight: 700; color: var(--primary);">BINATANG</td>
-          <td style="padding: 10px 16px;">Musang &bull; Rusa &bull; Beruang &bull; Zebra &bull; Harimau</td>
+        <tr class="mem-row" style="background: #f8fafc;" onmousedown="revealRow(this)" onmouseup="hideAllRows()" onmouseleave="hideAllRows()" ontouchstart="revealRowTouch(event, this)" ontouchend="hideAllRows()" ontouchcancel="hideAllRows()">
+          <td style="padding: 12px 16px; font-weight: 700; color: var(--primary);">👆 BINATANG</td>
+          <td class="mem-words" style="padding: 12px 16px;">Musang &bull; Rusa &bull; Beruang &bull; Zebra &bull; Harimau</td>
         </tr>
       </table>
     </div>
 
-    <div style="font-size: 0.9rem; color: #dc2626; font-weight: 600;">
-      Perhatikan timer di pojok kanan atas. Jangan me-refresh halaman!
+    <div style="font-size: 0.85rem; color: #dc2626; font-weight: 600;">
+      Hanya 1 baris yang dapat dibuka dalam satu waktu. Jangan me-refresh halaman!
     </div>
   </div>
 
@@ -300,7 +316,27 @@
 
   function triggerGracePeriod() {
     isGracePeriod = true;
-    setTimeout(() => { isGracePeriod = false; }, 5000);
+    setTimeout(() => { isGracePeriod = false; }, 4000);
+  }
+
+  // Interaksi Tabel Hafalan Anti-Screenshot
+  function revealRow(rowEl) {
+    hideAllRows();
+    rowEl.classList.add("revealed");
+  }
+
+  function revealRowTouch(e, rowEl) {
+    if (e.touches && e.touches.length > 1) {
+      hideAllRows();
+      registerViolation("Gestur Multi-Jari / Tangkapan Layar Layar Sentuh");
+      return;
+    }
+    hideAllRows();
+    rowEl.classList.add("revealed");
+  }
+
+  function hideAllRows() {
+    document.querySelectorAll(".mem-row").forEach(r => r.classList.remove("revealed"));
   }
 
   // Mencegah peserta menutup browser tanpa sengaja
@@ -319,10 +355,11 @@
       try {
         const parsed = JSON.parse(saved);
         if (parsed.candidate && parsed.candidate.token && parsed.candidate.name) {
+          const savedStrikes = parseInt(localStorage.getItem("ist_strikes_" + parsed.candidate.token) || parsed.cheatStrikes || "0");
           document.getElementById("input-token").value = parsed.candidate.token;
           const resumeBox = document.getElementById("token-resume-alert");
           const resumeMsg = document.getElementById("resume-msg");
-          resumeMsg.innerHTML = `Peserta: <strong>${parsed.candidate.name}</strong> (${parsed.candidate.email})<br>Progres: Sedang berada di <strong>Subtes ${parsed.subIdx + 1}</strong>.`;
+          resumeMsg.innerHTML = `Peserta: <strong>${parsed.candidate.name}</strong> (${parsed.candidate.email})<br>Progres: <strong>Subtes ${parsed.subIdx + 1}</strong> | Catatan Pelanggaran: <strong>${savedStrikes}/${MAX_STRIKES}</strong>`;
           resumeBox.style.display = "block";
         }
       } catch (e) {
@@ -347,9 +384,11 @@
       answers: state.answers,
       timeLeft: state.timeLeft,
       memoryDone: state.memoryDone,
-      currentScreen: state.currentScreen
+      currentScreen: state.currentScreen,
+      cheatStrikes: cheatStrikes
     };
     localStorage.setItem("ist_active_session", JSON.stringify(data));
+    localStorage.setItem("ist_strikes_" + candidate.token, cheatStrikes.toString());
   }
 
   // Verifikasi token langsung ke Google Sheet (doGet)
@@ -389,6 +428,7 @@
       }
 
       candidate.token = val;
+      cheatStrikes = parseInt(localStorage.getItem("ist_strikes_" + val) || "0");
       document.getElementById("display-active-token").innerText = val;
       showScreen("screen-setup");
 
@@ -412,6 +452,17 @@
     state.answers = parsed.answers || {};
     state.timeLeft = parsed.timeLeft;
     state.memoryDone = parsed.memoryDone;
+
+    // Pulihkan jumlah pelanggaran (tidak bisa di-reset dengan refresh)
+    const tokenStrikes = parseInt(localStorage.getItem("ist_strikes_" + candidate.token) || "0");
+    cheatStrikes = Math.max(parsed.cheatStrikes || 0, tokenStrikes);
+
+    if (cheatStrikes >= MAX_STRIKES) {
+      candidate.isCheated = true;
+      candidate.cheatReason = "Mencoba melanjutkan sesi setelah batas diskualifikasi (3/3)";
+      submitAllData();
+      return;
+    }
 
     triggerGracePeriod();
     alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes Anda...`);
@@ -453,7 +504,7 @@
     state.subIdx = 0;
     state.answers = {};
     state.memoryDone = false;
-    cheatStrikes = 0;
+    cheatStrikes = parseInt(localStorage.getItem("ist_strikes_" + candidate.token) || "0");
     saveSession();
     loadInstruction();
   }
@@ -753,6 +804,7 @@
       totalRW: scores.totalRW,
       answersJSON: JSON.stringify({
         answers: state.answers,
+        cheatStrikes: cheatStrikes,
         cheatLog: candidate.cheatReason || "Bersih"
       })
     };
@@ -774,14 +826,14 @@
     }).then(() => {
       document.getElementById("finish-msg").innerHTML = 
         candidate.isCheated ? 
-        `<span style="color: #dc2626; font-weight: 700; font-size: 1.1rem;">Ujian Dihentikan (Didiskualifikasi)</span><br><br>Pelanggaran batas maksimal terlampaui. Seluruh log telah disinkronkan ke penguji.` :
+        `<span style="color: #dc2626; font-weight: 700; font-size: 1.1rem;">Ujian Dihentikan (Didiskualifikasi)</span><br><br>Pelanggaran batas maksimal (${MAX_STRIKES}/${MAX_STRIKES}) terlampaui. Token Anda telah dinonaktifkan dan log telah dikirim ke penguji.` :
         `<span style="color: #107c41; font-weight: 700; font-size: 1.1rem;">Data Berhasil Terkirim!</span><br><br>Terima kasih, <strong>${candidate.name}</strong>. Rangkaian Asesmen IST telah selesai. Token Anda (<strong>${candidate.token}</strong>) kini telah dinonaktifkan.`;
     }).catch(e => {
       document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
     });
   }
 
-  // --- SISTEM DETEKSI PELANGGARAN MODAL (TERPISAH & AMAN RESUME) ---
+  // --- SISTEM DETEKSI PELANGGARAN PERMANEN (PERSISTENT STRIKES) ---
 
   function registerViolation(reason) {
     if (isGracePeriod) return;
@@ -793,7 +845,11 @@
     isStrikeCooldown = true;
     setTimeout(() => { isStrikeCooldown = false; }, 2500);
 
+    hideAllRows();
     cheatStrikes++;
+
+    // Langsung simpan ke localStorage agar refresh tidak me-reset pelanggaran
+    saveSession();
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText("").catch(() => {});
@@ -805,28 +861,24 @@
     const btn = document.getElementById("btn-strike-ack");
 
     if (cheatStrikes >= MAX_STRIKES) {
+      // Langsung hanguskan token & kirim data saat itu juga sebelum kandidat sempat refresh
+      candidate.isCheated = true;
+      candidate.cheatReason = `Diskualifikasi: ${cheatStrikes}x (${reason})`;
+      
       title.innerText = `DISKUALIFIKASI (${cheatStrikes}/${MAX_STRIKES})`;
-      desc.innerHTML = `Anda telah melakukan tindakan terlarang (<strong>${reason}</strong>) sebanyak 3 kali.<br><br>Sesi ujian Anda dihentikan dan token dinyatakan hangus.`;
-      btn.innerText = "Tutup & Kirim Hasil";
+      desc.innerHTML = `Anda telah melakukan tindakan terlarang (<strong>${reason}</strong>) sebanyak 3 kali.<br><br>Sesi ujian Anda langsung dihentikan dan token dinyatakan hangus.`;
+      btn.innerText = "Lihat Status Akhir";
       btn.onclick = function() {
         modal.style.display = "none";
-        candidate.isCheated = true;
-        candidate.cheatReason = `Diskualifikasi: ${cheatStrikes}x (${reason})`;
-        submitAllData();
       };
       modal.style.display = "flex";
-
-      setTimeout(() => {
-        if (state.currentScreen !== "screen-finish") {
-          candidate.isCheated = true;
-          candidate.cheatReason = `Diskualifikasi: ${cheatStrikes}x (${reason})`;
-          submitAllData();
-        }
-      }, 4000);
+      
+      // Eksekusi submit langsung di latar belakang
+      submitAllData();
 
     } else {
       title.innerText = `PERINGATAN KEAMANAN (${cheatStrikes}/${MAX_STRIKES})`;
-      desc.innerHTML = `Terdeteksi aktivitas: <strong>${reason}</strong>.<br><br>Jika mencapai <strong>${MAX_STRIKES} kali</strong>, sistem akan otomatis <strong>mendiskualifikasi</strong> Anda.`;
+      desc.innerHTML = `Terdeteksi aktivitas: <strong>${reason}</strong>.<br><br>Peringatan ini tersimpan permanen pada token Anda. Jika mencapai <strong>${MAX_STRIKES} kali</strong>, ujian otomatis <strong>didiskualifikasi</strong>.`;
       btn.innerText = "Saya Mengerti & Lanjutkan";
       btn.onclick = function() {
         modal.style.display = "none";
@@ -835,32 +887,47 @@
     }
   }
 
-  // 1. Deteksi Tombol PrintScreen Murni
+  // 1. Deteksi Tombol PrintScreen Desktop
   window.addEventListener("keyup", function(e) {
     if (e.key === "PrintScreen") {
       registerViolation("Menekan Tombol Tangkapan Layar (PrintScreen)");
     }
   });
 
-  // 2. Deteksi Tab Ditinggalkan / Buka Tab Baru
+  // 2. Deteksi Tab Ditinggalkan / Minimize / Layar HP Mati atau Pindah Aplikasi
   document.addEventListener("visibilitychange", function() {
     if (document.visibilityState === "hidden") {
-      registerViolation("Membuka / Beralih ke Tab Lain");
+      hideAllRows();
+      registerViolation("Meninggalkan Halaman Ujian / Beralih Aplikasi");
     }
   });
 
-  // 3. Matikan Klik Kanan
+  // 3. Deteksi Gestur Screenshot 3 Jari di HP (Multi-Touch)
+  window.addEventListener("touchstart", function(e) {
+    if (e.touches && e.touches.length > 1) {
+      hideAllRows();
+      registerViolation("Gestur Multi-Jari / Tangkapan Layar HP");
+    }
+  }, { passive: true });
+
+  // 4. Sembunyikan kata hafalan seketika jika jendela kehilangan fokus
+  window.addEventListener("blur", function() {
+    hideAllRows();
+  });
+
+  // 5. Matikan Klik Kanan
   document.addEventListener("contextmenu", e => e.preventDefault());
 
-  // 4. Cegah Seleksi Teks & Drag (Kecuali pada Input)
+  // 6. Cegah Seleksi Teks & Drag (Kecuali pada Input)
   document.addEventListener("selectstart", e => {
     if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return true;
     e.preventDefault();
   });
   document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 5. Blokir Pintasan Keyboard Berbahaya (Izinkan Ctrl+V pada Input)
+  // 7. Blokir Pintasan Keyboard Berbahaya (Izinkan Ctrl+V pada Input)
   document.addEventListener("keydown", function(e) {
+    hideAllRows();
     if (e.key === "F12") return e.preventDefault();
 
     if (e.ctrlKey || e.metaKey) {
