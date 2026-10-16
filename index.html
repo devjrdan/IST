@@ -18,7 +18,6 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
-    /* Proteksi seleksi teks global (kecuali kolom input) */
     body { 
       background: var(--bg); 
       color: var(--text); 
@@ -39,26 +38,8 @@
       user-select: text !important;
     }
 
-    /* Proteksi cetak layar / simpan dokumen */
     @media print {
       body { display: none !important; }
-    }
-
-    /* Layar Hitam Pengaman Screenshot / Snipping Tool */
-    #security-blackout {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: #000000;
-      color: #ffffff;
-      z-index: 999999;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      font-size: 1.25rem;
-      font-weight: 700;
-      text-align: center;
-      padding: 20px;
     }
 
     /* Watermark Identitas Kandidat */
@@ -67,7 +48,7 @@
       inset: 0;
       pointer-events: none;
       z-index: 9999;
-      opacity: 0.07;
+      opacity: 0.08;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-around;
@@ -78,7 +59,20 @@
       user-select: none;
     }
 
-    .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; min-height: 540px; position: relative; z-index: 1; }
+    .container { 
+      background: var(--surface); 
+      width: 100%; 
+      max-width: 800px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+      border: 1px solid var(--border); 
+      overflow: hidden; 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 540px; 
+      position: relative; 
+      z-index: 1; 
+    }
     
     /* Header & Timer */
     .header { background: var(--primary); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
@@ -113,7 +107,7 @@
     .option-lbl:hover { background: #f1f5f9; }
     .option-lbl input { margin-right: 12px; transform: scale(1.2); }
 
-    /* Digit Selector Subtes 5 (RA) & 6 (ZR) */
+    /* Digit Selector Subtes 5 (RA) & Subtes 6 (ZR) */
     .digit-scale-container { display: flex; flex-direction: column; align-items: center; margin: 20px 0; gap: 12px; }
     .digit-scale-label { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .digit-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-width: 540px; }
@@ -136,15 +130,6 @@
   <script src="norma.js"></script>
 </head>
 <body>
-
-<!-- Layar Hitam Pemblokir Snipping Tool / Screenshot -->
-<div id="security-blackout">
-  <div>⚠️ SISTEM TERKUNCI SEMENTARA</div>
-  <div style="font-size: 0.95rem; font-weight: 400; margin-top: 10px; color: #94a3b8; max-width: 480px; line-height: 1.5;">
-    Tangkapan layar dan perpindahan aplikasi dilarang selama pengerjaan asesmen.<br>
-    Klik kembali pada halaman ini untuk melanjutkan.
-  </div>
-</div>
 
 <!-- Layer Watermark Dinamis -->
 <div id="watermark-layer" class="watermark-overlay"></div>
@@ -203,7 +188,7 @@
     <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal (Daya Ingat)</h1>
     <p style="color: var(--muted); margin-bottom: 20px;">
       Hafalkan daftar kata berikut beserta kategorinya. Waktu Anda: <strong>3 Menit</strong>.<br>
-      Setelah waktu habis, tampilan hafalan otomatis ditutup dan tes langsung dimulai.
+      Setelah waktu habis, tampilan hafalan otomatis ditutup dan tes langsung dimulai tanpa jeda.
     </p>
 
     <div style="max-width: 580px; margin: 0 auto 24px auto; background: #ffffff; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left;">
@@ -274,7 +259,14 @@
 <script>
   const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzmHIc7pigMlvk_3e_8Q4UdV6geB4CcDRg-wtj3luPNkwdkRlXBYsfkigTr56bFUvTk-g/exec"; 
 
-  let candidate = { token: "", name: "", email: "" };
+  let candidate = { 
+    token: "", 
+    name: "", 
+    email: "", 
+    isCheated: false, 
+    cheatReason: "" 
+  };
+  
   let state = {
     subIdx: 0,
     qIdx: 0,
@@ -377,7 +369,7 @@
 
     } catch (err) {
       console.error(err);
-      alert("Gagal menghubungi server database token. Pastikan URL Webhook sudah benar dan koneksi internet stabil.");
+      alert("Gagal menghubungi server database token. Pastikan koneksi internet stabil.");
     } finally {
       btn.disabled = false;
       btn.innerText = originalText;
@@ -486,7 +478,7 @@
     }
   }
 
-  // Transisi otomatis subtes 9 tanpa popup
+  // Transisi otomatis subtes 9 langsung ke soal tanpa pop-up
   function endMemoryPhase() {
     clearInterval(state.timerObj);
     beginSubtest();
@@ -724,6 +716,7 @@
   }
 
   function submitAllData() {
+    if (state.timerObj) clearInterval(state.timerObj);
     showScreen("screen-finish");
     document.getElementById("timer-display").innerText = "SELESAI";
     
@@ -732,11 +725,14 @@
     const payload = {
       timestamp: new Date().toLocaleString("id-ID"),
       token: candidate.token,
-      name: candidate.name,
+      name: candidate.name + (candidate.isCheated ? " [DISKUALIFIKASI]" : ""),
       email: candidate.email,
       rawScores: scores.rawScores,
       totalRW: scores.totalRW,
-      answersJSON: JSON.stringify(state.answers)
+      answersJSON: JSON.stringify({
+        answers: state.answers,
+        cheatLog: candidate.cheatReason || "Bersih"
+      })
     };
 
     let voidTokens = JSON.parse(localStorage.getItem("ist_void_tokens") || "[]");
@@ -755,80 +751,91 @@
       body: JSON.stringify(payload)
     }).then(() => {
       document.getElementById("finish-msg").innerHTML = 
+        candidate.isCheated ? 
+        `<span style="color: #dc2626; font-weight: 700; font-size: 1.1rem;">Ujian Dihentikan (Didiskualifikasi)</span><br><br>Pelanggaran keamanan terdeteksi. Seluruh log telah disinkronkan ke penguji.` :
         `<span style="color: #107c41; font-weight: 700; font-size: 1.1rem;">Data Berhasil Terkirim!</span><br><br>Terima kasih, <strong>${candidate.name}</strong>. Rangkaian Asesmen IST telah selesai. Token Anda (<strong>${candidate.token}</strong>) kini telah dinonaktifkan.`;
     }).catch(e => {
       document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
     });
   }
 
-  // --- KEAMANAN SISTEM & PROTEKSI SCREENSHOT AKTIF ---
+  // --- SISTEM DETEKSI PELANGGARAN & DISKUALIFIKASI (STRIKE SYSTEM) ---
+  let cheatStrikes = 0;
+  const MAX_STRIKES = 3;
 
-  const blackoutEl = document.getElementById("security-blackout");
+  function registerViolation(reason) {
+    // Hanya aktifkan hukuman saat ujian sedang berjalan (layar instruksi, hafalan, atau soal)
+    if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory" && state.currentScreen !== "screen-instruction") {
+      return;
+    }
 
-  function triggerBlackout() {
-    // Hanya kunci layar jika peserta sudah melewati layar pengisian token
-    if (state.currentScreen !== "screen-token") {
-      blackoutEl.style.display = "flex";
+    cheatStrikes++;
+    
+    // Hapus clipboard bila mencoba print screen
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText("").catch(() => {});
+    }
+
+    if (cheatStrikes >= MAX_STRIKES) {
+      alert(`PELANGGARAN MAKSIMAL TERLAMPAUI (${cheatStrikes}/${MAX_STRIKES})!\n\nAnda terdeteksi melakukan tindakan terlarang (${reason}) secara berulang. Tes Anda langsung DIHENTIKAN dan DIDISKUALIFIKASI.`);
+      
+      candidate.isCheated = true;
+      candidate.cheatReason = `Diskualifikasi: ${cheatStrikes}x pelanggaran (${reason})`;
+      submitAllData();
+    } else {
+      alert(`PERINGATAN KEAMANAN (${cheatStrikes}/${MAX_STRIKES})!\n\nTerdeteksi aktivitas terlarang: ${reason}.\nJika mencapai ${MAX_STRIKES} kali, ujian Anda otomatis DIDISKUALIFIKASI dan token dinyatakan hangus.`);
     }
   }
 
-  function clearBlackout() {
-    blackoutEl.style.display = "none";
-  }
-
-  // 1. Saat Snipping Tool aktif / Alt+Tab / Jendela lepas fokus -> Layar langsung hitam pekat
-  window.addEventListener("blur", triggerBlackout);
-  window.addEventListener("focus", clearBlackout);
-
-  // 2. Cegah PrintScreen dan bersihkan clipboard
-  window.addEventListener("keydown", function(e) {
+  // 1. Deteksi Tombol PrintScreen
+  window.addEventListener("keyup", function(e) {
     if (e.key === "PrintScreen") {
-      triggerBlackout();
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText("").catch(() => {});
-      }
-      setTimeout(clearBlackout, 1500);
+      registerViolation("Mencoba mengambil tangkapan layar (PrintScreen)");
     }
   });
 
-  // 3. Matikan Klik Kanan
+  // 2. Deteksi Snipping Tool / Beralih Aplikasi Lain (Window Blur)
+  window.addEventListener("blur", function() {
+    registerViolation("Membuka aplikasi lain / Snipping Tool");
+  });
+
+  // 3. Deteksi Pindah / Buka Tab Baru di Browser
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "hidden") {
+      registerViolation("Membuka tab peramban lain");
+    }
+  });
+
+  // 4. Matikan Klik Kanan
   document.addEventListener('contextmenu', event => event.preventDefault());
 
-  // 4. Cegah Seleksi Teks & Drag (Kecuali pada kolom Input)
+  // 5. Cegah Seleksi Teks & Drag (Kecuali pada kolom Input)
   document.addEventListener('selectstart', event => {
     if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return true;
     event.preventDefault();
   });
   document.addEventListener('dragstart', event => event.preventDefault());
 
-  // 5. Blokir Pintasan Keyboard Berbahaya (Izinkan Ctrl+V hanya di Input)
+  // 6. Blokir Pintasan Keyboard Khusus
   document.addEventListener('keydown', function(e) {
     if (e.key === 'F12') {
       e.preventDefault();
+      registerViolation("Membuka Developer Tools (F12)");
       return false;
     }
 
     if (e.ctrlKey || e.metaKey) {
       const key = e.key.toLowerCase();
-      
-      // Izinkan paste ke kolom token/nama/email
-      if (key === 'v' && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-        return true;
-      }
-
-      if (['c', 'v', 'p', 's', 'u'].includes(key)) {
+      if (key === 'v' && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return true;
+      if (['c', 'u', 'p', 's'].includes(key)) {
         e.preventDefault();
-        return false;
-      }
-      
-      if (e.shiftKey && ['i', 'j', 'c'].includes(key)) {
-        e.preventDefault();
+        registerViolation(`Pintasan tombol terlarang (Ctrl+${key.toUpperCase()})`);
         return false;
       }
     }
   });
 
-  // 6. Render Watermark Identitas Peserta
+  // 7. Render Watermark Identitas Peserta
   function renderWatermark() {
     const layer = document.getElementById("watermark-layer");
     layer.innerHTML = "";
