@@ -83,9 +83,16 @@
     .screen.active { display: block; }
     
     /* Question Styling */
-    .q-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; line-height: 1.6; }
-    .q-image { max-width: 100%; border-radius: 6px; margin: 0 auto 16px auto; border: 1px solid var(--border); display: block; }
+    .q-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; line-height: 1.6; transition: filter 0.1s; }
+    .q-image { max-width: 100%; border-radius: 6px; margin: 0 auto 16px auto; border: 1px solid var(--border); display: block; transition: filter 0.1s; }
     
+    /* Efek Blur Otomatis Saat AssistiveTouch / Overlay Aktif */
+    body.focus-lost #screen-test,
+    body.focus-lost #screen-memory {
+      filter: blur(18px);
+      pointer-events: none;
+    }
+
     .options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
     .option-lbl { display: flex; align-items: center; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: 0.2s; }
     .option-lbl:hover { background: #f1f5f9; }
@@ -109,6 +116,34 @@
     
     .footer { display: flex; justify-content: space-between; margin-top: 24px; align-items: center; }
 
+    /* Kotak Peringatan Instruksi Subtes */
+    .inst-warning-box {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 4px solid #dc2626;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      font-size: 0.88rem;
+      color: #7f1d1d;
+      line-height: 1.55;
+    }
+    .inst-warning-box strong.title {
+      display: block;
+      color: #991b1b;
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .inst-warning-box ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .inst-warning-box li {
+      margin-bottom: 4px;
+    }
+
     /* Subtes 9 Anti-Screenshot Hold-to-Reveal */
     .mem-row { cursor: pointer; transition: background 0.15s; }
     .mem-row:hover { background: #eff6ff !important; }
@@ -117,7 +152,6 @@
       opacity: 0.25;
       transition: filter 0.1s ease, opacity 0.1s ease;
       pointer-events: none;
-      select: none;
     }
     .mem-row.revealed .mem-words {
       filter: blur(0);
@@ -210,8 +244,22 @@
   <div id="screen-instruction" class="body screen">
     <h1 id="inst-title">Judul Subtes</h1>
     <img id="inst-image" src="" style="display:none; width: 100%; max-width: 650px; margin: 0 auto 20px auto; border: 1px solid var(--border); border-radius: 6px;" alt="Instruksi">
-    <div id="inst-text" style="margin-bottom: 24px; line-height: 1.6; color: var(--muted);">Penjelasan Subtes</div>
-    <p style="color: #dc2626; font-weight: 600;">Waktu Mengerjakan: <span id="inst-time"></span></p>
+    <div id="inst-text" style="margin-bottom: 20px; line-height: 1.6; color: var(--muted);">Penjelasan Subtes</div>
+    
+    <p style="color: #dc2626; font-weight: 700; margin-bottom: 16px;">Waktu Mengerjakan: <span id="inst-time"></span></p>
+
+    <!-- KOTAK PERINGATAN KEAMANAN DI ANTARA WAKTU & TOMBOL MULAI -->
+    <div class="inst-warning-box">
+      <strong class="title">⚠️ Peraturan & Keamanan Selama Pengerjaan:</strong>
+      <ul>
+        <li><strong>Jangan sampai layar perangkat mati / terkunci</strong> selama subtes berlangsung.</li>
+        <li><strong>Jangan berpindah tab, meminimalkan peramban, atau membuka jendela lain.</strong></li>
+        <li><strong>Dilarang melakukan tangkapan layar (screenshot)</strong> — setiap pelanggaran tercatat otomatis (konsekuensi <strong>Peringatan 0/3 hingga Diskualifikasi</strong>).</li>
+        <li><strong>Jangan gunakan aplikasi overlay eksternal</strong> (seperti <em>AssistiveTouch</em>, <em>floating chat</em>, atau mode <em>Split Screen</em>).</li>
+        <li>Sangat disarankan menggunakan perangkat <strong>Windows (PC/Laptop)</strong> atau <strong>Android</strong> demi kelancaran sistem.</li>
+      </ul>
+    </div>
+
     <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
   </div>
 
@@ -313,10 +361,12 @@
   const MAX_STRIKES = 3;
   let isStrikeCooldown = false;
   let isGracePeriod = false;
+  let isPageUnloading = false; // Flag khusus mencegah +1 strike saat tombol Refresh ditekan
+  let blurTimer = null;
 
   function triggerGracePeriod() {
     isGracePeriod = true;
-    setTimeout(() => { isGracePeriod = false; }, 4000);
+    setTimeout(() => { isGracePeriod = false; }, 3500);
   }
 
   // Interaksi Tabel Hafalan Anti-Screenshot
@@ -328,7 +378,7 @@
   function revealRowTouch(e, rowEl) {
     if (e.touches && e.touches.length > 1) {
       hideAllRows();
-      registerViolation("Gestur Multi-Jari / Tangkapan Layar Layar Sentuh");
+      registerViolation("Gestur Multi-Jari / Tangkapan Layar");
       return;
     }
     hideAllRows();
@@ -339,16 +389,22 @@
     document.querySelectorAll(".mem-row").forEach(r => r.classList.remove("revealed"));
   }
 
-  // Mencegah peserta menutup browser tanpa sengaja
+  // Kunci status unloading saat pengguna me-refresh halaman agar tidak dianggap pindah tab
   window.addEventListener("beforeunload", function (e) {
+    isPageUnloading = true;
     if (localStorage.getItem("ist_active_session")) {
       e.preventDefault();
       e.returnValue = "Pengerjaan tes sedang berlangsung. Data Anda tersimpan.";
     }
   });
 
+  window.addEventListener("pagehide", function () {
+    isPageUnloading = true;
+  });
+
   // Otomatis deteksi sesi tersimpan saat halaman dibuka ulang
   window.addEventListener("load", function () {
+    isPageUnloading = false;
     triggerGracePeriod();
     const saved = localStorage.getItem("ist_active_session");
     if (saved) {
@@ -453,7 +509,7 @@
     state.timeLeft = parsed.timeLeft;
     state.memoryDone = parsed.memoryDone;
 
-    // Pulihkan jumlah pelanggaran (tidak bisa di-reset dengan refresh)
+    // Pulihkan jumlah pelanggaran persis seperti sebelum di-refresh
     const tokenStrikes = parseInt(localStorage.getItem("ist_strikes_" + candidate.token) || "0");
     cheatStrikes = Math.max(parsed.cheatStrikes || 0, tokenStrikes);
 
@@ -465,7 +521,7 @@
     }
 
     triggerGracePeriod();
-    alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes Anda...`);
+    alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes Anda (Pelanggaran: ${cheatStrikes}/${MAX_STRIKES})...`);
 
     if (parsed.currentScreen === "screen-test") {
       showScreen("screen-test");
@@ -541,6 +597,8 @@
     const sub = IST_DATA[state.subIdx];
     state.qIdx = 0;
     if (!state.answers[sub.id]) state.answers[sub.id] = {};
+
+    triggerGracePeriod();
 
     if (sub.type === "memory" && !state.memoryDone) {
       state.memoryDone = true;
@@ -833,10 +891,11 @@
     });
   }
 
-  // --- SISTEM DETEKSI PELANGGARAN PERMANEN (PERSISTENT STRIKES) ---
+  // --- SISTEM DETEKSI PELANGGARAN PERMANEN (FIX REFRESH BUG & IOS OVERLAY) ---
 
   function registerViolation(reason) {
-    if (isGracePeriod) return;
+    // Abaikan jika halaman sedang di-refresh atau dalam masa tenggang
+    if (isPageUnloading || isGracePeriod) return;
     if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") {
       return;
     }
@@ -848,7 +907,7 @@
     hideAllRows();
     cheatStrikes++;
 
-    // Langsung simpan ke localStorage agar refresh tidak me-reset pelanggaran
+    // Simpan ke localStorage
     saveSession();
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -861,7 +920,6 @@
     const btn = document.getElementById("btn-strike-ack");
 
     if (cheatStrikes >= MAX_STRIKES) {
-      // Langsung hanguskan token & kirim data saat itu juga sebelum kandidat sempat refresh
       candidate.isCheated = true;
       candidate.cheatReason = `Diskualifikasi: ${cheatStrikes}x (${reason})`;
       
@@ -873,15 +931,15 @@
       };
       modal.style.display = "flex";
       
-      // Eksekusi submit langsung di latar belakang
       submitAllData();
 
     } else {
       title.innerText = `PERINGATAN KEAMANAN (${cheatStrikes}/${MAX_STRIKES})`;
-      desc.innerHTML = `Terdeteksi aktivitas: <strong>${reason}</strong>.<br><br>Peringatan ini tersimpan permanen pada token Anda. Jika mencapai <strong>${MAX_STRIKES} kali</strong>, ujian otomatis <strong>didiskualifikasi</strong>.`;
+      desc.innerHTML = `Terdeteksi aktivitas: <strong>${reason}</strong>.<br><br>Peringatan ini tersimpan pada token Anda. Jika mencapai <strong>${MAX_STRIKES} kali</strong>, ujian otomatis <strong>didiskualifikasi</strong>.`;
       btn.innerText = "Saya Mengerti & Lanjutkan";
       btn.onclick = function() {
         modal.style.display = "none";
+        document.body.classList.remove("focus-lost");
       };
       modal.style.display = "flex";
     }
@@ -894,15 +952,22 @@
     }
   });
 
-  // 2. Deteksi Tab Ditinggalkan / Minimize / Layar HP Mati atau Pindah Aplikasi
+  // 2. Deteksi Tab Ditinggalkan / Layar Mati (Dengan Delay 400ms agar Refresh Tidak Terhitung)
   document.addEventListener("visibilitychange", function() {
     if (document.visibilityState === "hidden") {
       hideAllRows();
-      registerViolation("Meninggalkan Halaman Ujian / Beralih Aplikasi");
+      document.body.classList.add("focus-lost");
+      setTimeout(() => {
+        if (!isPageUnloading && document.visibilityState === "hidden") {
+          registerViolation("Meninggalkan Halaman Ujian / Layar Mati");
+        }
+      }, 400);
+    } else {
+      document.body.classList.remove("focus-lost");
     }
   });
 
-  // 3. Deteksi Gestur Screenshot 3 Jari di HP (Multi-Touch)
+  // 3. Deteksi Gestur Screenshot 3 Jari & Multi-Touch
   window.addEventListener("touchstart", function(e) {
     if (e.touches && e.touches.length > 1) {
       hideAllRows();
@@ -910,9 +975,23 @@
     }
   }, { passive: true });
 
-  // 4. Sembunyikan kata hafalan seketika jika jendela kehilangan fokus
+  // 4. Proteksi iOS AssistiveTouch / Control Center / Split Screen Overlay
   window.addEventListener("blur", function() {
     hideAllRows();
+    if (state.currentScreen === "screen-test" || state.currentScreen === "screen-memory") {
+      document.body.classList.add("focus-lost");
+      clearTimeout(blurTimer);
+      blurTimer = setTimeout(() => {
+        if (!isPageUnloading && !document.hasFocus()) {
+          registerViolation("Membuka Overlay Eksternal / AssistiveTouch / Split Screen");
+        }
+      }, 600);
+    }
+  });
+
+  window.addEventListener("focus", function() {
+    clearTimeout(blurTimer);
+    document.body.classList.remove("focus-lost");
   });
 
   // 5. Matikan Klik Kanan
