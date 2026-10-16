@@ -42,23 +42,6 @@
       body { display: none !important; }
     }
 
-    /* Watermark Identitas Kandidat */
-    .watermark-overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.08;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      align-content: space-around;
-      font-size: 1.05rem;
-      font-weight: 800;
-      transform: rotate(-25deg);
-      user-select: none;
-    }
-
     .container { 
       background: var(--surface); 
       width: 100%; 
@@ -130,9 +113,6 @@
   <script src="norma.js"></script>
 </head>
 <body>
-
-<!-- Layer Watermark Dinamis -->
-<div id="watermark-layer" class="watermark-overlay"></div>
 
 <div class="container">
   <div class="header">
@@ -259,14 +239,7 @@
 <script>
   const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzmHIc7pigMlvk_3e_8Q4UdV6geB4CcDRg-wtj3luPNkwdkRlXBYsfkigTr56bFUvTk-g/exec"; 
 
-  let candidate = { 
-    token: "", 
-    name: "", 
-    email: "", 
-    isCheated: false, 
-    cheatReason: "" 
-  };
-  
+  let candidate = { token: "", name: "", email: "" };
   let state = {
     subIdx: 0,
     qIdx: 0,
@@ -331,13 +304,11 @@
     const val = inputEl.value.trim().toUpperCase();
     if (!val) return alert("Silakan masukkan kode token Anda!");
 
-    // Cek apakah token sudah pernah selesai di perangkat ini
     const voidTokens = JSON.parse(localStorage.getItem("ist_void_tokens") || "[]");
     if (voidTokens.includes(val)) {
       return alert("Token ini sudah dinyatakan SELESAI (VOID) di perangkat ini.");
     }
 
-    // Fast-resume jika sesi lokal aktif cocok dengan token input
     const saved = localStorage.getItem("ist_active_session");
     if (saved) {
       try {
@@ -388,7 +359,6 @@
     state.timeLeft = parsed.timeLeft;
     state.memoryDone = parsed.memoryDone;
 
-    renderWatermark();
     alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes Anda...`);
 
     if (parsed.currentScreen === "screen-test") {
@@ -428,7 +398,6 @@
     state.subIdx = 0;
     state.answers = {};
     state.memoryDone = false;
-    renderWatermark();
     saveSession();
     loadInstruction();
   }
@@ -478,13 +447,11 @@
     }
   }
 
-  // Transisi otomatis subtes 9 langsung ke soal tanpa pop-up
   function endMemoryPhase() {
     clearInterval(state.timerObj);
     beginSubtest();
   }
 
-  // Timer anti-freeze berbasis delta timestamp
   function startTimer(seconds, timeoutCallback) {
     clearInterval(state.timerObj);
     state.timeLeft = seconds;
@@ -600,7 +567,6 @@
     updateGridColor();
   }
 
-  // Validasi seluruh soal wajib terjawab sebelum submit manual
   function handleManualSubtestSubmit() {
     const sub = IST_DATA[state.subIdx];
     const subAnswers = state.answers[sub.id] || {};
@@ -725,14 +691,11 @@
     const payload = {
       timestamp: new Date().toLocaleString("id-ID"),
       token: candidate.token,
-      name: candidate.name + (candidate.isCheated ? " [DISKUALIFIKASI]" : ""),
+      name: candidate.name,
       email: candidate.email,
       rawScores: scores.rawScores,
       totalRW: scores.totalRW,
-      answersJSON: JSON.stringify({
-        answers: state.answers,
-        cheatLog: candidate.cheatReason || "Bersih"
-      })
+      answersJSON: JSON.stringify(state.answers)
     };
 
     let voidTokens = JSON.parse(localStorage.getItem("ist_void_tokens") || "[]");
@@ -751,102 +714,45 @@
       body: JSON.stringify(payload)
     }).then(() => {
       document.getElementById("finish-msg").innerHTML = 
-        candidate.isCheated ? 
-        `<span style="color: #dc2626; font-weight: 700; font-size: 1.1rem;">Ujian Dihentikan (Didiskualifikasi)</span><br><br>Pelanggaran keamanan terdeteksi. Seluruh log telah disinkronkan ke penguji.` :
         `<span style="color: #107c41; font-weight: 700; font-size: 1.1rem;">Data Berhasil Terkirim!</span><br><br>Terima kasih, <strong>${candidate.name}</strong>. Rangkaian Asesmen IST telah selesai. Token Anda (<strong>${candidate.token}</strong>) kini telah dinonaktifkan.`;
     }).catch(e => {
       document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
     });
   }
 
-  // --- SISTEM DETEKSI PELANGGARAN & DISKUALIFIKASI (STRIKE SYSTEM) ---
-  let cheatStrikes = 0;
-  const MAX_STRIKES = 3;
+  // --- KEAMANAN & PENCEGAHAN (CLEAN & NON-INTRUSIVE) ---
 
-  function registerViolation(reason) {
-    // Hanya aktifkan hukuman saat ujian sedang berjalan (layar instruksi, hafalan, atau soal)
-    if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory" && state.currentScreen !== "screen-instruction") {
-      return;
-    }
-
-    cheatStrikes++;
-    
-    // Hapus clipboard bila mencoba print screen
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText("").catch(() => {});
-    }
-
-    if (cheatStrikes >= MAX_STRIKES) {
-      alert(`PELANGGARAN MAKSIMAL TERLAMPAUI (${cheatStrikes}/${MAX_STRIKES})!\n\nAnda terdeteksi melakukan tindakan terlarang (${reason}) secara berulang. Tes Anda langsung DIHENTIKAN dan DIDISKUALIFIKASI.`);
-      
-      candidate.isCheated = true;
-      candidate.cheatReason = `Diskualifikasi: ${cheatStrikes}x pelanggaran (${reason})`;
-      submitAllData();
-    } else {
-      alert(`PERINGATAN KEAMANAN (${cheatStrikes}/${MAX_STRIKES})!\n\nTerdeteksi aktivitas terlarang: ${reason}.\nJika mencapai ${MAX_STRIKES} kali, ujian Anda otomatis DIDISKUALIFIKASI dan token dinyatakan hangus.`);
-    }
-  }
-
-  // 1. Deteksi Tombol PrintScreen
-  window.addEventListener("keyup", function(e) {
-    if (e.key === "PrintScreen") {
-      registerViolation("Mencoba mengambil tangkapan layar (PrintScreen)");
-    }
-  });
-
-  // 2. Deteksi Snipping Tool / Beralih Aplikasi Lain (Window Blur)
-  window.addEventListener("blur", function() {
-    registerViolation("Membuka aplikasi lain / Snipping Tool");
-  });
-
-  // 3. Deteksi Pindah / Buka Tab Baru di Browser
-  document.addEventListener("visibilitychange", function() {
-    if (document.visibilityState === "hidden") {
-      registerViolation("Membuka tab peramban lain");
-    }
-  });
-
-  // 4. Matikan Klik Kanan
+  // 1. Matikan Klik Kanan
   document.addEventListener('contextmenu', event => event.preventDefault());
 
-  // 5. Cegah Seleksi Teks & Drag (Kecuali pada kolom Input)
+  // 2. Cegah Seleksi Teks & Drag (Kecuali pada kolom Input)
   document.addEventListener('selectstart', event => {
     if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return true;
     event.preventDefault();
   });
   document.addEventListener('dragstart', event => event.preventDefault());
 
-  // 6. Blokir Pintasan Keyboard Khusus
+  // 3. Blokir Pintasan Keyboard Khusus (Tetap izinkan Ctrl+V untuk paste token)
   document.addEventListener('keydown', function(e) {
     if (e.key === 'F12') {
       e.preventDefault();
-      registerViolation("Membuka Developer Tools (F12)");
       return false;
     }
 
     if (e.ctrlKey || e.metaKey) {
       const key = e.key.toLowerCase();
-      if (key === 'v' && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return true;
+      
+      // Izinkan paste token di kolom input
+      if (key === 'v' && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+        return true;
+      }
+
       if (['c', 'u', 'p', 's'].includes(key)) {
         e.preventDefault();
-        registerViolation(`Pintasan tombol terlarang (Ctrl+${key.toUpperCase()})`);
         return false;
       }
     }
   });
-
-  // 7. Render Watermark Identitas Peserta
-  function renderWatermark() {
-    const layer = document.getElementById("watermark-layer");
-    layer.innerHTML = "";
-    const stamp = `${candidate.name || 'PESERTA'} • ${candidate.token || 'IST'} • ${candidate.email || ''} `;
-    for (let i = 0; i < 24; i++) {
-      const span = document.createElement("span");
-      span.innerText = stamp;
-      span.style.margin = "20px";
-      layer.appendChild(span);
-    }
-  }
 </script>
 
 </body>
