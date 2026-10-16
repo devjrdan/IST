@@ -114,6 +114,9 @@
 </head>
 <body>
 
+<!-- Penutup Layar Putih Bersih saat Screenshot / Kehilangan Fokus -->
+<div id="blank-cover" style="display: none; position: fixed; inset: 0; background: #f8fafc; z-index: 999999;"></div>
+
 <div class="container">
   <div class="header">
     <h2 id="header-title">IST Digital</h2>
@@ -250,7 +253,7 @@
     currentScreen: "screen-token"
   };
 
-  // Mencegah peserta menutup tab/browser tanpa sengaja
+  // Mencegah peserta menutup tab tanpa sengaja
   window.addEventListener("beforeunload", function (e) {
     if (localStorage.getItem("ist_active_session")) {
       e.preventDefault();
@@ -722,36 +725,53 @@
     });
   }
 
-  // --- KEAMANAN STANDAR TANPA POPUP GANGGUAN ---
+  // --- KEAMANAN SENYAP (BLANK OUT ON UNFOCUS / SCREENSHOT, NO POPUPS, NO WATERMARK) ---
 
-  // 1. Matikan Klik Kanan
-  document.addEventListener('contextmenu', event => event.preventDefault());
+  const blankCover = document.getElementById("blank-cover");
 
-  // 2. Cegah Seleksi Teks & Drag (Kecuali pada kolom Input)
-  document.addEventListener('selectstart', event => {
-    if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return true;
-    event.preventDefault();
-  });
-  document.addEventListener('dragstart', event => event.preventDefault());
-
-  // 3. Blokir Pintasan Keyboard Khusus (Tetap izinkan Ctrl+V untuk paste token)
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'F12') {
-      e.preventDefault();
-      return false;
+  function blankOut() {
+    // Layar menjadi putih hanya pada fase hafalan atau pengerjaan soal
+    if (state.currentScreen === "screen-memory" || state.currentScreen === "screen-test") {
+      blankCover.style.display = "block";
     }
+  }
 
+  function restoreScreen() {
+    blankCover.style.display = "none";
+  }
+
+  // 1. Saat Snipping Tool aktif / Alt+Tab / browser kehilangan fokus -> Tutup layar putih
+  window.addEventListener("blur", blankOut);
+  window.addEventListener("focus", restoreScreen);
+
+  // 2. Saat tombol PrintScreen ditekan -> Layar putih & hapus isi clipboard
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "PrintScreen") {
+      blankOut();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText("").catch(() => {});
+      }
+      setTimeout(restoreScreen, 1000);
+    }
+  });
+
+  // 3. Matikan Klik Kanan
+  document.addEventListener("contextmenu", e => e.preventDefault());
+
+  // 4. Cegah Seleksi Teks & Drag (Kecuali pada kolom Input)
+  document.addEventListener("selectstart", e => {
+    if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return true;
+    e.preventDefault();
+  });
+  document.addEventListener("dragstart", e => e.preventDefault());
+
+  // 5. Blokir Pintasan Keyboard Khusus (Tetap izinkan Ctrl+V untuk input)
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "F12") return e.preventDefault();
     if (e.ctrlKey || e.metaKey) {
-      const key = e.key.toLowerCase();
-      
-      if (key === 'v' && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-        return true;
-      }
-
-      if (['c', 'u', 'p', 's'].includes(key)) {
-        e.preventDefault();
-        return false;
-      }
+      const k = e.key.toLowerCase();
+      if (k === "v" && ["INPUT", "TEXTAREA"].includes(e.target.tagName)) return true;
+      if (["c", "u", "p", "s"].includes(k)) return e.preventDefault();
     }
   });
 </script>
