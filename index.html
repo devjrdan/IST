@@ -18,7 +18,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
-    /* Mencegah seleksi / blok teks, tetapi mengizinkan input teks */
+    /* Proteksi seleksi teks global (kecuali kolom input) */
     body { 
       background: var(--bg); 
       color: var(--text); 
@@ -39,11 +39,46 @@
       user-select: text !important;
     }
 
+    /* Proteksi cetak layar / simpan dokumen */
     @media print {
       body { display: none !important; }
     }
 
-    .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; min-height: 540px; }
+    /* Layar Hitam Pengaman Screenshot / Snipping Tool */
+    #security-blackout {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000000;
+      color: #ffffff;
+      z-index: 999999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* Watermark Identitas Kandidat */
+    .watermark-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.07;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-content: space-around;
+      font-size: 1.05rem;
+      font-weight: 800;
+      transform: rotate(-25deg);
+      user-select: none;
+    }
+
+    .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; min-height: 540px; position: relative; z-index: 1; }
     
     /* Header & Timer */
     .header { background: var(--primary); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
@@ -102,6 +137,18 @@
 </head>
 <body>
 
+<!-- Layar Hitam Pemblokir Snipping Tool / Screenshot -->
+<div id="security-blackout">
+  <div>⚠️ SISTEM TERKUNCI SEMENTARA</div>
+  <div style="font-size: 0.95rem; font-weight: 400; margin-top: 10px; color: #94a3b8; max-width: 480px; line-height: 1.5;">
+    Tangkapan layar dan perpindahan aplikasi dilarang selama pengerjaan asesmen.<br>
+    Klik kembali pada halaman ini untuk melanjutkan.
+  </div>
+</div>
+
+<!-- Layer Watermark Dinamis -->
+<div id="watermark-layer" class="watermark-overlay"></div>
+
 <div class="container">
   <div class="header">
     <h2 id="header-title">IST Digital</h2>
@@ -115,7 +162,7 @@
     
     <div class="form-group" style="max-width: 420px;">
       <label>Kode Token Asesmen</label>
-      <input type="text" id="input-token" placeholder="Contoh: IST-8X9Y2Z" style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px;" autocomplete="off" required>
+      <input type="text" id="input-token" placeholder="Contoh: IST-8X9Y2Z" style="text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px;" autocomplete="off" required>
     </div>
     
     <button class="btn" id="btn-verify-token" style="min-width: 180px;" onclick="verifyToken()">Verifikasi Token ➔</button>
@@ -153,7 +200,7 @@
 
   <!-- Screen 3: MEMORY PHASE (SUBTES 9) -->
   <div id="screen-memory" class="body screen" style="text-align: center;">
-    <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal</h1>
+    <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal (Daya Ingat)</h1>
     <p style="color: var(--muted); margin-bottom: 20px;">
       Hafalkan daftar kata berikut beserta kategorinya. Waktu Anda: <strong>3 Menit</strong>.<br>
       Setelah waktu habis, tampilan hafalan otomatis ditutup dan tes langsung dimulai.
@@ -349,6 +396,7 @@
     state.timeLeft = parsed.timeLeft;
     state.memoryDone = parsed.memoryDone;
 
+    renderWatermark();
     alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes Anda...`);
 
     if (parsed.currentScreen === "screen-test") {
@@ -388,6 +436,7 @@
     state.subIdx = 0;
     state.answers = {};
     state.memoryDone = false;
+    renderWatermark();
     saveSession();
     loadInstruction();
   }
@@ -437,6 +486,7 @@
     }
   }
 
+  // Transisi otomatis subtes 9 tanpa popup
   function endMemoryPhase() {
     clearInterval(state.timerObj);
     beginSubtest();
@@ -711,19 +761,47 @@
     });
   }
 
-  // --- KEAMANAN & PENCEGAHAN KECURANGAN ---
+  // --- KEAMANAN SISTEM & PROTEKSI SCREENSHOT AKTIF ---
 
-  // 1. Matikan Klik Kanan
+  const blackoutEl = document.getElementById("security-blackout");
+
+  function triggerBlackout() {
+    // Hanya kunci layar jika peserta sudah melewati layar pengisian token
+    if (state.currentScreen !== "screen-token") {
+      blackoutEl.style.display = "flex";
+    }
+  }
+
+  function clearBlackout() {
+    blackoutEl.style.display = "none";
+  }
+
+  // 1. Saat Snipping Tool aktif / Alt+Tab / Jendela lepas fokus -> Layar langsung hitam pekat
+  window.addEventListener("blur", triggerBlackout);
+  window.addEventListener("focus", clearBlackout);
+
+  // 2. Cegah PrintScreen dan bersihkan clipboard
+  window.addEventListener("keydown", function(e) {
+    if (e.key === "PrintScreen") {
+      triggerBlackout();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText("").catch(() => {});
+      }
+      setTimeout(clearBlackout, 1500);
+    }
+  });
+
+  // 3. Matikan Klik Kanan
   document.addEventListener('contextmenu', event => event.preventDefault());
 
-  // 2. Cegah Seleksi Teks & Drag (Dikecualikan untuk Input/Formulir)
+  // 4. Cegah Seleksi Teks & Drag (Kecuali pada kolom Input)
   document.addEventListener('selectstart', event => {
     if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return true;
     event.preventDefault();
   });
   document.addEventListener('dragstart', event => event.preventDefault());
 
-  // 3. Pintasan Keyboard (Izinkan Ctrl+V hanya di Input)
+  // 5. Blokir Pintasan Keyboard Berbahaya (Izinkan Ctrl+V hanya di Input)
   document.addEventListener('keydown', function(e) {
     if (e.key === 'F12') {
       e.preventDefault();
@@ -733,7 +811,7 @@
     if (e.ctrlKey || e.metaKey) {
       const key = e.key.toLowerCase();
       
-      // Izinkan paste token / data ke input
+      // Izinkan paste ke kolom token/nama/email
       if (key === 'v' && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
         return true;
       }
@@ -750,24 +828,18 @@
     }
   });
 
-  // 4. Deteksi Tangkapan Layar (PrintScreen)
-  window.addEventListener('keyup', function(e) {
-    if (e.key === 'PrintScreen') {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText('').catch(() => {});
-      }
-      alert("Tangkapan layar (screenshot) dilarang selama pengerjaan asesmen!");
+  // 6. Render Watermark Identitas Peserta
+  function renderWatermark() {
+    const layer = document.getElementById("watermark-layer");
+    layer.innerHTML = "";
+    const stamp = `${candidate.name || 'PESERTA'} • ${candidate.token || 'IST'} • ${candidate.email || ''} `;
+    for (let i = 0; i < 24; i++) {
+      const span = document.createElement("span");
+      span.innerText = stamp;
+      span.style.margin = "20px";
+      layer.appendChild(span);
     }
-  });
-
-  // 5. Peringatan Pindah Tab
-  document.addEventListener("visibilitychange", function() {
-    if (document.visibilityState === 'hidden') {
-      if (state.currentScreen === "screen-test" || state.currentScreen === "screen-memory") {
-        console.warn("Kandidat meninggalkan halaman pengerjaan.");
-      }
-    }
-  });
+  }
 </script>
 
 </body>
