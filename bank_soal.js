@@ -282,86 +282,140 @@ const IST_DATA = [
       { q: "Di dalam suatu keluarga anak perempuan mempunyai jumlah saudara laki-laki yang sama dengan jumlah saudara perempuan dan setiap anak laki-laki mempunyai dua kali lebih banyak saudara perempuan daripada saudara laki-laki. Berapa anak laki-laki yang terdapat didalam keluarga itu ?", key: "3", digits: [3] }
     ]
   },
-  {
+{
     id: "ZR",
-    name: "Subtes 6",
+    name: "Subtes 6 (Deret Angka)",
     durationSec: 600, // 10 Menit
-    type: "input", // Isian Angka
+    type: "digit_select", // Menggunakan pemilih tombol digit 0 - 9
     instruction: `
-  <p>Pada persoalan berikut akan diberikan deret angka yang tersusun menurut aturan tertentu dan dapat dilanjutkan menurut aturan itu. Carilah angka lanjutan berikutnya menurut aturan deret tersebut!</p>
-  <p><em>(Petunjuk: Pola bisa berupa penjumlahan, pengurangan, perkalian, atau pembagian bertingkat).</em></p>
-  <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; margin-top: 10px;">
-    <strong>Contoh 06:</strong><br>
-    2 &nbsp; 4 &nbsp; 6 &nbsp; 8 &nbsp; 10 &nbsp; 12 &nbsp; 14 &nbsp; ?<br>
-    <em>Penjelasan: Angka berikutnya didapat dengan menambah 2 pada angka di depannya.</em><br>
-    <em>Jawaban: <strong>16</strong></em>
-    <br><br>
-    <strong>Contoh berikutnya:</strong><br>
-    9 &nbsp; 7 &nbsp; 10 &nbsp; 8 &nbsp; 11 &nbsp; 9 &nbsp; 12 &nbsp; ?<br>
-    <em>Penjelasan: Pola bergantian dikurangi 2 (-2), lalu ditambah 3 (+3).</em><br>
-    <em>Jawaban: <strong>10</strong></em>
-  </div>
-`,
-questions: [
+      <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 12px; color: var(--primary); text-align: center;">
+        PETUNJUK DAN CONTOH UNTUK KELOMPOK SOAL 06<br>
+        <span style="font-size: 0.9rem; color: var(--muted); font-weight: 600;">(Soal-soal No. 97 - 116)</span>
+      </div>
+
+      <p style="margin-bottom: 14px; line-height: 1.6;">
+        Pada persoalan berikut akan diberikan deret angka. Setiap deret tersusun menurut suatu aturan tertentu dan dapat dilanjutkan menurut aturan itu.
+      </p>
+      <p style="margin-bottom: 16px; line-height: 1.6;">
+        Carilah untuk setiap deret angka berikutnya, kemudian <strong>pilihlah (klik) seluruh angka pembentuk jawaban Anda</strong> pada deretan tombol angka (0 – 9) yang tersedia di layar.
+      </p>
+
+      <!-- Contoh 06 -->
+      <div style="background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+        <div style="font-weight: 700; color: var(--text); margin-bottom: 6px;">Contoh 06:</div>
+        <div style="font-family: monospace; font-size: 1.15rem; font-weight: 700; letter-spacing: 2px; color: var(--primary); margin-bottom: 8px;">
+          2 &nbsp; 4 &nbsp; 6 &nbsp; 8 &nbsp; 10 &nbsp; 12 &nbsp; 14 &nbsp; ?
+        </div>
+        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--muted); margin-bottom: 10px;">
+          Pada deret ini angka berikutnya selalu didapat jika angka di depannya ditambah dengan 2 (+2).<br>
+          Maka jawabannya ialah <strong>16</strong>. Oleh karena itu, pada pilihan tombol angka di bawah soal, angka <strong>1</strong> dan <strong>6</strong> harus dipilih (diklik).
+        </p>
+        
+        <!-- Simulasi Visual Tombol Angka Terpilih -->
+        <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#107c41; color:#fff; font-weight:700; border:2px solid #0b5a2f; box-shadow:0 2px 6px rgba(16,124,65,0.3);">1</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">2</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">3</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">4</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">5</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#107c41; color:#fff; font-weight:700; border:2px solid #0b5a2f; box-shadow:0 2px 6px rgba(16,124,65,0.3);">6</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">7</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">8</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">9</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">0</span>
+        </div>
+      </div>
+
+      <!-- Contoh Berikutnya -->
+      <div style="background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: 8px;">
+        <div style="font-weight: 700; color: var(--text); margin-bottom: 6px;">Contoh berikutnya:</div>
+        <div style="font-family: monospace; font-size: 1.15rem; font-weight: 700; letter-spacing: 2px; color: var(--primary); margin-bottom: 8px;">
+          9 &nbsp; 7 &nbsp; 10 &nbsp; 8 &nbsp; 11 &nbsp; 9 &nbsp; 12 &nbsp; ?
+        </div>
+        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--muted); margin-bottom: 10px;">
+          Pada deret ini selalu berganti-ganti harus dikurangi dengan 2 (-2) dan setelah itu ditambah dengan 3 (+3).<br>
+          Jawaban contoh ini ialah: <strong>10</strong> (12 - 2 = 10). Maka dari itu angka <strong>1</strong> dan <strong>0</strong> seharusnya yang dipilih (diklik).
+        </p>
+        
+        <!-- Simulasi Visual Tombol Angka Terpilih -->
+        <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#107c41; color:#fff; font-weight:700; border:2px solid #0b5a2f; box-shadow:0 2px 6px rgba(16,124,65,0.3);">1</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">2</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">3</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">4</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">5</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">6</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">7</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">8</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#fff; color:#1e293b; font-weight:700; border:1px solid var(--border);">9</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:36px; border-radius:6px; background:#107c41; color:#fff; font-weight:700; border:2px solid #0b5a2f; box-shadow:0 2px 6px rgba(16,124,65,0.3);">0</span>
+        </div>
+      </div>
+
+      <p style="margin-top: 14px; font-size: 0.9rem; font-weight: 600; color: #b45309; text-align: center;">
+        <em>Kadang-kadang pada beberapa soal harus pula dikalikan atau dibagi.</em>
+      </p>
+    `,
+    questions: [
       // 97. Pola: +3 -> 24 + 3 = 27
-      { q: "6,   9,   12,   15,   18,   21,   24,   ?", key: "27", digits: [2, 7] },
+      { q: "6,    9,    12,    15,    18,    21,    24,    ?", key: "27", digits: [2, 7] },
 
       // 98. Pola: +1, +2, +1, +2, +1, +2, +1 -> 24 + 1 = 25
-      { q: "15,   16,   18,   19,   21,   22,   24,   ?", key: "25", digits: [2, 5] },
+      { q: "15,    16,    18,    19,    21,    22,    24,    ?", key: "25", digits: [2, 5] },
 
       // 99. Pola: -1, +4, -1, +4, -1, +4, -1 -> 28 - 1 = 27
-      { q: "19,   18,   22,   21,   25,   24,   28,   ?", key: "27", digits: [2, 7] },
+      { q: "19,    18,    22,    21,    25,    24,    28,    ?", key: "27", digits: [2, 7] },
 
       // 100. Pola: -4, +5, -4, +5, -4, +5, -4 -> 19 - 4 = 15
-      { q: "16,   12,   17,   13,   18,   14,   19,   ?", key: "15", digits: [1, 5] },
+      { q: "16,    12,    17,    13,    18,    14,    19,    ?", key: "15", digits: [1, 5] },
 
       // 101. Pola: +2, *2, +2, *2, +2, *2, +2 -> 44 + 2 = 46
-      { q: "2,   4,   8,   10,   20,   22,   44,   ?", key: "46", digits: [4, 6] },
+      { q: "2,    4,    8,    10,    20,    22,    44,    ?", key: "46", digits: [4, 6] },
 
       // 102. Pola selang-seling: 13, 12, 11, ? (-1) -> 10
-      { q: "15,   13,   16,   12,   17,   11,   18,   ?", key: "10", digits: [0, 1] },
+      { q: "15,    13,    16,    12,    17,    11,    18,    ?", key: "10", digits: [0, 1] },
 
       // 103. Pola: -3, /2, *3, -3, /2, *3, -3 -> 45 - 3 = 42
-      { q: "25,   22,   11,   33,   30,   15,   45,   ?", key: "42", digits: [2, 4] },
+      { q: "25,    22,    11,    33,    30,    15,    45,    ?", key: "42", digits: [2, 4] },
 
       // 104. Pola: +2, +3, /2, /3, +2, +3, /2 -> 14 / 2 = 7
-      { q: "49,   51,   54,   27,   9,   11,   14,   ?", key: "7", digits: [7] },
+      { q: "49,    51,    54,    27,    9,    11,    14,    ?", key: "7", digits: [7] },
 
       // 105. Pola blok 3 angka bertambah 1: (2,3,1), (3,4,2), (4,5,3) -> 5
-      { q: "2,   3,   1,   3,   4,   2,   4,   ?", key: "5", digits: [5] },
+      { q: "2,    3,    1,    3,    4,    2,    4,    ?", key: "5", digits: [5] },
 
       // 106. Pola selang-seling: 17, 16, 15, ? (-1) -> 14
-      { q: "19,   17,   20,   16,   21,   15,   22,   ?", key: "14", digits: [1, 4] },
+      { q: "19,    17,    20,    16,    21,    15,    22,    ?", key: "14", digits: [1, 4] },
 
       // 107. Pola: -2, /2, -2, /2, -2, /2, -2 -> 10 - 2 = 8
-      { q: "94,   92,   46,   44,   22,   20,   10,   ?", key: "8", digits: [8] },
+      { q: "94,    92,    46,    44,    22,    20,    10,    ?", key: "8", digits: [8] },
 
       // 108. Pola: +3, +1, -1, +3, +1, -1, +3 -> 11 + 3 = 14
-      { q: "5,   8,   9,   8,   11,   12,   11,   ?", key: "14", digits: [1, 4] },
+      { q: "5,    8,    9,    8,    11,    12,    11,    ?", key: "14", digits: [1, 4] },
 
       // 109. Pola selisih: +3, +4, +4, +5, +5, +6, +6 -> 39 + 6 = 45
-      { q: "12,   15,   19,   23,   28,   33,   39,   ?", key: "45", digits: [4, 5] },
+      { q: "12,    15,    19,    23,    28,    33,    39,    ?", key: "45", digits: [4, 5] },
 
       // 110. Pola: -2, *2, -3, *3, -4, *4, -5 -> 68 - 5 = 63
-      { q: "7,   5,   10,   7,   21,   17,   68,   ?", key: "63", digits: [3, 6] },
+      { q: "7,    5,    10,    7,    21,    17,    68,    ?", key: "63", digits: [3, 6] },
 
       // 111. Pola: +4, +3, /2, +4, +3, /2, +4 -> 8 + 4 = 12
-      { q: "11,   15,   18,   9,   13,   16,   8,   ?", key: "12", digits: [1, 2] },
+      { q: "11,    15,    18,    9,    13,    16,    8,    ?", key: "12", digits: [1, 2] },
 
       // 112. Pola selisih ganjil: +5, +7, +9, +11, +13, +15, +17 -> 63 + 17 = 80
-      { q: "3,   8,   15,   24,   35,   48,   63,   ?", key: "80", digits: [0, 8] },
+      { q: "3,    8,    15,    24,    35,    48,    63,    ?", key: "80", digits: [0, 8] },
 
       // 113. Pola: +1, +2, -3, +4, +5, -6, +7 -> 7 + 7 = 14
-      { q: "4,   5,   7,   4,   8,   13,   7,   ?", key: "14", digits: [1, 4] },
+      { q: "4,    5,    7,    4,    8,    13,    7,    ?", key: "14", digits: [1, 4] },
 
       // 114. Pola operasi 3: -3, *3, +3, /3, -3, *3, +3 -> 9 + 3 = 12
-      { q: "8,   5,   15,   18,   6,   3,   9,   ?", key: "12", digits: [1, 2] },
+      { q: "8,    5,    15,    18,    6,    3,    9,    ?", key: "12", digits: [1, 2] },
 
       // 115. Pola: -9, *3, -8, *3, -7, *3, -6 -> 69 - 6 = 63
-      { q: "15,   6,   18,   10,   30,   23,   69,   ?", key: "63", digits: [3, 6] },
+      { q: "15,    6,    18,    10,    30,    23,    69,    ?", key: "63", digits: [3, 6] },
 
       // 116. Pola operasi 7: *7, -7, /7, +7, *7, -7, /7 -> 70 / 7 = 10
-      { q: "5,   35,   28,   4,   11,   77,   70,   ?", key: "10", digits: [0, 1] }
+      { q: "5,    35,    28,    4,    11,    77,    70,    ?", key: "10", digits: [0, 1] }
     ]
   },
 {
