@@ -17,7 +17,32 @@
       --border: #e2e8f0; 
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
+    
+    /* Mencegah seleksi / blok teks, tetapi mengizinkan input teks */
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      padding: 20px; 
+      display: flex; 
+      justify-content: center; 
+      min-height: 100vh;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    input, textarea {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+
     .container { background: var(--surface); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; min-height: 540px; }
     
     /* Header & Timer */
@@ -40,7 +65,7 @@
     .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
     .btn-outline:hover { background: #f1f5f9; }
     
-    /* Screen State Management */
+    /* Screen Management */
     .screen { display: none; }
     .screen.active { display: block; }
     
@@ -53,7 +78,7 @@
     .option-lbl:hover { background: #f1f5f9; }
     .option-lbl input { margin-right: 12px; transform: scale(1.2); }
 
-    /* Digit Selector Subtes 5 (RA) */
+    /* Digit Selector Subtes 5 (RA) & 6 (ZR) */
     .digit-scale-container { display: flex; flex-direction: column; align-items: center; margin: 20px 0; gap: 12px; }
     .digit-scale-label { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .digit-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-width: 540px; }
@@ -69,18 +94,6 @@
     .nav-btn.answered { background: #dbeafe; color: var(--primary); border-color: var(--primary); }
     .nav-btn.current { border: 2px solid var(--primary-dark); }
     
-    /* Mencegah seleksi / blok teks di seluruh halaman */
-    body {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    /* Mengosongkan tampilan layar jika mencoba mencetak dokumen (Print / Save PDF) */
-    @media print {
-      body { display: none !important; }
-    }
     .footer { display: flex; justify-content: space-between; margin-top: 24px; align-items: center; }
   </style>
   
@@ -102,7 +115,7 @@
     
     <div class="form-group" style="max-width: 420px;">
       <label>Kode Token Asesmen</label>
-      <input type="text" id="input-token" placeholder="Contoh: ALBEA-0001" style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px;" autocomplete="off" required>
+      <input type="text" id="input-token" placeholder="Contoh: IST-8X9Y2Z" style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px;" autocomplete="off" required>
     </div>
     
     <button class="btn" id="btn-verify-token" style="min-width: 180px;" onclick="verifyToken()">Verifikasi Token ➔</button>
@@ -140,10 +153,10 @@
 
   <!-- Screen 3: MEMORY PHASE (SUBTES 9) -->
   <div id="screen-memory" class="body screen" style="text-align: center;">
-    <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal </h1>
+    <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal</h1>
     <p style="color: var(--muted); margin-bottom: 20px;">
       Hafalkan daftar kata berikut beserta kategorinya. Waktu Anda: <strong>3 Menit</strong>.<br>
-      Setelah waktu habis, tabel akan tertutup otomatis dan soal akan langsung dimulai.
+      Setelah waktu habis, tampilan hafalan otomatis ditutup dan tes langsung dimulai.
     </p>
 
     <div style="max-width: 580px; margin: 0 auto 24px auto; background: #ffffff; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left;">
@@ -239,7 +252,7 @@
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.candidate && parsed.candidate.token) {
+        if (parsed.candidate && parsed.candidate.token && parsed.candidate.name) {
           document.getElementById("input-token").value = parsed.candidate.token;
           const resumeBox = document.getElementById("token-resume-alert");
           const resumeMsg = document.getElementById("resume-msg");
@@ -260,7 +273,7 @@
   }
 
   function saveSession() {
-    if (!candidate.token) return;
+    if (!candidate.token || !candidate.name) return;
     const data = {
       candidate: candidate,
       subIdx: state.subIdx,
@@ -290,7 +303,7 @@
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.candidate && parsed.candidate.token === val) {
+        if (parsed.candidate && parsed.candidate.token === val && parsed.candidate.name) {
           resumeSession();
           return;
         }
@@ -311,7 +324,6 @@
         return;
       }
 
-      // Token valid & aktif di database
       candidate.token = val;
       document.getElementById("display-active-token").innerText = val;
       showScreen("screen-setup");
@@ -333,7 +345,7 @@
     candidate = parsed.candidate;
     state.subIdx = parsed.subIdx;
     state.qIdx = parsed.qIdx;
-    state.answers = parsed.answers;
+    state.answers = parsed.answers || {};
     state.timeLeft = parsed.timeLeft;
     state.memoryDone = parsed.memoryDone;
 
@@ -427,17 +439,19 @@
 
   function endMemoryPhase() {
     clearInterval(state.timerObj);
-    // Langsung buka soal subtes 9 secara otomatis tanpa pop-up peringatan
     beginSubtest();
   }
 
+  // Timer anti-freeze berbasis delta timestamp
   function startTimer(seconds, timeoutCallback) {
     clearInterval(state.timerObj);
     state.timeLeft = seconds;
+    const endTime = Date.now() + (seconds * 1000);
     document.getElementById("timer-display").innerText = formatTime(state.timeLeft);
     
     state.timerObj = setInterval(() => {
-      state.timeLeft--;
+      const remaining = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+      state.timeLeft = remaining;
       document.getElementById("timer-display").innerText = formatTime(state.timeLeft);
       
       if (state.timeLeft % 5 === 0) saveSession();
@@ -478,10 +492,10 @@
 
     const ansArea = document.getElementById("answer-area");
     ansArea.innerHTML = "";
-    let savedAns = state.answers[sub.id][state.qIdx];
+    let savedAns = state.answers[sub.id]?.[state.qIdx];
 
-    // 1. Tipe Digit Selector (RA)
-    if (sub.id === "RA" || sub.type === "digit_select") {
+    // 1. Tipe Digit Selector: Subtes 5 (RA) & Subtes 6 (ZR)
+    if (sub.id === "RA" || sub.id === "ZR" || sub.type === "digit_select") {
       const selectedArr = Array.isArray(savedAns) ? savedAns : [];
       const digitList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
       
@@ -521,7 +535,7 @@
       html += `</div>`;
       ansArea.innerHTML = html;
     } 
-    // 3. Tipe Isian Bebas (GE / ZR)
+    // 3. Tipe Isian Bebas (GE)
     else if (sub.type === "input") {
       ansArea.innerHTML = `
         <div class="form-group" style="max-width: 480px; margin: 16px auto;">
@@ -554,7 +568,7 @@
       const ans = subAnswers[i];
       let isAnswered = false;
 
-      if (sub.id === "RA" || sub.type === "digit_select") {
+      if (sub.id === "RA" || sub.id === "ZR" || sub.type === "digit_select") {
         isAnswered = Array.isArray(ans) && ans.length > 0;
       } else if (sub.type === "input") {
         isAnswered = typeof ans === "string" && ans.trim().length > 0;
@@ -577,6 +591,7 @@
 
   function toggleDigitRA(digit) {
     const subId = IST_DATA[state.subIdx].id;
+    if (!state.answers[subId]) state.answers[subId] = {};
     if (!Array.isArray(state.answers[subId][state.qIdx])) {
       state.answers[subId][state.qIdx] = [];
     }
@@ -607,6 +622,7 @@
 
   function saveAns(val) {
     const subId = IST_DATA[state.subIdx].id;
+    if (!state.answers[subId]) state.answers[subId] = {};
     state.answers[subId][state.qIdx] = val;
     saveSession();
     updateGridColor();
@@ -654,7 +670,6 @@
     clearInterval(state.timerObj);
     state.subIdx++;
     state.memoryDone = false;
-    showScreen("screen-instruction");
     loadInstruction();
   }
 
@@ -696,53 +711,60 @@
     });
   }
 
-  // 1. Matikan Klik Kanan (Context Menu)
+  // --- KEAMANAN & PENCEGAHAN KECURANGAN ---
+
+  // 1. Matikan Klik Kanan
   document.addEventListener('contextmenu', event => event.preventDefault());
 
-  // 2. Cegah Seleksi Teks & Drag Elemen
-  document.addEventListener('selectstart', event => event.preventDefault());
+  // 2. Cegah Seleksi Teks & Drag (Dikecualikan untuk Input/Formulir)
+  document.addEventListener('selectstart', event => {
+    if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return true;
+    event.preventDefault();
+  });
   document.addEventListener('dragstart', event => event.preventDefault());
 
-  // 3. Blokir Tombol Pintasan Keyboard (Ctrl+C, Ctrl+V, Ctrl+P, Ctrl+S, Inspect F12)
+  // 3. Pintasan Keyboard (Izinkan Ctrl+V hanya di Input)
   document.addEventListener('keydown', function(e) {
-    // Blokir tombol F12 (Inspect Element)
     if (e.key === 'F12') {
       e.preventDefault();
       return false;
     }
 
-    // Blokir shortcut kombinasi Ctrl / Cmd
     if (e.ctrlKey || e.metaKey) {
-      const forbiddenKeys = ['c', 'v', 'p', 's', 'u'];
-      if (forbiddenKeys.includes(e.key.toLowerCase())) {
+      const key = e.key.toLowerCase();
+      
+      // Izinkan paste token / data ke input
+      if (key === 'v' && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+        return true;
+      }
+
+      if (['c', 'v', 'p', 's', 'u'].includes(key)) {
         e.preventDefault();
         return false;
       }
-      // Blokir Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C (Developer Tools)
-      if (e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) {
+      
+      if (e.shiftKey && ['i', 'j', 'c'].includes(key)) {
         e.preventDefault();
         return false;
       }
     }
   });
 
-  // 4. Deteksi dan Batasi Tangkapan Layar (PrintScreen)
+  // 4. Deteksi Tangkapan Layar (PrintScreen)
   window.addEventListener('keyup', function(e) {
     if (e.key === 'PrintScreen') {
-      // Hapus data tangkapan layar dari clipboard
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText('');
+        navigator.clipboard.writeText('').catch(() => {});
       }
       alert("Tangkapan layar (screenshot) dilarang selama pengerjaan asesmen!");
     }
   });
 
-  // 5. Deteksi Perpindahan Tab / Aplikasi (Visibility Change)
+  // 5. Peringatan Pindah Tab
   document.addEventListener("visibilitychange", function() {
     if (document.visibilityState === 'hidden') {
-      // Peringatan hanya berlaku saat ujian aktif atau fase menghafal sedang berjalan
       if (state.currentScreen === "screen-test" || state.currentScreen === "screen-memory") {
-        alert("PERINGATAN: Anda terdeteksi meninggalkan halaman asesmen! Pelanggaran ini dicatat oleh sistem pengawas.");
+        console.warn("Kandidat meninggalkan halaman pengerjaan.");
       }
     }
   });
