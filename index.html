@@ -296,6 +296,12 @@
   let cheatStrikes = 0;
   const MAX_STRIKES = 3;
   let isStrikeCooldown = false;
+  let isGracePeriod = false;
+
+  function triggerGracePeriod() {
+    isGracePeriod = true;
+    setTimeout(() => { isGracePeriod = false; }, 5000);
+  }
 
   // Mencegah peserta menutup browser tanpa sengaja
   window.addEventListener("beforeunload", function (e) {
@@ -307,6 +313,7 @@
 
   // Otomatis deteksi sesi tersimpan saat halaman dibuka ulang
   window.addEventListener("load", function () {
+    triggerGracePeriod();
     const saved = localStorage.getItem("ist_active_session");
     if (saved) {
       try {
@@ -406,6 +413,7 @@
     state.timeLeft = parsed.timeLeft;
     state.memoryDone = parsed.memoryDone;
 
+    triggerGracePeriod();
     alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes Anda...`);
 
     if (parsed.currentScreen === "screen-test") {
@@ -495,13 +503,11 @@
     }
   }
 
-  // Transisi otomatis subtes 9 langsung ke soal tanpa pop-up
   function endMemoryPhase() {
     clearInterval(state.timerObj);
     beginSubtest();
   }
 
-  // Timer anti-freeze berbasis delta timestamp
   function startTimer(seconds, timeoutCallback) {
     clearInterval(state.timerObj);
     state.timeLeft = seconds;
@@ -775,15 +781,14 @@
     });
   }
 
-  // --- SISTEM DETEKSI PELANGGARAN DENGAN CUSTOM MODAL (NO ALERT, NO LOOP) ---
+  // --- SISTEM DETEKSI PELANGGARAN MODAL (TERPISAH & AMAN RESUME) ---
 
   function registerViolation(reason) {
-    // Hanya aktif saat fase hafalan atau pengerjaan soal
+    if (isGracePeriod) return;
     if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") {
       return;
     }
 
-    // Debounce cooldown agar 1 tindakan tidak memicu berkali-kali
     if (isStrikeCooldown) return;
     isStrikeCooldown = true;
     setTimeout(() => { isStrikeCooldown = false; }, 2500);
@@ -821,7 +826,7 @@
 
     } else {
       title.innerText = `PERINGATAN KEAMANAN (${cheatStrikes}/${MAX_STRIKES})`;
-      desc.innerHTML = `Terdeteksi aktivitas terlarang: <strong>${reason}</strong>.<br><br>Jika mencapai <strong>${MAX_STRIKES} kali</strong>, sistem akan otomatis <strong>mendiskualifikasi</strong> Anda.`;
+      desc.innerHTML = `Terdeteksi aktivitas: <strong>${reason}</strong>.<br><br>Jika mencapai <strong>${MAX_STRIKES} kali</strong>, sistem akan otomatis <strong>mendiskualifikasi</strong> Anda.`;
       btn.innerText = "Saya Mengerti & Lanjutkan";
       btn.onclick = function() {
         modal.style.display = "none";
@@ -830,29 +835,31 @@
     }
   }
 
-  // 1. Deteksi Tombol PrintScreen
+  // 1. Deteksi Tombol PrintScreen Murni
   window.addEventListener("keyup", function(e) {
     if (e.key === "PrintScreen") {
-      registerViolation("Tangkapan layar (PrintScreen)");
+      registerViolation("Menekan Tombol Tangkapan Layar (PrintScreen)");
     }
   });
 
-  // 2. Deteksi Beralih Aplikasi Lain / Snipping Tool / Lightshot
-  window.addEventListener("blur", function() {
-    registerViolation("Membuka aplikasi lain / Screenshot Tool");
+  // 2. Deteksi Tab Ditinggalkan / Buka Tab Baru
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "hidden") {
+      registerViolation("Membuka / Beralih ke Tab Lain");
+    }
   });
 
   // 3. Matikan Klik Kanan
   document.addEventListener("contextmenu", e => e.preventDefault());
 
-  // 4. Cegah Seleksi Teks & Drag (Kecuali pada kolom Input)
+  // 4. Cegah Seleksi Teks & Drag (Kecuali pada Input)
   document.addEventListener("selectstart", e => {
     if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return true;
     e.preventDefault();
   });
   document.addEventListener("dragstart", e => e.preventDefault());
 
-  // 5. Blokir Pintasan Keyboard Khusus (Tetap izinkan Ctrl+V untuk input)
+  // 5. Blokir Pintasan Keyboard Berbahaya (Izinkan Ctrl+V pada Input)
   document.addEventListener("keydown", function(e) {
     if (e.key === "F12") return e.preventDefault();
 
