@@ -69,6 +69,18 @@
     .nav-btn.answered { background: #dbeafe; color: var(--primary); border-color: var(--primary); }
     .nav-btn.current { border: 2px solid var(--primary-dark); }
     
+    /* Mencegah seleksi / blok teks di seluruh halaman */
+    body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Mengosongkan tampilan layar jika mencoba mencetak dokumen (Print / Save PDF) */
+    @media print {
+      body { display: none !important; }
+    }
     .footer { display: flex; justify-content: space-between; margin-top: 24px; align-items: center; }
   </style>
   
@@ -415,7 +427,7 @@
 
   function endMemoryPhase() {
     clearInterval(state.timerObj);
-    alert("Waktu menghafal telah selesai! Silakan jawab soal-soal berikut.");
+    // Langsung buka soal subtes 9 secara otomatis tanpa pop-up peringatan
     beginSubtest();
   }
 
@@ -683,6 +695,57 @@
       document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
     });
   }
+
+  // 1. Matikan Klik Kanan (Context Menu)
+  document.addEventListener('contextmenu', event => event.preventDefault());
+
+  // 2. Cegah Seleksi Teks & Drag Elemen
+  document.addEventListener('selectstart', event => event.preventDefault());
+  document.addEventListener('dragstart', event => event.preventDefault());
+
+  // 3. Blokir Tombol Pintasan Keyboard (Ctrl+C, Ctrl+V, Ctrl+P, Ctrl+S, Inspect F12)
+  document.addEventListener('keydown', function(e) {
+    // Blokir tombol F12 (Inspect Element)
+    if (e.key === 'F12') {
+      e.preventDefault();
+      return false;
+    }
+
+    // Blokir shortcut kombinasi Ctrl / Cmd
+    if (e.ctrlKey || e.metaKey) {
+      const forbiddenKeys = ['c', 'v', 'p', 's', 'u'];
+      if (forbiddenKeys.includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        return false;
+      }
+      // Blokir Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C (Developer Tools)
+      if (e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        return false;
+      }
+    }
+  });
+
+  // 4. Deteksi dan Batasi Tangkapan Layar (PrintScreen)
+  window.addEventListener('keyup', function(e) {
+    if (e.key === 'PrintScreen') {
+      // Hapus data tangkapan layar dari clipboard
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText('');
+      }
+      alert("Tangkapan layar (screenshot) dilarang selama pengerjaan asesmen!");
+    }
+  });
+
+  // 5. Deteksi Perpindahan Tab / Aplikasi (Visibility Change)
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === 'hidden') {
+      // Peringatan hanya berlaku saat ujian aktif atau fase menghafal sedang berjalan
+      if (state.currentScreen === "screen-test" || state.currentScreen === "screen-memory") {
+        alert("PERINGATAN: Anda terdeteksi meninggalkan halaman asesmen! Pelanggaran ini dicatat oleh sistem pengawas.");
+      }
+    }
+  });
 </script>
 
 </body>
