@@ -107,6 +107,32 @@
     .nav-btn.current { border: 2px solid var(--primary-dark); }
     
     .footer { display: flex; justify-content: space-between; margin-top: 24px; align-items: center; }
+
+    /* Custom Strike Modal (Anti-Infinite Loop) */
+    #strike-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      z-index: 9999999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: #ffffff;
+      border-radius: 12px;
+      max-width: 440px;
+      width: 100%;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      animation: modalFadeIn 0.2s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
   </style>
   
   <script src="bank_soal.js"></script>
@@ -114,8 +140,15 @@
 </head>
 <body>
 
-<!-- Penutup Layar Putih Bersih saat Screenshot / Kehilangan Fokus -->
-<div id="blank-cover" style="display: none; position: fixed; inset: 0; background: #f8fafc; z-index: 999999;"></div>
+<!-- Custom Modal Peringatan Pelanggaran -->
+<div id="strike-modal">
+  <div class="modal-box">
+    <div style="font-size: 2.8rem; margin-bottom: 8px; line-height: 1;">⚠️</div>
+    <h3 id="strike-title" style="color: #dc2626; font-size: 1.25rem; margin-bottom: 10px; font-weight: 800;">PERINGATAN KEAMANAN (1/3)</h3>
+    <p id="strike-desc" style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;"></p>
+    <button class="btn" style="background: #dc2626; width: 100%; font-size: 1rem; padding: 12px;" id="btn-strike-ack">Saya Mengerti & Lanjutkan</button>
+  </div>
+</div>
 
 <div class="container">
   <div class="header">
@@ -242,7 +275,14 @@
 <script>
   const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzmHIc7pigMlvk_3e_8Q4UdV6geB4CcDRg-wtj3luPNkwdkRlXBYsfkigTr56bFUvTk-g/exec"; 
 
-  let candidate = { token: "", name: "", email: "" };
+  let candidate = { 
+    token: "", 
+    name: "", 
+    email: "", 
+    isCheated: false, 
+    cheatReason: "" 
+  };
+
   let state = {
     subIdx: 0,
     qIdx: 0,
@@ -253,7 +293,11 @@
     currentScreen: "screen-token"
   };
 
-  // Mencegah peserta menutup tab tanpa sengaja
+  let cheatStrikes = 0;
+  const MAX_STRIKES = 3;
+  let isStrikeCooldown = false;
+
+  // Mencegah peserta menutup browser tanpa sengaja
   window.addEventListener("beforeunload", function (e) {
     if (localStorage.getItem("ist_active_session")) {
       e.preventDefault();
@@ -401,6 +445,7 @@
     state.subIdx = 0;
     state.answers = {};
     state.memoryDone = false;
+    cheatStrikes = 0;
     saveSession();
     loadInstruction();
   }
@@ -696,11 +741,14 @@
     const payload = {
       timestamp: new Date().toLocaleString("id-ID"),
       token: candidate.token,
-      name: candidate.name,
+      name: candidate.name + (candidate.isCheated ? " [DISKUALIFIKASI]" : ""),
       email: candidate.email,
       rawScores: scores.rawScores,
       totalRW: scores.totalRW,
-      answersJSON: JSON.stringify(state.answers)
+      answersJSON: JSON.stringify({
+        answers: state.answers,
+        cheatLog: candidate.cheatReason || "Bersih"
+      })
     };
 
     let voidTokens = JSON.parse(localStorage.getItem("ist_void_tokens") || "[]");
@@ -719,40 +767,79 @@
       body: JSON.stringify(payload)
     }).then(() => {
       document.getElementById("finish-msg").innerHTML = 
+        candidate.isCheated ? 
+        `<span style="color: #dc2626; font-weight: 700; font-size: 1.1rem;">Ujian Dihentikan (Didiskualifikasi)</span><br><br>Pelanggaran batas maksimal terlampaui. Seluruh log telah disinkronkan ke penguji.` :
         `<span style="color: #107c41; font-weight: 700; font-size: 1.1rem;">Data Berhasil Terkirim!</span><br><br>Terima kasih, <strong>${candidate.name}</strong>. Rangkaian Asesmen IST telah selesai. Token Anda (<strong>${candidate.token}</strong>) kini telah dinonaktifkan.`;
     }).catch(e => {
       document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
     });
   }
 
-  // --- KEAMANAN SENYAP (BLANK OUT ON UNFOCUS / SCREENSHOT, NO POPUPS, NO WATERMARK) ---
+  // --- SISTEM DETEKSI PELANGGARAN DENGAN CUSTOM MODAL (NO ALERT, NO LOOP) ---
 
-  const blankCover = document.getElementById("blank-cover");
+  function registerViolation(reason) {
+    // Hanya aktif saat fase hafalan atau pengerjaan soal
+    if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") {
+      return;
+    }
 
-  function blankOut() {
-    // Layar menjadi putih hanya pada fase hafalan atau pengerjaan soal
-    if (state.currentScreen === "screen-memory" || state.currentScreen === "screen-test") {
-      blankCover.style.display = "block";
+    // Debounce cooldown agar 1 tindakan tidak memicu berkali-kali
+    if (isStrikeCooldown) return;
+    isStrikeCooldown = true;
+    setTimeout(() => { isStrikeCooldown = false; }, 2500);
+
+    cheatStrikes++;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText("").catch(() => {});
+    }
+
+    const modal = document.getElementById("strike-modal");
+    const title = document.getElementById("strike-title");
+    const desc = document.getElementById("strike-desc");
+    const btn = document.getElementById("btn-strike-ack");
+
+    if (cheatStrikes >= MAX_STRIKES) {
+      title.innerText = `DISKUALIFIKASI (${cheatStrikes}/${MAX_STRIKES})`;
+      desc.innerHTML = `Anda telah melakukan tindakan terlarang (<strong>${reason}</strong>) sebanyak 3 kali.<br><br>Sesi ujian Anda dihentikan dan token dinyatakan hangus.`;
+      btn.innerText = "Tutup & Kirim Hasil";
+      btn.onclick = function() {
+        modal.style.display = "none";
+        candidate.isCheated = true;
+        candidate.cheatReason = `Diskualifikasi: ${cheatStrikes}x (${reason})`;
+        submitAllData();
+      };
+      modal.style.display = "flex";
+
+      setTimeout(() => {
+        if (state.currentScreen !== "screen-finish") {
+          candidate.isCheated = true;
+          candidate.cheatReason = `Diskualifikasi: ${cheatStrikes}x (${reason})`;
+          submitAllData();
+        }
+      }, 4000);
+
+    } else {
+      title.innerText = `PERINGATAN KEAMANAN (${cheatStrikes}/${MAX_STRIKES})`;
+      desc.innerHTML = `Terdeteksi aktivitas terlarang: <strong>${reason}</strong>.<br><br>Jika mencapai <strong>${MAX_STRIKES} kali</strong>, sistem akan otomatis <strong>mendiskualifikasi</strong> Anda.`;
+      btn.innerText = "Saya Mengerti & Lanjutkan";
+      btn.onclick = function() {
+        modal.style.display = "none";
+      };
+      modal.style.display = "flex";
     }
   }
 
-  function restoreScreen() {
-    blankCover.style.display = "none";
-  }
-
-  // 1. Saat Snipping Tool aktif / Alt+Tab / browser kehilangan fokus -> Tutup layar putih
-  window.addEventListener("blur", blankOut);
-  window.addEventListener("focus", restoreScreen);
-
-  // 2. Saat tombol PrintScreen ditekan -> Layar putih & hapus isi clipboard
-  window.addEventListener("keydown", function (e) {
+  // 1. Deteksi Tombol PrintScreen
+  window.addEventListener("keyup", function(e) {
     if (e.key === "PrintScreen") {
-      blankOut();
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText("").catch(() => {});
-      }
-      setTimeout(restoreScreen, 1000);
+      registerViolation("Tangkapan layar (PrintScreen)");
     }
+  });
+
+  // 2. Deteksi Beralih Aplikasi Lain / Snipping Tool / Lightshot
+  window.addEventListener("blur", function() {
+    registerViolation("Membuka aplikasi lain / Screenshot Tool");
   });
 
   // 3. Matikan Klik Kanan
@@ -766,8 +853,9 @@
   document.addEventListener("dragstart", e => e.preventDefault());
 
   // 5. Blokir Pintasan Keyboard Khusus (Tetap izinkan Ctrl+V untuk input)
-  document.addEventListener("keydown", function (e) {
+  document.addEventListener("keydown", function(e) {
     if (e.key === "F12") return e.preventDefault();
+
     if (e.ctrlKey || e.metaKey) {
       const k = e.key.toLowerCase();
       if (k === "v" && ["INPUT", "TEXTAREA"].includes(e.target.tagName)) return true;
