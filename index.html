@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asesmen IST Digital</title>
+  <title>Asesmen IST Digital - ALBÉA INDONESIA</title>
   <style>
     :root { 
       --primary: #2563eb; 
@@ -93,15 +93,12 @@
     .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
     .btn-outline:hover { background: #f1f5f9; }
     
-    /* Screen Management */
     .screen { display: none; }
     .screen.active { display: block; }
     
-    /* Question Styling */
     .q-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; line-height: 1.6; transition: filter 0.1s; }
     .q-image { max-width: 100%; border-radius: 6px; margin: 0 auto 16px auto; border: 1px solid var(--border); display: block; transition: filter 0.1s; }
     
-    /* Blur Saat Kehilangan Fokus */
     body.focus-lost #screen-test,
     body.focus-lost #screen-memory {
       filter: blur(18px);
@@ -113,7 +110,6 @@
     .option-lbl:hover { background: #f1f5f9; }
     .option-lbl input { margin-right: 12px; transform: scale(1.2); }
 
-    /* Digit Selector Subtes 5 & 6 */
     .digit-scale-container { display: flex; flex-direction: column; align-items: center; margin: 20px 0; gap: 12px; }
     .digit-scale-label { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .digit-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-width: 540px; }
@@ -123,7 +119,6 @@
     .selected-preview { font-size: 0.9rem; color: var(--muted); min-height: 22px; }
     .selected-preview strong { color: var(--accent); }
     
-    /* Grid Nomor Soal */
     .grid-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); }
     .nav-btn { width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border); background: #f8fafc; cursor: pointer; font-weight: 600; }
     .nav-btn.answered { background: #dbeafe; color: var(--primary); border-color: var(--primary); }
@@ -131,11 +126,10 @@
     
     .footer { display: flex; justify-content: space-between; margin-top: 24px; align-items: center; }
 
-    /* Kotak Peringatan Instruksi */
     .inst-warning-box {
       background: #fef2f2;
       border: 1px solid #fecaca;
-      border-left: 4px solid #dc2626;
+      border-left: 4px solid var(--err);
       border-radius: 8px;
       padding: 14px 18px;
       margin-bottom: 24px;
@@ -165,7 +159,6 @@
       font-size: 0.92rem; 
     }
 
-    /* Modal Strike Pelanggaran */
     #strike-modal {
       display: none;
       position: fixed;
@@ -200,9 +193,9 @@
 <div id="strike-modal">
   <div class="modal-box">
     <div style="font-size: 2.8rem; margin-bottom: 8px; line-height: 1;">⚠️</div>
-    <h3 id="strike-title" style="color: #dc2626; font-size: 1.25rem; margin-bottom: 10px; font-weight: 800;">PERINGATAN KEAMANAN (1/3)</h3>
+    <h3 id="strike-title" style="color: var(--err); font-size: 1.25rem; margin-bottom: 10px; font-weight: 800;">PERINGATAN KEAMANAN (1/3)</h3>
     <p id="strike-desc" style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;"></p>
-    <button class="btn" style="background: #dc2626; width: 100%; font-size: 1rem; padding: 12px;" id="btn-strike-ack">Saya Mengerti & Lanjutkan</button>
+    <button class="btn" style="background: var(--err); width: 100%; font-size: 1rem; padding: 12px;" id="btn-strike-ack">Saya Mengerti & Lanjutkan</button>
   </div>
 </div>
 
@@ -224,18 +217,15 @@
     
     <button class="btn" id="btn-verify-token" style="min-width: 180px;" onclick="verifyToken()">Verifikasi Token ➔</button>
 
-    <!-- Kotak Resume Sesi dengan Opsi Reset -->
-    <div id="token-resume-alert" style="display: none; margin-top: 24px; padding: 16px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: left;">
+    <!-- Banner Resume Sesi Otomatis (Hanya Lanjutkan, Tanpa Tombol Reset) -->
+    <div id="token-resume-alert" style="display: none; margin-top: 24px; padding: 18px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: left;">
       <h3 style="color: #1d4ed8; font-size: 1rem; margin-bottom: 6px;">Sesi Ujian Ditemukan!</h3>
-      <p style="margin-bottom: 12px; font-size: 0.9rem;" id="resume-msg"></p>
-      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-<!-- SESUDAH (AMAN): -->
+      <p style="margin-bottom: 14px; font-size: 0.92rem; color: #1e293b;" id="resume-msg"></p>
       <button class="btn" style="background: var(--accent); width: 100%;" onclick="resumeSession()">Lanjutkan Pengerjaan ➔</button>
-      </div>
     </div>
   </div>
 
-  <!-- Screen 1: SETUP BIODATA (STANDAR PERSIS DISC) -->
+  <!-- Screen 1: SETUP DATA DIRI (STANDAR 5 KOLOM) -->
   <div id="screen-setup" class="body screen">
     <h1>Data Diri Peserta</h1>
     <p>Token Terverifikasi: <strong id="display-active-token" style="color: var(--primary);"></strong>. Lengkapi data diri Anda sebelum melanjutkan ke lembar instruksi & tes.</p>
@@ -281,23 +271,23 @@
     <img id="inst-image" src="" style="display:none; width: 100%; max-width: 650px; margin: 0 auto 20px auto; border: 1px solid var(--border); border-radius: 6px;" alt="Instruksi">
     <div id="inst-text" style="margin-bottom: 20px; line-height: 1.6; color: var(--muted);">Penjelasan Subtes</div>
     
-    <p style="color: #dc2626; font-weight: 700; margin-bottom: 16px;">Waktu Mengerjakan: <span id="inst-time"></span></p>
+    <p style="color: var(--err); font-weight: 700; margin-bottom: 16px;">Waktu Mengerjakan: <span id="inst-time"></span></p>
 
     <div class="inst-warning-box">
       <strong class="title">⚠️ Peraturan & Keamanan Selama Pengerjaan:</strong>
       <ul>
         <li><strong>Jangan sampai layar perangkat mati / terkunci</strong> selama subtes berlangsung.</li>
-        <li><strong>Jangan berpindah tab, meminimalkan peramban, atau membuka jendela lain.</strong></li>
-        <li><strong>Dilarang melakukan tangkapan layar (screenshot)</strong> — setiap pelanggaran tercatat otomatis (konsekuensi <strong>Peringatan 0/3 hingga Diskualifikasi</strong>).</li>
-        <li><strong>Jangan gunakan aplikasi overlay eksternal</strong> (seperti <em>AssistiveTouch</em>, <em>floating chat</em>, atau mode <em>Split Screen</em>).</li>
-        <li>Sangat disarankan menggunakan perangkat <strong>Windows (PC/Laptop)</strong> atau <strong>Android</strong> demi kelancaran sistem.</li>
+        <li><strong>Jangan berpindah tab, meminimalkan browser, atau membuka aplikasi lain.</strong></li>
+        <li><strong>Dilarang melakukan tangkapan layar (screenshot)</strong> — setiap pelanggaran tercatat otomatis (maksimal 3 kali sebelum diskualifikasi).</li>
+        <li><strong>Jangan gunakan aplikasi overlay eksternal</strong> (seperti floating chat atau split screen).</li>
+        <li>Sangat disarankan menggunakan perangkat <strong>PC/Laptop</strong> demi kenyamanan dan kelancaran asesmen.</li>
       </ul>
     </div>
 
     <button class="btn" onclick="beginSubtest()">Mulai Subtes Ini</button>
   </div>
 
-  <!-- Screen 3: MEMORY PHASE (SUBTES 9 - TAMPIL PENUH) -->
+  <!-- Screen 3: MEMORY PHASE (SUBTES 9 - HAFALAN) -->
   <div id="screen-memory" class="body screen" style="text-align: center;">
     <h1 style="color: var(--primary); margin-bottom: 8px;">Fase Menghafal (Daya Ingat)</h1>
     <p style="color: var(--muted); margin-bottom: 20px;">
@@ -330,8 +320,8 @@
       </table>
     </div>
 
-    <div style="font-size: 0.85rem; color: #dc2626; font-weight: 600;">
-      Perhatikan timer di pojok kanan atas. Jangan me-refresh halaman!
+    <div style="font-size: 0.85rem; color: var(--err); font-weight: 600;">
+      Perhatikan timer di pojok kanan atas. Jangan merefresh halaman!
     </div>
   </div>
 
@@ -369,6 +359,7 @@
 </div>
 
 <script>
+  // Tempel URL Web App Google Apps Script IST Anda (berakhiran /exec)
   const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzmHIc7pigMlvk_3e_8Q4UdV6geB4CcDRg-wtj3luPNkwdkRlXBYsfkigTr56bFUvTk-g/exec"; 
 
   let candidate = { 
@@ -473,10 +464,23 @@
     localStorage.setItem("ist_strikes_" + candidate.token, cheatStrikes.toString());
   }
 
+  /* 1. Verifikasi Token Langsung ke Server Spreadsheet (Strict Fast-Resume) */
   async function verifyToken() {
     const inputEl = document.getElementById("input-token");
     const val = inputEl.value.trim().toUpperCase();
     if (!val) return alert("Silakan masukkan kode token Anda!");
+
+    // Fast-resume jika sesi lokal untuk token ini sedang berjalan
+    const saved = localStorage.getItem("ist_active_session");
+    let parsed = null;
+    if (saved) {
+      try { parsed = JSON.parse(saved); } catch(e){}
+    }
+
+    if (parsed && parsed.candidate && parsed.candidate.token === val) {
+      resumeSession();
+      return;
+    }
 
     const btn = document.getElementById("btn-verify-token");
     const originalText = btn.innerText;
@@ -493,35 +497,6 @@
       }
 
       candidate.token = val;
-
-      const saved = localStorage.getItem("ist_active_session");
-      let parsed = null;
-      if (saved) {
-        try { parsed = JSON.parse(saved); } catch(e){}
-      }
-
-      if (parsed && parsed.candidate && parsed.candidate.token === val) {
-        const savedStrikes = parseInt(localStorage.getItem("ist_strikes_" + val) || parsed.cheatStrikes || "0");
-
-        if (savedStrikes >= MAX_STRIKES || parsed.candidate.isCheated) {
-          discardLocalSession(val);
-          alert("Token ini telah di-reset oleh penguji. Anda dapat memulai pengerjaan baru dengan 0 pelanggaran.");
-          document.getElementById("display-active-token").innerText = val;
-          showScreen("screen-setup");
-          return;
-        }
-
-        if (confirm(`Ditemukan sesi pengerjaan sebelumnya di Subtes ${parsed.subIdx + 1}.\n\nKlik "OK" untuk melanjutkan sesi, atau "Cancel" untuk memulai ujian dari awal.`)) {
-          resumeSession();
-          return;
-        } else {
-          discardLocalSession(val);
-          document.getElementById("display-active-token").innerText = val;
-          showScreen("screen-setup");
-          return;
-        }
-      }
-
       discardLocalSession(val);
       document.getElementById("display-active-token").innerText = val;
       showScreen("screen-setup");
@@ -555,7 +530,6 @@
       return;
     }
 
-    // Isi kembali field jika membuka form
     if (document.getElementById("nameInput")) {
       document.getElementById("nameInput").value = candidate.name || "";
       document.getElementById("emailInput").value = candidate.email || "";
@@ -568,7 +542,6 @@
     }
 
     triggerGracePeriod();
-    alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes (Pelanggaran: ${cheatStrikes}/${MAX_STRIKES})...`);
 
     if (parsed.currentScreen === "screen-test") {
       showScreen("screen-test");
@@ -593,7 +566,7 @@
     return `${m}:${s}`;
   }
 
-  /* Validasi 5 Kolom Lengkap Data Diri */
+  /* 2. Validasi 5 Kolom Lengkap Data Diri */
   function startEngine() {
     const nameVal = document.getElementById("nameInput").value.trim();
     const emailVal = document.getElementById("emailInput").value.trim();
@@ -923,6 +896,7 @@
     loadInstruction();
   }
 
+  /* 3. Pengiriman Jawaban & Rekap Nilai ke Spreadsheet */
   function submitAllData() {
     if (state.timerObj) clearInterval(state.timerObj);
     showScreen("screen-finish");
@@ -957,18 +931,17 @@
     }).then(() => {
       document.getElementById("finish-msg").innerHTML = 
         candidate.isCheated ? 
-        `<span style="color: #dc2626; font-weight: 700; font-size: 1.1rem;">Ujian Dihentikan (Didiskualifikasi)</span><br><br>Pelanggaran batas maksimal (${MAX_STRIKES}/${MAX_STRIKES}) terlampaui. Token Anda telah dinonaktifkan dan log telah dikirim ke penguji.` :
-        `<span style="color: #107c41; font-weight: 700; font-size: 1.1rem;">Data Berhasil Terkirim!</span><br><br>Terima kasih, <strong>${candidate.name}</strong>. Rangkaian Asesmen IST telah selesai. Token Anda (<strong>${candidate.token}</strong>) kini telah dinonaktifkan.`;
+        `<span style="color: var(--err); font-weight: 700; font-size: 1.1rem;">Ujian Dihentikan (Didiskualifikasi)</span><br><br>Pelanggaran batas maksimal (${MAX_STRIKES}/${MAX_STRIKES}) terlampaui. Token Anda telah dinonaktifkan dan catatan telah dikirim ke penguji.` :
+        `<span style="color: var(--accent); font-weight: 700; font-size: 1.1rem;">Data Berhasil Terkirim!</span><br><br>Terima kasih, <strong>${candidate.name}</strong>. Rangkaian Asesmen IST telah selesai. Token Anda (<strong>${candidate.token}</strong>) kini telah dinonaktifkan.`;
     }).catch(e => {
-      document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun log lokal aman.";
+      document.getElementById("finish-msg").innerHTML = "Selesai. Terjadi kendala visualisasi jaringan, namun data tersimpan.";
     });
   }
 
+  /* 4. Sistem Deteksi Kecurangan (Maks 3 Pelanggaran) */
   function registerViolation(reason) {
     if (isPageUnloading || isGracePeriod) return;
-    if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") {
-      return;
-    }
+    if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") return;
 
     if (isStrikeCooldown) return;
     isStrikeCooldown = true;
