@@ -187,7 +187,7 @@
 
 <div class="container">
   <div class="header">
-    <h2 id="header-title">IST Digital</h2>
+    <h2 id="header-title" ondblclick="quickDevReset()" style="cursor: pointer;" title="Double click untuk reset dev data">IST Digital</h2>
     <div class="timer-badge" id="timer-display">--:--</div>
   </div>
 
@@ -203,10 +203,14 @@
     
     <button class="btn" id="btn-verify-token" style="min-width: 180px;" onclick="verifyToken()">Verifikasi Token ➔</button>
 
+    <!-- Kotak Resume Sesi dengan Opsi Reset -->
     <div id="token-resume-alert" style="display: none; margin-top: 24px; padding: 16px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: left;">
       <h3 style="color: #1d4ed8; font-size: 1rem; margin-bottom: 6px;">Sesi Ujian Ditemukan!</h3>
       <p style="margin-bottom: 12px; font-size: 0.9rem;" id="resume-msg"></p>
-      <button class="btn" style="background: var(--accent);" onclick="resumeSession()">Lanjutkan Pengerjaan ➔</button>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn" style="background: var(--accent);" onclick="resumeSession()">Lanjutkan Pengerjaan ➔</button>
+        <button class="btn btn-outline" style="border-color: #dc2626; color: #dc2626;" onclick="resetCurrentSession()">Mulai Baru (Reset Sesi)</button>
+      </div>
     </div>
   </div>
 
@@ -344,24 +348,45 @@
   let isStrikeCooldown = false;
   let isGracePeriod = false;
   let isPageUnloading = false;
-  let blurTimer = null;
+  let awayTimestamp = null;
 
   function triggerGracePeriod() {
     isGracePeriod = true;
     setTimeout(() => { isGracePeriod = false; }, 3500);
   }
 
-  window.addEventListener("beforeunload", function (e) {
-    isPageUnloading = true;
-    if (localStorage.getItem("ist_active_session")) {
-      e.preventDefault();
-      e.returnValue = "Pengerjaan tes sedang berlangsung. Data Anda tersimpan.";
+  function quickDevReset() {
+    if (confirm("Reset seluruh data lokal sesi IST di browser ini?")) {
+      discardLocalSession();
+      location.reload();
     }
-  });
+  }
 
-  window.addEventListener("pagehide", function () {
-    isPageUnloading = true;
-  });
+  function discardLocalSession(token) {
+    localStorage.removeItem("ist_active_session");
+    if (token) localStorage.removeItem("ist_strikes_" + token);
+    cheatStrikes = 0;
+    const resumeBox = document.getElementById("token-resume-alert");
+    if (resumeBox) resumeBox.style.display = "none";
+  }
+
+  function resetCurrentSession() {
+    const inputVal = document.getElementById("input-token").value.trim().toUpperCase();
+    if (confirm("Hapus draf pengerjaan lokal dan mulai dari awal?")) {
+      discardLocalSession(inputVal);
+      alert("Sesi lokal berhasil dibersihkan. Silakan klik 'Verifikasi Token' untuk memulai sesi baru.");
+    }
+  }
+
+  // Tangkap perintah reload keyboard (F5 / Ctrl+R / Cmd+R) agar reload bebas strike
+  window.addEventListener("keydown", function(e) {
+    if (e.key === "F5" || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "r")) {
+      isPageUnloading = true;
+    }
+  }, true);
+
+  window.addEventListener("beforeunload", function () { isPageUnloading = true; });
+  window.addEventListener("pagehide", function () { isPageUnloading = true; });
 
   window.addEventListener("load", function () {
     isPageUnloading = false;
@@ -371,11 +396,12 @@
       try {
         const parsed = JSON.parse(saved);
         if (parsed.candidate && parsed.candidate.token && parsed.candidate.name) {
-          const savedStrikes = parseInt(localStorage.getItem("ist_strikes_" + parsed.candidate.token) || parsed.cheatStrikes || "0");
+          const rawStrikes = parseInt(localStorage.getItem("ist_strikes_" + parsed.candidate.token) || parsed.cheatStrikes || "0");
+          const displayStrikes = Math.min(rawStrikes, MAX_STRIKES); // Tidak akan pernah lebih dari 3
           document.getElementById("input-token").value = parsed.candidate.token;
           const resumeBox = document.getElementById("token-resume-alert");
           const resumeMsg = document.getElementById("resume-msg");
-          resumeMsg.innerHTML = `Peserta: <strong>${parsed.candidate.name}</strong> (${parsed.candidate.email})<br>Progres: <strong>Subtes ${parsed.subIdx + 1}</strong> | Catatan Pelanggaran: <strong>${savedStrikes}/${MAX_STRIKES}</strong>`;
+          resumeMsg.innerHTML = `Peserta: <strong>${parsed.candidate.name}</strong> (${parsed.candidate.email})<br>Progres: <strong>Subtes ${parsed.subIdx + 1}</strong> | Catatan Pelanggaran: <strong>${displayStrikes}/${MAX_STRIKES}</strong>`;
           resumeBox.style.display = "block";
         }
       } catch (e) {
@@ -407,21 +433,11 @@
     localStorage.setItem("ist_strikes_" + candidate.token, cheatStrikes.toString());
   }
 
+  // VERIFIKASI WAJIB TANYA SERVER GOOGLE SHEET DAHULU (TIDAK ADA BYPASS LOKAL)
   async function verifyToken() {
     const inputEl = document.getElementById("input-token");
     const val = inputEl.value.trim().toUpperCase();
     if (!val) return alert("Silakan masukkan kode token Anda!");
-
-    const saved = localStorage.getItem("ist_active_session");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.candidate && parsed.candidate.token === val && parsed.candidate.name) {
-          resumeSession();
-          return;
-        }
-      } catch (e) {}
-    }
 
     const btn = document.getElementById("btn-verify-token");
     const originalText = btn.innerText;
@@ -429,6 +445,7 @@
     btn.innerText = "Memverifikasi ke Server...";
 
     try {
+      // 1. Selalu validasi ke database Google Sheet terlebih dahulu
       const response = await fetch(`${WEBHOOK_URL}?action=verifyToken&token=${encodeURIComponent(val)}`);
       const result = await response.json();
 
@@ -437,8 +454,43 @@
         return;
       }
 
+      // 2. Token dinyatakan ACTIVE di server
       candidate.token = val;
-      cheatStrikes = parseInt(localStorage.getItem("ist_strikes_" + val) || "0");
+
+      const saved = localStorage.getItem("ist_active_session");
+      let parsed = null;
+      if (saved) {
+        try { parsed = JSON.parse(saved); } catch(e){}
+      }
+
+      // Jika token ini punya riwayat sesi lokal:
+      if (parsed && parsed.candidate && parsed.candidate.token === val) {
+        const savedStrikes = parseInt(localStorage.getItem("ist_strikes_" + val) || parsed.cheatStrikes || "0");
+
+        // JIKA SEBELUMNYA SUDAH DISKUALIFIKASI TAPI SERVER MENYATAKAN VALID:
+        // BERARTI ADMIN TELAH ME-RESET TOKEN INI DI GOOGLE SHEET!
+        if (savedStrikes >= MAX_STRIKES || parsed.candidate.isCheated) {
+          discardLocalSession(val);
+          alert("Token ini telah di-reset oleh penguji. Anda dapat memulai pengerjaan baru dengan 0 pelanggaran.");
+          document.getElementById("display-active-token").innerText = val;
+          showScreen("screen-setup");
+          return;
+        }
+
+        // Jika sesi belum diskualifikasi, tanyakan mau lanjut atau mulai baru
+        if (confirm(`Ditemukan sesi pengerjaan sebelumnya di Subtes ${parsed.subIdx + 1}.\n\nKlik "OK" untuk melanjutkan sesi, atau "Cancel" untuk memulai ujian dari awal.`)) {
+          resumeSession();
+          return;
+        } else {
+          discardLocalSession(val);
+          document.getElementById("display-active-token").innerText = val;
+          showScreen("screen-setup");
+          return;
+        }
+      }
+
+      // Token fresh tanpa draf
+      discardLocalSession(val);
       document.getElementById("display-active-token").innerText = val;
       showScreen("screen-setup");
 
@@ -464,17 +516,15 @@
     state.memoryDone = parsed.memoryDone;
 
     const tokenStrikes = parseInt(localStorage.getItem("ist_strikes_" + candidate.token) || "0");
-    cheatStrikes = Math.max(parsed.cheatStrikes || 0, tokenStrikes);
+    cheatStrikes = Math.min(Math.max(parsed.cheatStrikes || 0, tokenStrikes), MAX_STRIKES);
 
     if (cheatStrikes >= MAX_STRIKES) {
-      candidate.isCheated = true;
-      candidate.cheatReason = "Mencoba melanjutkan sesi setelah batas diskualifikasi (3/3)";
-      submitAllData();
+      alert("Sesi ini tercatat telah didiskualifikasi. Silakan hubungi penguji untuk me-reset token Anda.");
       return;
     }
 
     triggerGracePeriod();
-    alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes Anda (Pelanggaran: ${cheatStrikes}/${MAX_STRIKES})...`);
+    alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes (Pelanggaran: ${cheatStrikes}/${MAX_STRIKES})...`);
 
     if (parsed.currentScreen === "screen-test") {
       showScreen("screen-test");
@@ -509,7 +559,7 @@
     state.subIdx = 0;
     state.answers = {};
     state.memoryDone = false;
-    cheatStrikes = parseInt(localStorage.getItem("ist_strikes_" + candidate.token) || "0");
+    cheatStrikes = 0;
     saveSession();
     loadInstruction();
   }
@@ -810,6 +860,7 @@
       })
     };
 
+    // Bersihkan sesi aktif agar tidak bisa di-resume lagi
     localStorage.removeItem("ist_active_session");
 
     fetch(WEBHOOK_URL, {
@@ -827,6 +878,8 @@
     });
   }
 
+  // --- LOGIKA STRIKE: ANTI-RELOAD BUG & CAPPED DI 3 ---
+
   function registerViolation(reason) {
     if (isPageUnloading || isGracePeriod) return;
     if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") {
@@ -837,7 +890,8 @@
     isStrikeCooldown = true;
     setTimeout(() => { isStrikeCooldown = false; }, 2500);
 
-    cheatStrikes++;
+    // Kunci nilai maksimal tidak boleh melebihi 3
+    cheatStrikes = Math.min(cheatStrikes + 1, MAX_STRIKES);
     saveSession();
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -875,46 +929,59 @@
     }
   }
 
+  // Catat waktu saat layar ditinggalkan
+  function handleAway() {
+    if (isPageUnloading || isGracePeriod) return;
+    if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") return;
+    document.body.classList.add("focus-lost");
+    awayTimestamp = Date.now();
+  }
+
+  // HANYA HUKUM SAAT PENGGUNA KEMBALI SETELAH > 1 DETIK (BEBAS DARI KASUS RELOAD)
+  function handleReturn(reason) {
+    document.body.classList.remove("focus-lost");
+    if (isPageUnloading || isGracePeriod) return;
+    if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") return;
+
+    if (awayTimestamp) {
+      const duration = Date.now() - awayTimestamp;
+      awayTimestamp = null;
+      if (duration > 1000) {
+        registerViolation(reason);
+      }
+    }
+  }
+
+  // 1. Deteksi Tombol PrintScreen Desktop
   window.addEventListener("keyup", function(e) {
     if (e.key === "PrintScreen") {
       registerViolation("Menekan Tombol Tangkapan Layar (PrintScreen)");
     }
   });
 
+  // 2. Deteksi Beralih Tab / Minimize
   document.addEventListener("visibilitychange", function() {
     if (document.visibilityState === "hidden") {
-      document.body.classList.add("focus-lost");
-      setTimeout(() => {
-        if (!isPageUnloading && document.visibilityState === "hidden") {
-          registerViolation("Meninggalkan Halaman Ujian / Layar Mati");
-        }
-      }, 400);
-    } else {
-      document.body.classList.remove("focus-lost");
+      handleAway();
+    } else if (document.visibilityState === "visible") {
+      handleReturn("Meninggalkan Halaman Ujian / Beralih Tab");
     }
   });
 
+  // 3. Deteksi Multi-Jari di HP
   window.addEventListener("touchstart", function(e) {
     if (e.touches && e.touches.length > 1) {
       registerViolation("Gestur Multi-Jari / Tangkapan Layar HP");
     }
   }, { passive: true });
 
+  // 4. Deteksi Kehilangan Fokus Window
   window.addEventListener("blur", function() {
-    if (state.currentScreen === "screen-test" || state.currentScreen === "screen-memory") {
-      document.body.classList.add("focus-lost");
-      clearTimeout(blurTimer);
-      blurTimer = setTimeout(() => {
-        if (!isPageUnloading && !document.hasFocus()) {
-          registerViolation("Membuka Overlay Eksternal / AssistiveTouch / Split Screen");
-        }
-      }, 600);
-    }
+    handleAway();
   });
 
   window.addEventListener("focus", function() {
-    clearTimeout(blurTimer);
-    document.body.classList.remove("focus-lost");
+    handleReturn("Membuka Aplikasi Lain / Screenshot Tool");
   });
 
   document.addEventListener("contextmenu", e => e.preventDefault());
