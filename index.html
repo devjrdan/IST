@@ -229,8 +229,8 @@
       <h3 style="color: #1d4ed8; font-size: 1rem; margin-bottom: 6px;">Sesi Ujian Ditemukan!</h3>
       <p style="margin-bottom: 12px; font-size: 0.9rem;" id="resume-msg"></p>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <button class="btn" style="background: var(--accent);" onclick="resumeSession()">Lanjutkan Pengerjaan ➔</button>
-        <button class="btn btn-outline" style="border-color: #dc2626; color: #dc2626;" onclick="resetCurrentSession()">Mulai Baru (Reset Sesi)</button>
+<!-- SESUDAH (AMAN): -->
+      <button class="btn" style="background: var(--accent); width: 100%;" onclick="resumeSession()">Lanjutkan Pengerjaan ➔</button>
       </div>
     </div>
   </div>
@@ -417,14 +417,6 @@
     cheatStrikes = 0;
     const resumeBox = document.getElementById("token-resume-alert");
     if (resumeBox) resumeBox.style.display = "none";
-  }
-
-  function resetCurrentSession() {
-    const inputVal = document.getElementById("input-token").value.trim().toUpperCase();
-    if (confirm("Hapus draf pengerjaan lokal dan mulai dari awal?")) {
-      discardLocalSession(inputVal);
-      alert("Sesi lokal berhasil dibersihkan. Silakan klik 'Verifikasi Token' untuk memulai sesi baru.");
-    }
   }
 
   window.addEventListener("keydown", function(e) {
