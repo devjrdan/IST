@@ -15,6 +15,8 @@
       --text: #1e293b; 
       --muted: #64748b; 
       --border: #e2e8f0; 
+      --err: #dc2626;
+      --err-soft: #fef2f2;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
@@ -46,7 +48,7 @@
     .container { 
       background: var(--surface); 
       width: 100%; 
-      max-width: 800px; 
+      max-width: 820px; 
       border-radius: 12px; 
       box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
       border: 1px solid var(--border); 
@@ -60,19 +62,32 @@
     
     /* Header & Timer */
     .header { background: var(--primary); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
-    .header h2 { font-size: 1.1rem; font-weight: 600; }
-    .timer-badge { background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-family: monospace; font-size: 1.2rem; }
+    .header h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.5px; }
+    .timer-badge { background: rgba(0,0,0,0.25); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-family: monospace; font-size: 1.2rem; }
     
     .body { padding: 32px 24px; flex-grow: 1; }
-    h1 { color: var(--primary); margin-bottom: 12px; }
-    p { color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    h1 { color: var(--primary); margin-bottom: 12px; font-size: 1.6rem; }
+    p { color: var(--muted); margin-bottom: 24px; line-height: 1.6; font-size: 0.95rem; }
     
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
-    .form-group input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border); outline: none; font-size: 1rem; }
-    .form-group input:focus { border-color: var(--primary); }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px; margin-bottom: 20px; }
     
-    .btn { background: var(--primary); color: white; border: none; padding: 12px 24px; font-weight: 600; border-radius: 6px; cursor: pointer; display: inline-block; transition: background 0.2s; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+    .form-group input { width: 100%; padding: 12px 14px; border-radius: 6px; border: 1px solid var(--border); outline: none; font-size: 1rem; }
+    .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+    
+    .choices { display: flex; flex-wrap: wrap; gap: 14px 28px; margin-top: 8px; }
+    .choices label { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      cursor: pointer; 
+      font-size: 0.95rem; 
+      white-space: nowrap; 
+    }
+    .choices input[type=radio] { transform: scale(1.2); accent-color: var(--primary); }
+
+    .btn { background: var(--primary); color: white; border: none; padding: 12px 26px; font-weight: 600; border-radius: 6px; cursor: pointer; display: inline-block; transition: background 0.2s; font-size: 1rem; }
     .btn:hover { background: var(--primary-dark); }
     .btn:disabled { background: #94a3b8; cursor: not-allowed; }
     .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); }
@@ -136,12 +151,18 @@
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
-    .inst-warning-box ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-    .inst-warning-box li {
-      margin-bottom: 4px;
+    .inst-warning-box ul { margin: 0; padding-left: 18px; }
+    .inst-warning-box li { margin-bottom: 4px; }
+
+    .msg-err { 
+      background: var(--err-soft); 
+      color: var(--err); 
+      border: 1px solid var(--err); 
+      border-radius: 8px; 
+      padding: 12px 16px; 
+      margin: 16px 0; 
+      font-weight: 600; 
+      font-size: 0.92rem; 
     }
 
     /* Modal Strike Pelanggaran */
@@ -196,7 +217,7 @@
     <h1>Selamat Datang di Asesmen IST</h1>
     <p>Silakan masukkan kode token ujian resmi yang telah diberikan oleh penguji untuk mengakses rangkaian asesmen.</p>
     
-    <div class="form-group" style="max-width: 420px;">
+    <div class="form-group" style="max-width: 420px; margin-bottom: 24px;">
       <label>Kode Token Asesmen</label>
       <input type="text" id="input-token" placeholder="Contoh: IST-8X9Y2Z" style="text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px;" autocomplete="off" required>
     </div>
@@ -214,19 +235,44 @@
     </div>
   </div>
 
-  <!-- Screen 1: SETUP BIODATA -->
+  <!-- Screen 1: SETUP BIODATA (STANDAR PERSIS DISC) -->
   <div id="screen-setup" class="body screen">
     <h1>Data Diri Peserta</h1>
-    <p>Token Terverifikasi: <strong id="display-active-token" style="color: var(--primary);"></strong>. Lengkapi biodata sebelum memulai ujian.</p>
-    <div class="form-group">
-      <label>Nama Lengkap</label>
-      <input type="text" id="user-name" placeholder="Masukkan nama lengkap" required>
+    <p>Token Terverifikasi: <strong id="display-active-token" style="color: var(--primary);"></strong>. Lengkapi data diri Anda sebelum melanjutkan ke lembar instruksi & tes.</p>
+
+    <div class="card" style="max-width: 620px;">
+      <div class="form-group">
+        <label for="nameInput">Nama Lengkap Kandidat *</label>
+        <input type="text" id="nameInput" placeholder="Masukkan nama lengkap sesuai KTP" required autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="emailInput">Alamat Email Aktif *</label>
+        <input type="email" id="emailInput" placeholder="nama@domain.com" required autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="nohpInput">No. HP / WhatsApp Aktif *</label>
+        <input type="text" id="nohpInput" placeholder="Contoh: 081234567890" required autocomplete="off">
+      </div>
+      
+      <div class="form-group">
+        <label for="posisiInput">Posisi yang Dilamar *</label>
+        <input type="text" id="posisiInput" placeholder="Masukkan posisi yang Anda lamar" required autocomplete="off">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Jenis Kelamin *</label>
+        <div class="choices">
+          <label><input type="radio" name="genderInput" value="Laki-laki"> Laki-laki</label>
+          <label><input type="radio" name="genderInput" value="Perempuan"> Perempuan</label>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label>Email Aktif</label>
-      <input type="email" id="user-email" placeholder="email@domain.com" required>
-    </div>
-    <button class="btn" onclick="startEngine()">Mulai Rangkaian Tes</button>
+
+    <div id="setupErrBox" class="msg-err" hidden></div>
+
+    <button class="btn" onclick="startEngine()">Lanjut ke Petunjuk Pengerjaan ➔</button>
   </div>
 
   <!-- Screen 2: INSTRUCTION -->
@@ -328,7 +374,10 @@
   let candidate = { 
     token: "", 
     name: "", 
-    email: "", 
+    email: "",
+    nohp: "",
+    posisi: "",
+    gender: "",
     isCheated: false, 
     cheatReason: "" 
   };
@@ -378,7 +427,6 @@
     }
   }
 
-  // Tangkap perintah reload keyboard (F5 / Ctrl+R / Cmd+R) agar reload bebas strike
   window.addEventListener("keydown", function(e) {
     if (e.key === "F5" || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "r")) {
       isPageUnloading = true;
@@ -397,7 +445,7 @@
         const parsed = JSON.parse(saved);
         if (parsed.candidate && parsed.candidate.token && parsed.candidate.name) {
           const rawStrikes = parseInt(localStorage.getItem("ist_strikes_" + parsed.candidate.token) || parsed.cheatStrikes || "0");
-          const displayStrikes = Math.min(rawStrikes, MAX_STRIKES); // Tidak akan pernah lebih dari 3
+          const displayStrikes = Math.min(rawStrikes, MAX_STRIKES);
           document.getElementById("input-token").value = parsed.candidate.token;
           const resumeBox = document.getElementById("token-resume-alert");
           const resumeMsg = document.getElementById("resume-msg");
@@ -433,7 +481,6 @@
     localStorage.setItem("ist_strikes_" + candidate.token, cheatStrikes.toString());
   }
 
-  // VERIFIKASI WAJIB TANYA SERVER GOOGLE SHEET DAHULU (TIDAK ADA BYPASS LOKAL)
   async function verifyToken() {
     const inputEl = document.getElementById("input-token");
     const val = inputEl.value.trim().toUpperCase();
@@ -445,7 +492,6 @@
     btn.innerText = "Memverifikasi ke Server...";
 
     try {
-      // 1. Selalu validasi ke database Google Sheet terlebih dahulu
       const response = await fetch(`${WEBHOOK_URL}?action=verifyToken&token=${encodeURIComponent(val)}`);
       const result = await response.json();
 
@@ -454,7 +500,6 @@
         return;
       }
 
-      // 2. Token dinyatakan ACTIVE di server
       candidate.token = val;
 
       const saved = localStorage.getItem("ist_active_session");
@@ -463,12 +508,9 @@
         try { parsed = JSON.parse(saved); } catch(e){}
       }
 
-      // Jika token ini punya riwayat sesi lokal:
       if (parsed && parsed.candidate && parsed.candidate.token === val) {
         const savedStrikes = parseInt(localStorage.getItem("ist_strikes_" + val) || parsed.cheatStrikes || "0");
 
-        // JIKA SEBELUMNYA SUDAH DISKUALIFIKASI TAPI SERVER MENYATAKAN VALID:
-        // BERARTI ADMIN TELAH ME-RESET TOKEN INI DI GOOGLE SHEET!
         if (savedStrikes >= MAX_STRIKES || parsed.candidate.isCheated) {
           discardLocalSession(val);
           alert("Token ini telah di-reset oleh penguji. Anda dapat memulai pengerjaan baru dengan 0 pelanggaran.");
@@ -477,7 +519,6 @@
           return;
         }
 
-        // Jika sesi belum diskualifikasi, tanyakan mau lanjut atau mulai baru
         if (confirm(`Ditemukan sesi pengerjaan sebelumnya di Subtes ${parsed.subIdx + 1}.\n\nKlik "OK" untuk melanjutkan sesi, atau "Cancel" untuk memulai ujian dari awal.`)) {
           resumeSession();
           return;
@@ -489,7 +530,6 @@
         }
       }
 
-      // Token fresh tanpa draf
       discardLocalSession(val);
       document.getElementById("display-active-token").innerText = val;
       showScreen("screen-setup");
@@ -523,6 +563,18 @@
       return;
     }
 
+    // Isi kembali field jika membuka form
+    if (document.getElementById("nameInput")) {
+      document.getElementById("nameInput").value = candidate.name || "";
+      document.getElementById("emailInput").value = candidate.email || "";
+      document.getElementById("nohpInput").value = candidate.nohp || "";
+      document.getElementById("posisiInput").value = candidate.posisi || "";
+      if (candidate.gender) {
+        const gEl = document.querySelector(`input[name="genderInput"][value="${candidate.gender}"]`);
+        if (gEl) gEl.checked = true;
+      }
+    }
+
     triggerGracePeriod();
     alert(`Selamat datang kembali, ${candidate.name}! Melanjutkan pengerjaan tes (Pelanggaran: ${cheatStrikes}/${MAX_STRIKES})...`);
 
@@ -549,12 +601,51 @@
     return `${m}:${s}`;
   }
 
+  /* Validasi 5 Kolom Lengkap Data Diri */
   function startEngine() {
-    candidate.name = document.getElementById("user-name").value.trim();
-    candidate.email = document.getElementById("user-email").value.trim();
-    
-    if (!candidate.name || !candidate.email) return alert("Mohon lengkapi nama dan email!");
-    if (!isValidEmail(candidate.email)) return alert("Format email tidak valid! (contoh: user@domain.com)");
+    const nameVal = document.getElementById("nameInput").value.trim();
+    const emailVal = document.getElementById("emailInput").value.trim();
+    const nohpVal = document.getElementById("nohpInput").value.trim();
+    const posisiVal = document.getElementById("posisiInput").value.trim();
+    const genderEl = document.querySelector('input[name="genderInput"]:checked');
+    const errBox = document.getElementById("setupErrBox");
+    errBox.hidden = true;
+
+    if (!nameVal) {
+      errBox.textContent = "Mohon isi Nama Lengkap Anda sesuai KTP.";
+      errBox.hidden = false;
+      document.getElementById("nameInput").focus();
+      return;
+    }
+    if (!isValidEmail(emailVal)) {
+      errBox.textContent = "Format alamat email aktif tidak valid (contoh: nama@domain.com).";
+      errBox.hidden = false;
+      document.getElementById("emailInput").focus();
+      return;
+    }
+    if (!nohpVal) {
+      errBox.textContent = "Mohon isi No. HP / WhatsApp aktif Anda.";
+      errBox.hidden = false;
+      document.getElementById("nohpInput").focus();
+      return;
+    }
+    if (!posisiVal) {
+      errBox.textContent = "Mohon isi Posisi yang Dilamar.";
+      errBox.hidden = false;
+      document.getElementById("posisiInput").focus();
+      return;
+    }
+    if (!genderEl) {
+      errBox.textContent = "Mohon pilih Jenis Kelamin Anda.";
+      errBox.hidden = false;
+      return;
+    }
+
+    candidate.name = nameVal;
+    candidate.email = emailVal;
+    candidate.nohp = nohpVal;
+    candidate.posisi = posisiVal;
+    candidate.gender = genderEl.value;
 
     state.subIdx = 0;
     state.answers = {};
@@ -590,6 +681,7 @@
       
     document.getElementById("inst-time").innerText = timeStr;
     showScreen("screen-instruction");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function beginSubtest() {
@@ -851,6 +943,9 @@
       token: candidate.token,
       name: candidate.name + (candidate.isCheated ? " [DISKUALIFIKASI]" : ""),
       email: candidate.email,
+      nohp: candidate.nohp || "-",
+      posisi: candidate.posisi || "-",
+      gender: candidate.gender || "-",
       rawScores: scores.rawScores,
       totalRW: scores.totalRW,
       answersJSON: JSON.stringify({
@@ -860,7 +955,6 @@
       })
     };
 
-    // Bersihkan sesi aktif agar tidak bisa di-resume lagi
     localStorage.removeItem("ist_active_session");
 
     fetch(WEBHOOK_URL, {
@@ -878,8 +972,6 @@
     });
   }
 
-  // --- LOGIKA STRIKE: ANTI-RELOAD BUG & CAPPED DI 3 ---
-
   function registerViolation(reason) {
     if (isPageUnloading || isGracePeriod) return;
     if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") {
@@ -890,7 +982,6 @@
     isStrikeCooldown = true;
     setTimeout(() => { isStrikeCooldown = false; }, 2500);
 
-    // Kunci nilai maksimal tidak boleh melebihi 3
     cheatStrikes = Math.min(cheatStrikes + 1, MAX_STRIKES);
     saveSession();
 
@@ -929,7 +1020,6 @@
     }
   }
 
-  // Catat waktu saat layar ditinggalkan
   function handleAway() {
     if (isPageUnloading || isGracePeriod) return;
     if (state.currentScreen !== "screen-test" && state.currentScreen !== "screen-memory") return;
@@ -937,7 +1027,6 @@
     awayTimestamp = Date.now();
   }
 
-  // HANYA HUKUM SAAT PENGGUNA KEMBALI SETELAH > 1 DETIK (BEBAS DARI KASUS RELOAD)
   function handleReturn(reason) {
     document.body.classList.remove("focus-lost");
     if (isPageUnloading || isGracePeriod) return;
@@ -952,14 +1041,12 @@
     }
   }
 
-  // 1. Deteksi Tombol PrintScreen Desktop
   window.addEventListener("keyup", function(e) {
     if (e.key === "PrintScreen") {
       registerViolation("Menekan Tombol Tangkapan Layar (PrintScreen)");
     }
   });
 
-  // 2. Deteksi Beralih Tab / Minimize
   document.addEventListener("visibilitychange", function() {
     if (document.visibilityState === "hidden") {
       handleAway();
@@ -968,14 +1055,12 @@
     }
   });
 
-  // 3. Deteksi Multi-Jari di HP
   window.addEventListener("touchstart", function(e) {
     if (e.touches && e.touches.length > 1) {
       registerViolation("Gestur Multi-Jari / Tangkapan Layar HP");
     }
   }, { passive: true });
 
-  // 4. Deteksi Kehilangan Fokus Window
   window.addEventListener("blur", function() {
     handleAway();
   });
